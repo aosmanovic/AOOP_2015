@@ -6,8 +6,11 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.message.JoinMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.Message.Type;
+import at.ac.tuwien.foop.server.model.Game;
+import at.ac.tuwien.foop.server.model.Player;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,6 +18,12 @@ public class GameHandler extends ChannelHandlerAdapter {
 	private static Logger log = LoggerFactory.getLogger(GameHandler.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
+	private Game game;
+	private Player player;
+
+	public GameHandler(Game game) {
+		this.game = game;
+	}
 
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
@@ -26,6 +35,11 @@ public class GameHandler extends ChannelHandlerAdapter {
 		if (m.type == Type.ping) {
 			ctx.writeAndFlush(new Message(Type.pong));
 		} else if (m.type == Type.join) {
+			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
+			if (player == null) {
+				player = new Player(jm.name);
+			}
+			game.join(player);
 			ctx.writeAndFlush(new Message(Type.joined));
 		} else {
 			log.warn("unknown message");

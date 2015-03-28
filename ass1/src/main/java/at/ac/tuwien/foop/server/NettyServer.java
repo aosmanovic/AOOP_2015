@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.message.MessageEncoder;
+import at.ac.tuwien.foop.server.model.Game;
 
 public class NettyServer implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyServer.class);
@@ -24,6 +25,7 @@ public class NettyServer implements Runnable {
 
 	public void run() {
 		log.info("run server");
+		final Game game = new Game();
 
 		EventLoopGroup dispatcherGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -44,7 +46,7 @@ public class NettyServer implements Runnable {
 							ch.pipeline().addLast(
 									new StringEncoder(CharsetUtil.UTF_8));
 							ch.pipeline().addLast(new MessageEncoder());
-							ch.pipeline().addLast(new GameHandler());
+							ch.pipeline().addLast(new GameHandler(game));
 						}
 					});
 
