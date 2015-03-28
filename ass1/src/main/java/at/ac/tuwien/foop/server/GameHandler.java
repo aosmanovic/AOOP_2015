@@ -1,20 +1,22 @@
 package at.ac.tuwien.foop.server;
 
-import java.util.List;
+import io.netty.channel.ChannelHandlerAdapter;
+import io.netty.channel.ChannelHandlerContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.MessageToMessageDecoder;
-
-public class GameHandler extends MessageToMessageDecoder<String> {
+public class GameHandler extends ChannelHandlerAdapter {
 	private static Logger log = LoggerFactory.getLogger(GameHandler.class);
 
-	@Override
-	protected void decode(ChannelHandlerContext ctx, String msg,
-			List<Object> out) throws Exception {
-		log.info("msg was :" + msg);
+	public void channelRead(ChannelHandlerContext ctx, Object msg)
+			throws Exception {
+		String str = (String) msg;
+		log.info(String.format("server received msg: %s", str));
+
+		if (str.equals("ping")) {
+			ctx.writeAndFlush("pong\n");
+		}
 	}
 
 	@Override

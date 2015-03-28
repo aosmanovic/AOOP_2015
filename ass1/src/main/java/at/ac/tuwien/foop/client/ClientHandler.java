@@ -10,19 +10,16 @@ public class ClientHandler extends ChannelHandlerAdapter {
 	private static Logger log = LoggerFactory.getLogger(ClientHandler.class);
 
 	@Override
-	public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.info("register client");
 		ctx.writeAndFlush("ping\n");
 	}
 
 	@Override
-	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-		log.info("unregister client");
-	}
-
-	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
-		log.info(String.format("received msg: %s", msg != null ? msg.toString() : ""));
+		super.channelRead(ctx, msg);
+		log.info(String.format("client received msg: %s",
+				msg != null ? (String) msg : ""));
 	}
 }
