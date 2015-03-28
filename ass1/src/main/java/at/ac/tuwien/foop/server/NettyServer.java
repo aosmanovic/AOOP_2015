@@ -15,6 +15,8 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.message.MessageEncoder;
+
 public class NettyServer implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyServer.class);
 
@@ -22,6 +24,7 @@ public class NettyServer implements Runnable {
 
 	public void run() {
 		log.info("run server");
+
 		EventLoopGroup dispatcherGroup = new NioEventLoopGroup();
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
@@ -35,11 +38,12 @@ public class NettyServer implements Runnable {
 						protected void initChannel(SocketChannel ch)
 								throws Exception {
 							ch.pipeline().addLast(
-									new LineBasedFrameDecoder(256));
+									new LineBasedFrameDecoder(2048));
 							ch.pipeline().addLast(
 									new StringDecoder(CharsetUtil.UTF_8));
 							ch.pipeline().addLast(
 									new StringEncoder(CharsetUtil.UTF_8));
+							ch.pipeline().addLast(new MessageEncoder());
 							ch.pipeline().addLast(new GameHandler());
 						}
 					});

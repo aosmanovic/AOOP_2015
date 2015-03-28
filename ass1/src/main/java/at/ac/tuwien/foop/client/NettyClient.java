@@ -15,6 +15,8 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.message.MessageEncoder;
+
 public class NettyClient implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyClient.class);
 
@@ -38,6 +40,7 @@ public class NettyClient implements Runnable {
 									new StringDecoder(CharsetUtil.UTF_8));
 							ch.pipeline().addLast(
 									new StringEncoder(CharsetUtil.UTF_8));
+							ch.pipeline().addLast(new MessageEncoder());
 							ch.pipeline().addLast(new ClientHandler());
 						}
 					});
