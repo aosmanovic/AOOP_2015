@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.NettyClient;
+import at.ac.tuwien.foop.client.model.Game;
 import at.ac.tuwien.foop.server.NettyServer;
 
 public class App {
@@ -15,7 +16,7 @@ public class App {
 	public App() {
 		log.info("start system");
 		server = new Thread(new NettyServer());
-		client = new Thread(new NettyClient());
+		client = new Thread(new NettyClient(new Game()));
 	}
 
 	public void run() {

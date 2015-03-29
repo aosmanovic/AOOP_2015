@@ -15,6 +15,7 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.client.model.Game;
 import at.ac.tuwien.foop.message.MessageEncoder;
 
 public class NettyClient implements Runnable {
@@ -22,28 +23,33 @@ public class NettyClient implements Runnable {
 
 	private String host = "localhost";
 	private int port = 20150;
+	private Game game;
+	
+	public NettyClient(Game game) {
+		this.game = game;
+	}
 
 	public void run() {
 		log.info("start client");
 		EventLoopGroup workerGroup = new NioEventLoopGroup();
+		Bootstrap bootstrap = new Bootstrap();
+		bootstrap.group(workerGroup).channel(NioSocketChannel.class)
+				.option(ChannelOption.SO_KEEPALIVE, true)
+				.handler(new ChannelInitializer<SocketChannel>() {
+					@Override
+					protected void initChannel(SocketChannel ch)
+							throws Exception {
+						ch.pipeline().addLast(
+								new LineBasedFrameDecoder(256));
+						ch.pipeline().addLast(
+								new StringDecoder(CharsetUtil.UTF_8));
+						ch.pipeline().addLast(
+								new StringEncoder(CharsetUtil.UTF_8));
+						ch.pipeline().addLast(new MessageEncoder());
+						ch.pipeline().addLast(new ClientHandler(game));
+					}
+				});
 		try {
-			Bootstrap bootstrap = new Bootstrap();
-			bootstrap.group(workerGroup).channel(NioSocketChannel.class)
-					.option(ChannelOption.SO_KEEPALIVE, true)
-					.handler(new ChannelInitializer<SocketChannel>() {
-						@Override
-						protected void initChannel(SocketChannel ch)
-								throws Exception {
-							ch.pipeline().addLast(
-									new LineBasedFrameDecoder(256));
-							ch.pipeline().addLast(
-									new StringDecoder(CharsetUtil.UTF_8));
-							ch.pipeline().addLast(
-									new StringEncoder(CharsetUtil.UTF_8));
-							ch.pipeline().addLast(new MessageEncoder());
-							ch.pipeline().addLast(new ClientHandler());
-						}
-					});
 			bootstrap.connect(host, port).sync().channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
