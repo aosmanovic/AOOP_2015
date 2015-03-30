@@ -4,5 +4,11 @@ import java.util.List;
 
 public class Game {
 	private boolean started;
-	private List<Fields> fields;
+	private Board board;
+	private List<Player> player;
+	
+	public void board(Board board) {
+		this.board = board;
+	}
+	
 }
