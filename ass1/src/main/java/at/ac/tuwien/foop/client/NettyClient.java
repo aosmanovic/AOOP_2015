@@ -25,14 +25,15 @@ import at.ac.tuwien.foop.message.MessageEncoder;
 public class NettyClient implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyClient.class);
 
-	private final int MAX_RETRY = 10;
-	private final int RETRY_TIME_MS = 1000;
-	private final CountDownLatch latch = new CountDownLatch(1);
+	private final int MAX_RETRY = 3;
+	private final int RETRY_TIME_MS = 2000;
 
-	private String host = "localhost";
-	private int port = 20150;
+	private final String host = "localhost"; // TODO: load from config
+	private final int port = 20150;
+
+	private final CountDownLatch latch = new CountDownLatch(1);
+	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 	private int retry = 0;
-	EventLoopGroup workerGroup = new NioEventLoopGroup();
 
 	private Game game;
 
@@ -41,7 +42,7 @@ public class NettyClient implements Runnable {
 	}
 
 	public void run() {
-		log.info("start client");
+		log.info("start netty client");
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(workerGroup).channel(NioSocketChannel.class)
 				.option(ChannelOption.SO_KEEPALIVE, true)
@@ -59,17 +60,17 @@ public class NettyClient implements Runnable {
 					}
 				});
 		connect(bootstrap);
+
+		// wait for channel
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("retry latch interrupted", e);
 		}
 		workerGroup.shutdownGracefully();
-		log.info("_client done..");
 	}
 
-	private ChannelFuture connect(Bootstrap bootstrap) {
+	private void connect(Bootstrap bootstrap) {
 		log.debug("connect to {}:{}", host, port);
 		ChannelFuture future = bootstrap.connect(host, port);
 		future.addListener(new ChannelFutureListener() {
@@ -81,22 +82,19 @@ public class NettyClient implements Runnable {
 					if (retry >= MAX_RETRY) {
 						log.warn("could not connect to server, give up :(!");
 						latch.countDown();
-						System.out.println(future.channel());
 						future.channel().close();
-						log.info("closed!?");
 						return;
 					}
 					retry++;
 					log.warn("could not connect, will retry ({}/{})!", retry,
 							MAX_RETRY);
-					 Thread.sleep(RETRY_TIME_MS);
-					 connect(bootstrap);
+					Thread.sleep(RETRY_TIME_MS);
+					connect(bootstrap);
 				} else {
 					future.channel().closeFuture().sync();
 					latch.countDown();
 				}
 			}
 		});
-		return future;
 	}
 }
