@@ -8,8 +8,8 @@ public class Game {
 
 	private boolean running;
 	// TODO: think about immutable list types here, as the client can request the list and modify its elements
-	private List<Fields> fields;
 	private List<Player> players;
+	private Board board;
 	
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -31,21 +31,17 @@ public class Game {
 		players.add(player);
 	}
 	
-	public void setFields(String fieldsString) {
-		//TODO: move convert to a distinct file
-	}
-	
-	public void updateBoard(String updateString) {
-		//TODO: move convert to a distinct file
-		
-	}
-	
-	public List<Fields> getFields() {
-		return fields;
-	}
-	
 	public List<Player> getPlayers() {
 		return players;
+	}
+
+	public void setBoard(Board board) {
+		// TODO: should not be possible while the game is still running
+		this.board = board;
+	}
+	
+	public Board getBoard() {
+		return board;
 	}
 }
 

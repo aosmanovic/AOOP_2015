@@ -6,8 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.client.model.Board;
 import at.ac.tuwien.foop.client.model.Game;
 import at.ac.tuwien.foop.client.model.Player;
+import at.ac.tuwien.foop.message.BoardMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.NewPlayerMessage;
 import at.ac.tuwien.foop.message.Message.Type;
@@ -43,6 +45,9 @@ public class ClientHandler extends ChannelHandlerAdapter {
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(new Player(mapper.readValue(str,
 					NewPlayerMessage.class).name));
+		} else if (m.type == Type.S_BOARD) {
+			game.setBoard(Board.createBoard(mapper.readValue(str,
+					BoardMessage.class).fields));
 		} else if (m.type == Type.S_JOINED) {
 			// TODO: check if needed?
 		} else {
