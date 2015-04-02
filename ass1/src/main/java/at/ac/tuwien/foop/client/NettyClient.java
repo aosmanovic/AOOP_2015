@@ -101,7 +101,7 @@ public class NettyClient implements Runnable {
 
 					// close on close event
 					game.addGameEventListener(e -> {
-						if (e.type == Type.close)
+						if (e.type == Type.CLOSE)
 							channel.close();
 					});
 

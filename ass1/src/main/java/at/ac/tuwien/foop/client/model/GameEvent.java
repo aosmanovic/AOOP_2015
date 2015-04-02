@@ -2,7 +2,7 @@ package at.ac.tuwien.foop.client.model;
 
 public class GameEvent {
 	public enum Type {
-		close
+		CLOSE, NEW_PLAYER, BOARD, START, STOP
 	}
 
 	public final Type type;

@@ -7,8 +7,6 @@ public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();
 
 	private boolean running;
-	// TODO: think about immutable list types here, as the client can request
-	// the list and modify its elements
 	private List<Player> players;
 	private Board board;
 
@@ -20,12 +18,22 @@ public class Game {
 		listeners.remove(listener);
 	}
 
+	public void fireGameEvent(GameEvent event) {
+		listeners.forEach(e -> e.update(event));
+	}
+
 	public void start() {
 		running = true;
+		fireGameEvent(new GameEvent(GameEvent.Type.START));
 	}
 
 	public void stop() {
 		running = false;
+		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
+	}
+
+	public boolean isRunning() {
+		return running;
 	}
 
 	public void update(Update update) {
@@ -34,6 +42,7 @@ public class Game {
 
 	public void addPlayer(Player player) {
 		players.add(player);
+		fireGameEvent(new GameEvent(GameEvent.Type.NEW_PLAYER));
 	}
 
 	public List<Player> getPlayers() {
@@ -41,8 +50,11 @@ public class Game {
 	}
 
 	public void setBoard(Board board) {
-		// TODO: should not be possible while the game is still running
+		if (running) {
+			throw new RuntimeException("can't set board on a running game!");
+		}
 		this.board = board;
+		fireGameEvent(new GameEvent(GameEvent.Type.BOARD));
 	}
 
 	public Board getBoard() {
