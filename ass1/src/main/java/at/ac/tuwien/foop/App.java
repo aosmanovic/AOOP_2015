@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.NettyClient;
-import at.ac.tuwien.foop.client.model.Game;
+import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.server.NettyServer;
 
 public class App {

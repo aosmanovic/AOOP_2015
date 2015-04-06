@@ -20,8 +20,8 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.model.Game;
-import at.ac.tuwien.foop.client.model.GameEvent.Type;
+import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.GameEvent.Type;
 import at.ac.tuwien.foop.message.MessageEncoder;
 
 public class NettyClient implements Runnable {

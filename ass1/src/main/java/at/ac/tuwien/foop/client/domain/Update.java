@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.model;
+package at.ac.tuwien.foop.client.domain;
 
 import at.ac.tuwien.foop.message.UpdateMessage;
 

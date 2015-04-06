@@ -6,10 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.model.Board;
-import at.ac.tuwien.foop.client.model.Game;
-import at.ac.tuwien.foop.client.model.Player;
-import at.ac.tuwien.foop.client.model.Update;
+import at.ac.tuwien.foop.client.domain.Board;
+import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.domain.Player;
+import at.ac.tuwien.foop.client.domain.Update;
 import at.ac.tuwien.foop.message.BoardMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.NewPlayerMessage;
@@ -55,6 +55,9 @@ public class ClientHandler extends ChannelHandlerAdapter {
 					UpdateMessage.class)));
 		} else if (m.type == Type.S_JOINED) {
 			// TODO: check if needed?
+		} else if (m.type == Type.S_ALREADY_FULL) {
+			log.debug("game already full");
+			// TODO: somehow inform the ui
 		} else {
 			log.warn("unknown message");
 		}

@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.model;
+package at.ac.tuwien.foop.client.events;
 
 public class GameEvent {
 	public enum Type {

@@ -4,6 +4,10 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import at.ac.tuwien.foop.client.domain.Board;
+import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.GameEvent;
+
 public class GameTest {
 	@Test
 	public void testSetBoard_whileRunning_shouldThrowRuntimeException() {

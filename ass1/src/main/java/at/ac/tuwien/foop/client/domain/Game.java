@@ -1,7 +1,10 @@
-package at.ac.tuwien.foop.client.model;
+package at.ac.tuwien.foop.client.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.client.events.GameEventListener;
 
 public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();

@@ -3,7 +3,7 @@ package at.ac.tuwien.foop.client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.model.Game;
+import at.ac.tuwien.foop.client.domain.Game;
 
 public class Client {
 	private static Logger log = LoggerFactory.getLogger(Client.class);

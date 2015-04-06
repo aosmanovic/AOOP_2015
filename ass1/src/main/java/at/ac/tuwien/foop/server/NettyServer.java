@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.message.MessageEncoder;
-import at.ac.tuwien.foop.server.model.Game;
+import at.ac.tuwien.foop.server.domain.Game;
 
 public class NettyServer implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyServer.class);

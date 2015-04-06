@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.message.JoinMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.Message.Type;
-import at.ac.tuwien.foop.server.model.Game;
-import at.ac.tuwien.foop.server.model.Player;
+import at.ac.tuwien.foop.server.domain.Game;
+import at.ac.tuwien.foop.server.domain.Player;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -39,8 +39,11 @@ public class GameHandler extends ChannelHandlerAdapter {
 			if (player == null) {
 				player = new Player(jm.name);
 			}
-			game.join(player);
-			ctx.writeAndFlush(new Message(Type.S_JOINED));
+			if (game.join(player)) {
+				ctx.writeAndFlush(new Message(Type.S_JOINED));
+			} else {
+				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
+			}
 		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));

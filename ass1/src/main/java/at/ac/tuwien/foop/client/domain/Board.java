@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.model;
+package at.ac.tuwien.foop.client.domain;
 
 public class Board {
 	public static Board createBoard(String str) {
