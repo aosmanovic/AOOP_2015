@@ -11,7 +11,7 @@ public class Client {
 	public void run() {
 		log.info("start system");
 		Game game = new Game();
-		new NettyClient(game).run();
+		new NettyClient(game, "localhost", 20150).run();
 	}
 
 	public static void main(String[] args) {

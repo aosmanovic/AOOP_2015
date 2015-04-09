@@ -35,6 +35,12 @@ public class Game {
 		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
 	}
 
+	// TODO: has actually nothing to do with the game but with the client, so move it there..!?
+	public void disconnect() {
+		running = false;
+		fireGameEvent(new GameEvent(GameEvent.Type.DISCONNECT));
+	}
+	
 	public boolean isRunning() {
 		return running;
 	}
@@ -62,6 +68,11 @@ public class Game {
 
 	public Board getBoard() {
 		return board;
+	}
+
+	// TODO: not a ame method aswell but who cares atm :D
+	public void ping() {
+		fireGameEvent(new GameEvent(GameEvent.Type.PING));		
 	}
 }
 

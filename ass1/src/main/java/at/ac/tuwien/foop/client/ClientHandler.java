@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -10,6 +11,8 @@ import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.domain.Update;
+import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.message.BoardMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.NewPlayerMessage;
@@ -18,22 +21,27 @@ import at.ac.tuwien.foop.message.Message.Type;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ClientHandler extends ChannelHandlerAdapter {
+public class ClientHandler extends ChannelHandlerAdapter implements
+		GameEventListener {
 	private static Logger log = LoggerFactory.getLogger(ClientHandler.class);
 
 	private Game game;
 	private ObjectMapper mapper = new ObjectMapper();
+	private Channel channel;
 
 	public ClientHandler(Game game) {
 		this.game = game;
+		game.addGameEventListener(this);
 	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.info("send ping");
 		ctx.writeAndFlush(new Message(Type.C_PING));
+		channel = ctx.channel();
 	}
 
+	// messages from the server
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
@@ -60,6 +68,16 @@ public class ClientHandler extends ChannelHandlerAdapter {
 			// TODO: somehow inform the ui
 		} else {
 			log.warn("unknown message");
+		}
+	}
+
+	// messages from the game
+	@Override
+	public void update(GameEvent e) {
+		if (e.type == GameEvent.Type.DISCONNECT) {
+			channel.close();
+		} else if (e.type == GameEvent.Type.PING){
+			channel.writeAndFlush(new Message(Type.C_PING));
 		}
 	}
 }

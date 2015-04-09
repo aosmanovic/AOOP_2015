@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.events.GameEvent.Type;
 import at.ac.tuwien.foop.message.MessageEncoder;
 
 public class NettyClient implements Runnable {
@@ -36,11 +35,14 @@ public class NettyClient implements Runnable {
 	private int retry = 0;
 	private EventLoopGroup workerGroup = new NioEventLoopGroup();
 	private Channel channel;
+	private boolean connected = false;
 
 	private Game game;
 
-	public NettyClient(Game game) {
+	public NettyClient(Game game, String host, int port) {
 		this.game = game;
+		this.host = host;
+		this.port = port;
 	}
 
 	public void run() {
@@ -62,14 +64,29 @@ public class NettyClient implements Runnable {
 					}
 				});
 		connect(bootstrap);
+		
+		// wait till the connection process is done
 		try {
 			latch.await();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		// if connected then wait
+		if (connected) {
+			try {
+				log.debug("connected, and waiting for close signal...");
+				channel.closeFuture().sync();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			log.debug("client channel closed!");
+			connected = false;
+		}
+		
 		workerGroup.shutdownGracefully();
-		log.info("_client done..");
+		log.info("client down");
 	}
 
 	private ChannelFuture connect(Bootstrap bootstrap) {
@@ -97,16 +114,8 @@ public class NettyClient implements Runnable {
 					connect(bootstrap);
 				} else {
 					// connected
+					connected = true;
 					channel = future.channel();
-
-					// close on close event
-					game.addGameEventListener(e -> {
-						if (e.type == Type.CLOSE)
-							channel.close();
-					});
-
-					// wait for close future
-					future.channel().closeFuture().sync();
 					latch.countDown();
 				}
 			}

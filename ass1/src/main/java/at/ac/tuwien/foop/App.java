@@ -16,7 +16,7 @@ public class App {
 	public App() {
 		log.info("start system");
 		server = new Thread(new NettyServer());
-		client = new Thread(new NettyClient(new Game()));
+		client = new Thread(new NettyClient(new Game(), "localhost", 20150));
 	}
 
 	public void run() {
