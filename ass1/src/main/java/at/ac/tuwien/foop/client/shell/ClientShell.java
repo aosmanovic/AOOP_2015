@@ -5,18 +5,21 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import asg.cliche.Command;
 import asg.cliche.Param;
 import asg.cliche.ShellFactory;
+import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.service.GameService;
 
 public class ClientShell {
 	private static Logger log = LoggerFactory.getLogger(ClientShell.class);
 
 	private NettyClient client = null;
 	private Game game = null;
+	private ClientHandler core = null;
+	private GameService service = new GameService();
 
 	// public ClientShell() {
 	// }
@@ -30,7 +33,8 @@ public class ClientShell {
 		}
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
-		client = new NettyClient(game, "localhost", 20150);
+		core = new ClientHandler(game);
+		client = new NettyClient(core, "localhost", 20150);
 		new Thread(client, "Network-Layer-Thread").start();
 	}
 
@@ -41,8 +45,9 @@ public class ClientShell {
 			return;
 		}
 		log.debug("disconnect from server");
-		game.disconnect();
+		service.disconnect(game, core);
 		game = null;
+		core = null;
 		client = null;
 	}
 
@@ -53,7 +58,7 @@ public class ClientShell {
 			return;
 		}
 		log.debug("join a game");
-		throw new NotImplementedException();
+		service.join(game, core);
 	}
 
 	@Command(description = "show some system information")
@@ -61,7 +66,7 @@ public class ClientShell {
 		log.info("show some system information");
 		log.info("--- game -------------------");
 		if (game != null) {
-			log.info("running: {}", game.isRunning());
+			log.info("running: {}", game.running());
 		}
 		log.debug("--- threads ----------------");
 		Thread[] threads = new Thread[10];
@@ -80,7 +85,7 @@ public class ClientShell {
 			return;
 		}
 		log.debug("send a ping");
-		game.ping();
+		service.ping(core);
 	}
 
 	public static void main(String[] args) throws IOException {

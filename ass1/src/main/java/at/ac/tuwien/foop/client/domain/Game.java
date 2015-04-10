@@ -3,13 +3,15 @@ package at.ac.tuwien.foop.client.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 
 public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();
 
-	private boolean running;
+	private boolean running = false;
+	private boolean joined = false;
 	private List<Player> players;
 	private Board board;
 
@@ -35,18 +37,17 @@ public class Game {
 		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
 	}
 
-	// TODO: has actually nothing to do with the game but with the client, so move it there..!?
-	public void disconnect() {
-		running = false;
-		fireGameEvent(new GameEvent(GameEvent.Type.DISCONNECT));
+	public void join() {
+		joined = true;
 	}
-	
-	public boolean isRunning() {
+
+	public boolean running() {
 		return running;
 	}
 
 	public void update(Update update) {
 		// TODO: implement
+		throw new NotImplementedException();
 	}
 
 	public void addPlayer(Player player) {
@@ -70,10 +71,7 @@ public class Game {
 		return board;
 	}
 
-	// TODO: not a ame method aswell but who cares atm :D
-	public void ping() {
-		fireGameEvent(new GameEvent(GameEvent.Type.PING));		
+	public boolean joined() {
+		return joined;
 	}
 }
-
-// messages: add player, start game, gameover, player left

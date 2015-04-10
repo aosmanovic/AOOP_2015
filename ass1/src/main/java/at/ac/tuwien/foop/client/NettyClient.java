@@ -20,7 +20,6 @@ import java.util.concurrent.CountDownLatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.message.MessageEncoder;
 
 public class NettyClient implements Runnable {
@@ -37,12 +36,15 @@ public class NettyClient implements Runnable {
 	private Channel channel;
 	private boolean connected = false;
 
-	private Game game;
+//	private Game game;
 
-	public NettyClient(Game game, String host, int port) {
-		this.game = game;
+	private ClientHandler clientHandler;
+
+	public NettyClient(ClientHandler clientHandler, String host, int port) {
+//		this.game = game;
 		this.host = host;
 		this.port = port;
+		this.clientHandler = clientHandler;
 	}
 
 	public void run() {
@@ -60,7 +62,7 @@ public class NettyClient implements Runnable {
 						ch.pipeline().addLast(
 								new StringEncoder(CharsetUtil.UTF_8));
 						ch.pipeline().addLast(new MessageEncoder());
-						ch.pipeline().addLast(new ClientHandler(game));
+						ch.pipeline().addLast(clientHandler);
 					}
 				});
 		connect(bootstrap);

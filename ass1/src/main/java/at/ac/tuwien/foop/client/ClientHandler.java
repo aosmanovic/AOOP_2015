@@ -7,22 +7,23 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.domain.Update;
-import at.ac.tuwien.foop.client.events.GameEvent;
-import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.client.domain.Wind;
+import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.message.BoardMessage;
 import at.ac.tuwien.foop.message.Message;
+import at.ac.tuwien.foop.message.Message.Type;
 import at.ac.tuwien.foop.message.NewPlayerMessage;
 import at.ac.tuwien.foop.message.UpdateMessage;
-import at.ac.tuwien.foop.message.Message.Type;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientHandler extends ChannelHandlerAdapter implements
-		GameEventListener {
+		GameCore {
 	private static Logger log = LoggerFactory.getLogger(ClientHandler.class);
 
 	private Game game;
@@ -31,7 +32,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 
 	public ClientHandler(Game game) {
 		this.game = game;
-		game.addGameEventListener(this);
+//		game.addGameEventListener(this);
 	}
 
 	@Override
@@ -62,22 +63,36 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 			game.update(Update.createUpdate(mapper.readValue(str,
 					UpdateMessage.class)));
 		} else if (m.type == Type.S_JOINED) {
-			// TODO: check if needed?
+			game.join();
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
-			// TODO: somehow inform the ui
 		} else {
 			log.warn("unknown message");
 		}
 	}
 
-	// messages from the game
 	@Override
-	public void update(GameEvent e) {
-		if (e.type == GameEvent.Type.DISCONNECT) {
-			channel.close();
-		} else if (e.type == GameEvent.Type.PING){
-			channel.writeAndFlush(new Message(Type.C_PING));
-		}
+	public void join() {
+		channel.writeAndFlush(new Message(Type.C_JOIN));
+	}
+
+	@Override
+	public void leave() {
+		channel.writeAndFlush(new Message(Type.C_LEAVE));
+	}
+
+	@Override
+	public void disconnect() {
+		channel.close();
+	}
+
+	@Override
+	public void sendWind(Wind wind) {
+		throw new NotImplementedException();
+	}
+
+	@Override
+	public void ping() {
+		channel.writeAndFlush(new Message(Type.C_PING));
 	}
 }
