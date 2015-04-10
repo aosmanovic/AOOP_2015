@@ -61,6 +61,16 @@ public class ClientShell {
 		service.join(game, core, name);
 	}
 
+	@Command(description = "leave the current game")
+	public void leave() {
+		if (client == null) {
+			log.warn("not connected!");
+			return;
+		}
+		log.debug("leave the current game");
+		service.leave(game, core);
+	}
+
 	@Command(description = "show some system information")
 	public void show() {
 		log.info("show some system information");
