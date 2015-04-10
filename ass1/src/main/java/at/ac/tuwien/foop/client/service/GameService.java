@@ -4,18 +4,18 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Wind;
 
 public class GameService {
-	public void join(Game game, GameCore core) {
+	public void join(Game game, GameCore core, String name) {
 		if (game.joined()) {
 			throw new IllegalStateException();
 		}
-		core.join();
+		core.join(name);
 	}
 
 	public void leave(Game game, GameCore core) {
 		if (!game.joined()) {
 			throw new IllegalStateException();
 		}
-		core.join();
+		core.leave();
 	}
 
 	public void disconnect(Game game, GameCore core) {

@@ -7,7 +7,7 @@ public class JoinMessage {
 	public final String name;
 
 	@JsonCreator
-	private JoinMessage(@JsonProperty("name") String name) {
+	public JoinMessage(@JsonProperty("name") String name) {
 		this.name = name;
 	}
 }

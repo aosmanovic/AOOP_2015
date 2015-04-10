@@ -15,6 +15,7 @@ import at.ac.tuwien.foop.client.domain.Update;
 import at.ac.tuwien.foop.client.domain.Wind;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.message.BoardMessage;
+import at.ac.tuwien.foop.message.JoinMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.Message.Type;
 import at.ac.tuwien.foop.message.NewPlayerMessage;
@@ -72,8 +73,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 	}
 
 	@Override
-	public void join() {
-		channel.writeAndFlush(new Message(Type.C_JOIN));
+	public void join(String name) {
+		channel.writeAndFlush(new JoinMessage(name));
 	}
 
 	@Override

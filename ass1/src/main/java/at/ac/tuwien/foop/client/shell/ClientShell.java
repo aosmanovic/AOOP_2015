@@ -52,13 +52,13 @@ public class ClientShell {
 	}
 
 	@Command(description = "join a game")
-	public void join() {
+	public void join(String name) {
 		if (client == null) {
 			log.warn("not connected!");
 			return;
 		}
 		log.debug("join a game");
-		service.join(game, core);
+		service.join(game, core, name);
 	}
 
 	@Command(description = "show some system information")
