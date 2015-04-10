@@ -1,14 +1,13 @@
-package at.ac.tuwien.foop.message;
+package at.ac.tuwien.foop.message.server;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class JoinMessage extends Message {
+public class NewPlayerMessage {
 	public final String name;
 
 	@JsonCreator
-	public JoinMessage(@JsonProperty("name") String name) {
-		super(Type.C_JOIN);
+	public NewPlayerMessage(@JsonProperty("name") String name) {
 		this.name = name;
 	}
 }

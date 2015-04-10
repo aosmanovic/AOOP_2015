@@ -1,6 +1,8 @@
-package at.ac.tuwien.foop.message;
+package at.ac.tuwien.foop.message.server;
 
 import java.util.UUID;
+
+import at.ac.tuwien.foop.message.Message;
 
 public class BoardMessage extends Message {
 	public final String fields;

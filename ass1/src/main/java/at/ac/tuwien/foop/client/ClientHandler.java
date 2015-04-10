@@ -7,19 +7,19 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.domain.Update;
 import at.ac.tuwien.foop.client.domain.Wind;
 import at.ac.tuwien.foop.client.service.GameCore;
-import at.ac.tuwien.foop.message.BoardMessage;
-import at.ac.tuwien.foop.message.JoinMessage;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.Message.Type;
-import at.ac.tuwien.foop.message.NewPlayerMessage;
-import at.ac.tuwien.foop.message.UpdateMessage;
+import at.ac.tuwien.foop.message.client.JoinMessage;
+import at.ac.tuwien.foop.message.client.WindMessage;
+import at.ac.tuwien.foop.message.server.BoardMessage;
+import at.ac.tuwien.foop.message.server.NewPlayerMessage;
+import at.ac.tuwien.foop.message.server.UpdateMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -33,7 +33,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 
 	public ClientHandler(Game game) {
 		this.game = game;
-//		game.addGameEventListener(this);
 	}
 
 	@Override
@@ -43,7 +42,9 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 		channel = ctx.channel();
 	}
 
+
 	// messages from the server
+
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
 			throws Exception {
@@ -72,6 +73,9 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 		}
 	}
 
+
+	// client requests
+
 	@Override
 	public void join(String name) {
 		channel.writeAndFlush(new JoinMessage(name));
@@ -89,7 +93,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 
 	@Override
 	public void sendWind(Wind wind) {
-		throw new NotImplementedException();
+		channel.writeAndFlush(new WindMessage(wind));
 	}
 
 	@Override

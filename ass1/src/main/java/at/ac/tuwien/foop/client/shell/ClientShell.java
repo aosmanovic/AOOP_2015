@@ -11,6 +11,8 @@ import asg.cliche.ShellFactory;
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.domain.Wind;
+import at.ac.tuwien.foop.client.domain.Wind.Direction;
 import at.ac.tuwien.foop.client.service.GameService;
 
 public class ClientShell {
@@ -71,12 +73,23 @@ public class ClientShell {
 		service.leave(game, core);
 	}
 
+	@Command(description = "send a wind")
+	public void wind(String direction, int strength) {
+		if (client == null) {
+			log.warn("not connected!");
+			return;
+		}
+		log.debug("send a wind");
+		service.sendWind(game, core, new Wind(Direction.valueOf(direction.toUpperCase()), strength));
+	}
+	
 	@Command(description = "show some system information")
 	public void show() {
 		log.info("show some system information");
 		log.info("--- game -------------------");
 		if (game != null) {
 			log.info("running: {}", game.running());
+			log.info("joined: {}", game.joined());
 		}
 		log.debug("--- threads ----------------");
 		Thread[] threads = new Thread[10];
