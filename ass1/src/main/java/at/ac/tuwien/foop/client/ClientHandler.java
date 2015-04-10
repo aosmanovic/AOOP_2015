@@ -19,6 +19,7 @@ import at.ac.tuwien.foop.message.client.JoinMessage;
 import at.ac.tuwien.foop.message.client.WindMessage;
 import at.ac.tuwien.foop.message.server.BoardMessage;
 import at.ac.tuwien.foop.message.server.NewPlayerMessage;
+import at.ac.tuwien.foop.message.server.UnknownMessage;
 import at.ac.tuwien.foop.message.server.UpdateMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -68,6 +69,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 			game.join();
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
+		} else if (m.type == Type.S_UNKNOWN) {
+			log.warn("the server does not know the message '{}'", mapper.readValue(str,	UnknownMessage.class).unknownType);
 		} else {
 			log.warn("unknown message");
 		}

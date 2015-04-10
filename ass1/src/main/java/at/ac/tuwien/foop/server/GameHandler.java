@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.message.Message;
 import at.ac.tuwien.foop.message.Message.Type;
 import at.ac.tuwien.foop.message.client.JoinMessage;
+import at.ac.tuwien.foop.message.server.UnknownMessage;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.domain.Player;
 
@@ -46,7 +47,7 @@ public class GameHandler extends ChannelHandlerAdapter {
 			}
 		} else {
 			log.warn("unknown message");
-			ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
+			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
 	}
 

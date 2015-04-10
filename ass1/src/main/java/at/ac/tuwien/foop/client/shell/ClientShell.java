@@ -23,9 +23,6 @@ public class ClientShell {
 	private ClientHandler core = null;
 	private GameService service = new GameService();
 
-	// public ClientShell() {
-	// }
-
 	@Command(description = "conntect to a server")
 	public void connect(@Param(name = "host") String host,
 			@Param(name = "port") String port) {
