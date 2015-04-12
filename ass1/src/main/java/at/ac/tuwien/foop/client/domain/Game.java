@@ -24,7 +24,7 @@ public class Game {
 	}
 
 	public void fireGameEvent(GameEvent event) {
-		listeners.forEach(e -> e.update(event));
+		listeners.forEach(e -> e.onUpdate(event));
 	}
 
 	public void start() {

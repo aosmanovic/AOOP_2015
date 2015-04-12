@@ -3,7 +3,6 @@ package at.ac.tuwien.foop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.server.NettyServer;
@@ -17,7 +16,7 @@ public class App {
 	public App() {
 		log.info("start system");
 		server = new Thread(new NettyServer());
-		client = new Thread(new NettyClient(new ClientHandler(new Game()), "localhost", 20150));
+		client = new Thread(new NettyClient(new Game(), "localhost", 20150));
 	}
 
 	public void run() {

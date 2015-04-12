@@ -18,28 +18,34 @@ import at.ac.tuwien.foop.client.service.GameService;
 public class ClientShell {
 	private static Logger log = LoggerFactory.getLogger(ClientShell.class);
 
-	private NettyClient client = null;
 	private Game game = null;
 	private ClientHandler core = null;
 	private GameService service = new GameService();
 
+	
+	// TODO: remove
+	@Command
+	public void c() {
+		connect("localhost", "20150");
+	}
+	
 	@Command(description = "conntect to a server")
 	public void connect(@Param(name = "host") String host,
 			@Param(name = "port") String port) {
-		if (client != null) {
+		if (core != null) {
 			log.warn("client already connected!");
 			return;
 		}
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
-		core = new ClientHandler(game);
-		client = new NettyClient(core, "localhost", 20150);
-		new Thread(client, "Network-Layer-Thread").start();
+		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
+		c.addConnectListener(e -> core = e.getClientHandler());
+		new Thread(c, "Network-Layer-Thread").start();
 	}
 
 	@Command(description = "disconnect from server")
 	public void disconnect() {
-		if (client == null) {
+		if (core == null) {
 			log.warn("not connected!");
 			return;
 		}
@@ -47,12 +53,11 @@ public class ClientShell {
 		service.disconnect(game, core);
 		game = null;
 		core = null;
-		client = null;
 	}
 
 	@Command(description = "join a game")
 	public void join(String name) {
-		if (client == null) {
+		if (core == null) {
 			log.warn("not connected!");
 			return;
 		}
@@ -62,7 +67,7 @@ public class ClientShell {
 
 	@Command(description = "leave the current game")
 	public void leave() {
-		if (client == null) {
+		if (core == null) {
 			log.warn("not connected!");
 			return;
 		}
@@ -72,7 +77,7 @@ public class ClientShell {
 
 	@Command(description = "send a wind")
 	public void wind(String direction, int strength) {
-		if (client == null) {
+		if (core == null) {
 			log.warn("not connected!");
 			return;
 		}
@@ -84,9 +89,10 @@ public class ClientShell {
 	public void show() {
 		log.info("show some system information");
 		log.info("--- game -------------------");
+		log.info("connected: {}", core != null);
 		if (game != null) {
-			log.info("running: {}", game.running());
 			log.info("joined: {}", game.joined());
+			log.info("running: {}", game.running());
 		}
 		log.debug("--- threads ----------------");
 		Thread[] threads = new Thread[10];
@@ -100,7 +106,7 @@ public class ClientShell {
 
 	@Command(description = "send a ping")
 	public void ping() {
-		if (client == null) {
+		if (core == null) {
 			log.warn("not connected!");
 			return;
 		}
