@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.domain;
+package at.ac.tuwien.foop.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

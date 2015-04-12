@@ -11,9 +11,9 @@ import asg.cliche.ShellFactory;
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.domain.Wind;
-import at.ac.tuwien.foop.client.domain.Wind.Direction;
 import at.ac.tuwien.foop.client.service.GameService;
+import at.ac.tuwien.foop.domain.Wind;
+import at.ac.tuwien.foop.domain.Wind.Direction;
 
 public class ClientShell {
 	private static Logger log = LoggerFactory.getLogger(ClientShell.class);

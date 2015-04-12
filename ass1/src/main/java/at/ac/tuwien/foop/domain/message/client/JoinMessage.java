@@ -1,6 +1,6 @@
-package at.ac.tuwien.foop.message.client;
+package at.ac.tuwien.foop.domain.message.client;
 
-import at.ac.tuwien.foop.message.Message;
+import at.ac.tuwien.foop.domain.message.Message;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

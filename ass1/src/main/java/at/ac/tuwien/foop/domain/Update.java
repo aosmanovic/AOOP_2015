@@ -1,6 +1,6 @@
-package at.ac.tuwien.foop.client.domain;
+package at.ac.tuwien.foop.domain;
 
-import at.ac.tuwien.foop.message.server.UpdateMessage;
+import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 
 public class Update {
 

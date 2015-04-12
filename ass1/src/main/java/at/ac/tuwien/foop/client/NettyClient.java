@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
-import at.ac.tuwien.foop.message.MessageEncoder;
+import at.ac.tuwien.foop.domain.message.MessageEncoder;
 
 public class NettyClient implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyClient.class);

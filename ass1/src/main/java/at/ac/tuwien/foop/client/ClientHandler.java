@@ -10,17 +10,17 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
-import at.ac.tuwien.foop.client.domain.Update;
-import at.ac.tuwien.foop.client.domain.Wind;
 import at.ac.tuwien.foop.client.service.GameCore;
-import at.ac.tuwien.foop.message.Message;
-import at.ac.tuwien.foop.message.Message.Type;
-import at.ac.tuwien.foop.message.client.JoinMessage;
-import at.ac.tuwien.foop.message.client.WindMessage;
-import at.ac.tuwien.foop.message.server.BoardMessage;
-import at.ac.tuwien.foop.message.server.NewPlayerMessage;
-import at.ac.tuwien.foop.message.server.UnknownMessage;
-import at.ac.tuwien.foop.message.server.UpdateMessage;
+import at.ac.tuwien.foop.domain.Update;
+import at.ac.tuwien.foop.domain.Wind;
+import at.ac.tuwien.foop.domain.message.Message;
+import at.ac.tuwien.foop.domain.message.Message.Type;
+import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.client.WindMessage;
+import at.ac.tuwien.foop.domain.message.server.BoardMessage;
+import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
+import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
+import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

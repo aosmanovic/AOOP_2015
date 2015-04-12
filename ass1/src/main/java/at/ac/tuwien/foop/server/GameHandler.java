@@ -6,10 +6,10 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.message.Message;
-import at.ac.tuwien.foop.message.Message.Type;
-import at.ac.tuwien.foop.message.client.JoinMessage;
-import at.ac.tuwien.foop.message.server.UnknownMessage;
+import at.ac.tuwien.foop.domain.message.Message;
+import at.ac.tuwien.foop.domain.message.Message.Type;
+import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.domain.Player;
 

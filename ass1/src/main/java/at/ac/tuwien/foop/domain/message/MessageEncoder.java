@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.message;
+package at.ac.tuwien.foop.domain.message;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;

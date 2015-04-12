@@ -1,7 +1,7 @@
 package at.ac.tuwien.foop.client.service;
 
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.domain.Wind;
+import at.ac.tuwien.foop.domain.Wind;
 
 public class GameService {
 	public void join(Game game, GameCore core, String name) {

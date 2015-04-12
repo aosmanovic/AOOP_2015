@@ -15,7 +15,7 @@ import io.netty.util.CharsetUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.message.MessageEncoder;
+import at.ac.tuwien.foop.domain.message.MessageEncoder;
 import at.ac.tuwien.foop.server.domain.Game;
 
 public class NettyServer implements Runnable {

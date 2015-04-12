@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.message;
+package at.ac.tuwien.foop.domain.message;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
