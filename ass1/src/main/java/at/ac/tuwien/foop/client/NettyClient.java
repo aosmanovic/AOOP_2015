@@ -29,8 +29,8 @@ import at.ac.tuwien.foop.message.MessageEncoder;
 public class NettyClient implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyClient.class);
 
-	private final int MAX_RETRY = 10;
-	private final int RETRY_TIME_MS = 3000;
+	private final int MAX_RETRY = 5;
+	private final int RETRY_TIME_MS = 4000;
 
 	private CountDownLatch latch;
 	private String host;
@@ -113,6 +113,22 @@ public class NettyClient implements Runnable {
 		log.info("client down");
 	}
 
+	private void connect(Bootstrap bootstrap) {
+		log.debug("connect to {}:{}", host, port);
+		ChannelFuture future = bootstrap.connect(host, port);
+		future.addListener(new ChannelFutureListener() {
+			@Override
+			public void operationComplete(ChannelFuture future)
+					throws Exception {
+				log.info("connection operation completed...");
+				if (future.isSuccess()) {
+					channel = future.channel();
+				}
+				latch.countDown();
+			}
+		});
+	}
+
 	public void addConnectListener(ConnectListener l) {
 		connectListeners.add(l);
 	}
@@ -122,26 +138,7 @@ public class NettyClient implements Runnable {
 	}
 
 	private void fireConnectEvent() {
-		log.debug("## fire connect! ##");
 		connectListeners.forEach(e -> e.onConnect(this));
-	}
-
-	private ChannelFuture connect(Bootstrap bootstrap) {
-		log.debug("connect to {}:{}", host, port);
-		ChannelFuture future = bootstrap.connect(host, port);
-		future.addListener(new ChannelFutureListener() {
-			@Override
-			public void operationComplete(ChannelFuture future)
-					throws Exception {
-				log.info("connection operation completed...");
-				if (future.isSuccess()) {
-					// connected
-					channel = future.channel();
-				}
-				latch.countDown();
-			}
-		});
-		return future;
 	}
 
 	public ClientHandler getClientHandler() {
