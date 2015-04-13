@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.model.Game;
+import at.ac.tuwien.foop.client.model.GameEvent.Type;
 import at.ac.tuwien.foop.message.MessageEncoder;
 
 public class NettyClient implements Runnable {
@@ -34,6 +36,7 @@ public class NettyClient implements Runnable {
 	private final CountDownLatch latch = new CountDownLatch(1);
 	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 	private int retry = 0;
+	private Channel channel;
 
 	private Game game;
 
@@ -79,18 +82,31 @@ public class NettyClient implements Runnable {
 					throws Exception {
 				log.info("connection operation completed...");
 				if (!future.isSuccess()) {
+					// give up
 					if (retry >= MAX_RETRY) {
 						log.warn("could not connect to server, give up :(!");
 						latch.countDown();
 						future.channel().close();
 						return;
 					}
+
+					// retry
 					retry++;
 					log.warn("could not connect, will retry ({}/{})!", retry,
 							MAX_RETRY);
 					Thread.sleep(RETRY_TIME_MS);
 					connect(bootstrap);
 				} else {
+					// connected
+					channel = future.channel();
+
+					// close on close event
+					game.addGameEventListener(e -> {
+						if (e.type == Type.CLOSE)
+							channel.close();
+					});
+
+					// wait for close future
 					future.channel().closeFuture().sync();
 					latch.countDown();
 				}

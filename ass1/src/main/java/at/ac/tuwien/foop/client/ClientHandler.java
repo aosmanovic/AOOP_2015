@@ -6,8 +6,14 @@ import io.netty.channel.ChannelHandlerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.client.model.Board;
 import at.ac.tuwien.foop.client.model.Game;
+import at.ac.tuwien.foop.client.model.Player;
+import at.ac.tuwien.foop.client.model.Update;
+import at.ac.tuwien.foop.message.BoardMessage;
 import at.ac.tuwien.foop.message.Message;
+import at.ac.tuwien.foop.message.NewPlayerMessage;
+import at.ac.tuwien.foop.message.UpdateMessage;
 import at.ac.tuwien.foop.message.Message.Type;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +23,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 
 	private Game game;
 	private ObjectMapper mapper = new ObjectMapper();
-	
+
 	public ClientHandler(Game game) {
 		this.game = game;
 	}
@@ -25,7 +31,7 @@ public class ClientHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		log.info("send ping");
-		ctx.writeAndFlush(new Message(Type.ping));
+		ctx.writeAndFlush(new Message(Type.C_PING));
 	}
 
 	@Override
@@ -36,10 +42,19 @@ public class ClientHandler extends ChannelHandlerAdapter {
 
 		Message m = mapper.readValue(str, Message.class);
 
-		if (m.type == Type.pong) {
+		if (m.type == Type.S_PONG) {
 			log.info("yay, got a pong!");
-			// TODO: should be triggered by the UI
-			ctx.channel().close();
+		} else if (m.type == Type.S_NEWPLAYER) {
+			game.addPlayer(new Player(mapper.readValue(str,
+					NewPlayerMessage.class).name, null)); // TODO, set coordinates
+		} else if (m.type == Type.S_BOARD) {
+			game.setBoard(Board.createBoard(mapper.readValue(str,
+					BoardMessage.class).fields));
+		} else if (m.type == Type.S_UPDATE) {
+			game.update(Update.createUpdate(mapper.readValue(str,
+					UpdateMessage.class)));
+		} else if (m.type == Type.S_JOINED) {
+			// TODO: check if needed?
 		} else {
 			log.warn("unknown message");
 		}

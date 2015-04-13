@@ -32,18 +32,18 @@ public class GameHandler extends ChannelHandlerAdapter {
 
 		Message m = mapper.readValue(str, Message.class);
 
-		if (m.type == Type.ping) {
-			ctx.writeAndFlush(new Message(Type.pong));
-		} else if (m.type == Type.join) {
+		if (m.type == Type.C_PING) {
+			ctx.writeAndFlush(new Message(Type.S_PONG));
+		} else if (m.type == Type.C_JOIN) {
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
 			if (player == null) {
 				player = new Player(jm.name);
 			}
 			game.join(player);
-			ctx.writeAndFlush(new Message(Type.joined));
+			ctx.writeAndFlush(new Message(Type.S_JOINED));
 		} else {
 			log.warn("unknown message");
-			ctx.writeAndFlush(new Message(Type.already_full));
+			ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 		}
 	}
 

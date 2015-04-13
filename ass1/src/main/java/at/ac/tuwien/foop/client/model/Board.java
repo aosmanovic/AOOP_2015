@@ -5,7 +5,8 @@ import java.util.Objects;
 import org.apache.commons.lang3.Validate;
 
 public class Board {
-	public static enum Field { // TODO: just an example.. move to a separate file
+	public static enum Field { // TODO: just an example.. move to a separate
+								// file
 		wall, start, end
 	}
 
@@ -18,8 +19,9 @@ public class Board {
 	 */
 	public void generateFields(String fieldString, int width) {
 		Objects.requireNonNull(fieldString);
-		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'", width);
-		
+		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
+				width);
+
 		if (fieldString.length() % width != 0) {
 			throw new RuntimeException(
 					"field length does not match board width!");
@@ -43,5 +45,10 @@ public class Board {
 				j++;
 			}
 		}
+	}
+
+	public static Board createBoard(String str) {
+		// TODO: implement!
+		return null;
 	}
 }
