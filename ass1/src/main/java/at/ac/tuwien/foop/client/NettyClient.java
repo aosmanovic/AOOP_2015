@@ -31,12 +31,13 @@ public class NettyClient implements Runnable {
 
 	private final int MAX_RETRY = 5;
 	private final int RETRY_TIME_MS = 4000;
+	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
 	private CountDownLatch latch;
 	private String host;
 	private int port;
+
 	private int retry = 0;
-	private EventLoopGroup workerGroup = new NioEventLoopGroup();
 	private Channel channel;
 	private List<ConnectListener> connectListeners = new ArrayList<>();
 

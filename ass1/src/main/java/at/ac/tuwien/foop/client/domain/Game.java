@@ -3,7 +3,6 @@ package at.ac.tuwien.foop.client.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.domain.Update;
@@ -15,6 +14,10 @@ public class Game {
 	private boolean joined = false;
 	private List<Player> players;
 	private Board board;
+
+	public void board(Board board) {
+		this.board = board;
+	}
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -48,7 +51,7 @@ public class Game {
 
 	public void update(Update update) {
 		// TODO: implement
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException("not implemented yet");
 	}
 
 	public void addPlayer(Player player) {

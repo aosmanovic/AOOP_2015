@@ -58,7 +58,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(new Player(mapper.readValue(str,
-					NewPlayerMessage.class).name));
+					NewPlayerMessage.class).name, null)); // TODO, set coordinates
 		} else if (m.type == Type.S_BOARD) {
 			game.setBoard(Board.createBoard(mapper.readValue(str,
 					BoardMessage.class).fields));

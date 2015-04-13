@@ -1,7 +1,6 @@
 package at.ac.tuwien.foop.client.model;
 
-import junit.framework.Assert;
-
+import org.junit.Assert;
 import org.junit.Test;
 
 import at.ac.tuwien.foop.client.domain.Board;
@@ -25,7 +24,8 @@ public class GameTest {
 	@Test
 	public void testSetBoard_whithListener_shouldFireEvent() {
 		Game g = new Game();
-		g.addGameEventListener(e -> Assert.assertEquals(GameEvent.Type.BOARD, e.type));
+		g.addGameEventListener(e -> Assert.assertEquals(GameEvent.Type.BOARD,
+				e.type));
 		g.setBoard(new Board());
 	}
 }

@@ -1,9 +1,19 @@
 package at.ac.tuwien.foop.client.domain;
 
 public class Player {
-	public final String name;
+	private final String name;
+	private Coordinates coordinates;
 
-	public Player(String name) {
+	public Player(String name, Coordinates coordinates) {
 		this.name = name;
+		this.coordinates = coordinates;
+	}
+
+	public String name() {
+		return name;
+	}
+
+	public Coordinates coordinates() {
+		return coordinates;
 	}
 }
