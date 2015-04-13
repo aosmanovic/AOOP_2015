@@ -21,14 +21,15 @@ import at.ac.tuwien.foop.server.domain.Game;
 public class NettyServer implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyServer.class);
 
+	private final EventLoopGroup dispatcherGroup = new NioEventLoopGroup();
+	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+
 	private int port = 20150;
 
 	public void run() {
 		log.info("run server");
 		final Game game = new Game();
 
-		EventLoopGroup dispatcherGroup = new NioEventLoopGroup();
-		EventLoopGroup workerGroup = new NioEventLoopGroup();
 		try {
 			ServerBootstrap bootstrap = new ServerBootstrap();
 			bootstrap.group(dispatcherGroup, workerGroup)
@@ -50,12 +51,18 @@ public class NettyServer implements Runnable {
 						}
 					});
 
+			log.debug("waiting for all channels to be closed!?");
 			bootstrap.bind(port).sync().channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} finally {
-			workerGroup.shutdownGracefully();
-			dispatcherGroup.shutdownGracefully();
+			shutDown();
 		}
+	}
+	
+	public void shutDown() {
+		log.debug("shut down server!");
+		workerGroup.shutdownGracefully();
+		dispatcherGroup.shutdownGracefully();
 	}
 }

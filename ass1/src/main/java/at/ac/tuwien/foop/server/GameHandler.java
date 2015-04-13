@@ -57,11 +57,9 @@ public class GameHandler extends ChannelHandlerAdapter {
 		log.info("new client connected");
 	}
 
-	// TODO: should be triggered by the UI
 	@Override
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
 		super.channelUnregistered(ctx);
 		ctx.channel().close();
-		ctx.channel().parent().close();
 	}
 }
