@@ -1,8 +1,8 @@
-package at.ac.tuwien.foop.client.events;
+package at.ac.tuwien.foop.server.event;
 
 public class GameEvent {
 	public enum Type {
-		NEW_PLAYER, BOARD, START, STOP
+		NEW_PLAYER, START, UPDATE, REMOVE_PLAYER
 	}
 
 	public final Type type;

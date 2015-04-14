@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.server;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -9,21 +10,28 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
+import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.domain.Player;
+import at.ac.tuwien.foop.server.event.GameEvent;
+import at.ac.tuwien.foop.server.event.GameEventListener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class GameHandler extends ChannelHandlerAdapter {
+public class GameHandler extends ChannelHandlerAdapter implements
+		GameEventListener {
 	private static Logger log = LoggerFactory.getLogger(GameHandler.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
 	private Game game;
 	private Player player;
+	private Channel channel;
 
 	public GameHandler(Game game) {
 		this.game = game;
+		game.addGameEventListener(this);
 	}
 
 	public void channelRead(ChannelHandlerContext ctx, Object msg)
@@ -45,6 +53,13 @@ public class GameHandler extends ChannelHandlerAdapter {
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 			}
+		} else if (m.type == Type.C_LEAVE) {
+			if (player == null) {
+				// TODO: send error, as not joined yet
+			} else {
+				game.leave(player);
+			}
+		} else if (m.type == Type.C_WIND) {
 		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
@@ -54,6 +69,7 @@ public class GameHandler extends ChannelHandlerAdapter {
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
+		channel = ctx.channel();
 		log.info("new client connected");
 	}
 
@@ -61,5 +77,21 @@ public class GameHandler extends ChannelHandlerAdapter {
 	public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
 		super.channelUnregistered(ctx);
 		ctx.channel().close();
+	}
+
+	@Override
+	public void onUpdate(GameEvent e) {
+		if (e.type == GameEvent.Type.START) {
+			channel.writeAndFlush(new Message(Type.S_START));
+		} else if (e.type == GameEvent.Type.NEW_PLAYER) {
+			channel.writeAndFlush(new NewPlayerMessage("foo")); // TODO: get
+																// player name..
+																// put it into
+																// the event?
+		} else if (e.type == GameEvent.Type.UPDATE) {
+			channel.writeAndFlush(new UpdateMessage(null)); // TODO: get the
+															// update data.. use
+															// event or ask game
+		}
 	}
 }
