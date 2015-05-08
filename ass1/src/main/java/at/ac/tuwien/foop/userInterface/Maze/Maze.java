@@ -3,6 +3,7 @@ package at.ac.tuwien.foop.userInterface.Maze;
 
 import javax.swing.*;
 
+
 public class Maze {
 	
 	public static void main(String[] args)	{

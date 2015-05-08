@@ -1,11 +1,15 @@
 package at.ac.tuwien.foop;
 
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.shell.Start;
 import at.ac.tuwien.foop.server.NettyServer;
+
 
 public class App {
 	private static Logger log = LoggerFactory.getLogger(App.class);
@@ -15,6 +19,7 @@ public class App {
 	
 	public App() {
 		log.info("start system");
+		new Start().show();
 		server = new Thread(new NettyServer());
 		client = new Thread(new NettyClient(new Game(), "localhost", 20150));
 	}
@@ -33,5 +38,7 @@ public class App {
 	
 	public static void main(String[] args) {
 		new App().run();
+		
 	}
+
 }
