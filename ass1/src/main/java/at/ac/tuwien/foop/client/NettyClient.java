@@ -108,6 +108,7 @@ public class NettyClient implements Runnable {
 		
 		if (retry == MAX_RETRY) {
 			log.warn("could not connect to server, give up :(!");
+			connectListeners.forEach(e -> e.onConnecitonFailure());
 		}
 
 		workerGroup.shutdownGracefully();
