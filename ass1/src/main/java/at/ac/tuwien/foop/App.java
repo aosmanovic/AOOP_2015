@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.shell.Start;
+import at.ac.tuwien.foop.client.userInterface.Controller.StartController;
 import at.ac.tuwien.foop.server.NettyServer;
 
 
@@ -19,12 +19,11 @@ public class App {
 	
 	public App() {
 		log.info("start system");
-		new Start().show();
-		server = new Thread(new NettyServer());
-		client = new Thread(new NettyClient(new Game(), "localhost", 20150));
+		StartController sc =  new StartController();
+		sc.showStart();
 	}
 
-	public void run() {
+	/*public void run() {
 		try {
 			server.start();
 			Thread.sleep(500);
@@ -34,10 +33,10 @@ public class App {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public static void main(String[] args) {
-		new App().run();
+		new App();
 		
 	}
 

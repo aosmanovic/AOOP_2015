@@ -1,7 +1,9 @@
-package at.ac.tuwien.foop.client.shell;
+package at.ac.tuwien.foop.client.userInterface.Views;
 
 
 import java.awt.BorderLayout;
+
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,8 +18,6 @@ import java.awt.Insets;
 
 import javax.swing.JTextPane;
 
-import at.ac.tuwien.foop.client.gamelogic.StartController;
-import at.ac.tuwien.foop.userInterface.Maze.Maze;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -26,7 +26,10 @@ import java.awt.event.ActionEvent;
 public class Start extends JFrame {
 
 	private JPanel contentPane;
-
+	private JButton btnNewButton;
+	private JTextPane txtpnWelcomeToThe;
+	private GridBagConstraints gbc_btnNewButton;
+	
 	/**
 	* Launch the application.
 
@@ -46,8 +49,8 @@ public class Start extends JFrame {
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
-		JTextPane txtpnWelcomeToThe = new JTextPane();
-		txtpnWelcomeToThe.setText("Welcome to the Mouse Labirint ");
+		txtpnWelcomeToThe = new JTextPane();
+		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! ");
 		GridBagConstraints gbc_txtpnWelcomeToThe = new GridBagConstraints();
 		gbc_txtpnWelcomeToThe.insets = new Insets(0, 0, 5, 5);
 		gbc_txtpnWelcomeToThe.fill = GridBagConstraints.BOTH;
@@ -55,16 +58,10 @@ public class Start extends JFrame {
 		gbc_txtpnWelcomeToThe.gridy = 2;
 		contentPane.add(txtpnWelcomeToThe, gbc_txtpnWelcomeToThe);
 		
-		JButton btnNewButton = new JButton("Start game");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				StartController sc = new StartController();
-				//Here we should check if client is connected
-				sc.connect("localhost", "20150");
-			
-			}
-		});
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
+		btnNewButton = new JButton("Start game");
+		
+		
+		gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
 		gbc_btnNewButton.gridx = 5;
 		gbc_btnNewButton.gridy = 4;
@@ -72,13 +69,19 @@ public class Start extends JFrame {
 		
 	}
 
-	public void showError() {
+	public void showFailure() {
 		JOptionPane.showMessageDialog(null, "Try to connect again...");
 	}
 	
 	public void showMaze() {
 		new Maze();
 	}
+	
+	public void setStartControllerListener(ActionListener ac) {
+		this.btnNewButton.addActionListener(ac);
+	}
+	
+	
 }
 
      

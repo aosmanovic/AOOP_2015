@@ -1,14 +1,12 @@
-package at.ac.tuwien.foop.userInterface.Maze;
+package at.ac.tuwien.foop.client.userInterface.Views;
+
+
 
 
 import javax.swing.*;
 
 
 public class Maze {
-	
-	public static void main(String[] args)	{
-		new Maze();
-	}
 
 	public Maze() {
 		JFrame f = new JFrame();

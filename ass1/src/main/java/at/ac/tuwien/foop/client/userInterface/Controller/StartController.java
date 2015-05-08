@@ -1,4 +1,10 @@
-package at.ac.tuwien.foop.client.gamelogic;
+package at.ac.tuwien.foop.client.userInterface.Controller;
+
+
+
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +17,7 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.shell.ClientShell;
-import at.ac.tuwien.foop.client.shell.Start;
+import at.ac.tuwien.foop.client.userInterface.Views.Start;
 import at.ac.tuwien.foop.server.NettyServer;
 
 public class StartController implements ConnectListener {
@@ -19,29 +25,22 @@ public class StartController implements ConnectListener {
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game = null;
 	private ClientHandler core = null;
-	private Thread server;
-	private Thread client;
-	private Start start = new Start();
+//	private Thread server;
+	private Start start;
 
 	public StartController() {
-		server = new Thread(new NettyServer());
-		client = new Thread(new NettyClient(new Game(), "localhost", 20150));
+		
+//		server = new Thread(new NettyServer());
+		start = new Start();
+		start.setStartControllerListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				connect("localhost", "20150");
+			}
+		});
 	}
-
-	public void run() {
-		try {
-			server.start();
-			Thread.sleep(500);
-
-			client.run();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-
 
 	public void connect(String host,String port) {
 		if (core!= null) {
@@ -68,6 +67,16 @@ public class StartController implements ConnectListener {
 
 	public void setCore(ClientHandler core) {
 		this.core = core;
+	}
+
+	@Override
+	public void onConnecitonFailure() {
+		// TODO Auto-generated method stub
+		start.showFailure();
+	}
+	
+	public void showStart() {
+		start.setVisible(true);
 	}
 
 }

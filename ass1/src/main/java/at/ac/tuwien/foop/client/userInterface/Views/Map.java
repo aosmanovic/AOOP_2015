@@ -1,4 +1,6 @@
-package at.ac.tuwien.foop.userInterface.Maze;
+package at.ac.tuwien.foop.client.userInterface.Views;
+
+
 
 
 
