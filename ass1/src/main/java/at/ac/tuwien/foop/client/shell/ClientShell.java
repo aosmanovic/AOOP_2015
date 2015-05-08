@@ -11,6 +11,7 @@ import asg.cliche.ShellFactory;
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.domain.Wind.Direction;
@@ -39,7 +40,18 @@ public class ClientShell {
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
-		c.addConnectListener(e -> core = e.getClientHandler());
+		c.addConnectListener(new ConnectListener() {
+			@Override
+			public void onConnect(NettyClient client) {
+				core = client.getClientHandler();
+			}
+			
+			@Override
+			public void onConnecitonFailure() {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		new Thread(c, "Network-Layer-Thread").start();
 	}
 
