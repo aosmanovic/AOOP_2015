@@ -61,14 +61,7 @@ public class Start extends JFrame {
 				StartController sc = new StartController();
 				//Here we should check if client is connected
 				sc.connect("localhost", "20150");
-				if(sc.getCore()!=null) 
-				{
-					JOptionPane.showMessageDialog(null, "Try to connect again...");
-				}
-				else
-				{
-					Maze m = new Maze();
-				}
+			
 			}
 		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
@@ -76,8 +69,16 @@ public class Start extends JFrame {
 		gbc_btnNewButton.gridx = 5;
 		gbc_btnNewButton.gridy = 4;
 		contentPane.add(btnNewButton, gbc_btnNewButton);
+		
 	}
 
+	public void showError() {
+		JOptionPane.showMessageDialog(null, "Try to connect again...");
+	}
+	
+	public void showMaze() {
+		new Maze();
+	}
 }
 
      

@@ -8,17 +8,20 @@ import asg.cliche.Param;
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.shell.ClientShell;
+import at.ac.tuwien.foop.client.shell.Start;
 import at.ac.tuwien.foop.server.NettyServer;
 
-public class StartController {
+public class StartController implements ConnectListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game = null;
 	private ClientHandler core = null;
 	private Thread server;
 	private Thread client;
+	private Start start = new Start();
 
 	public StartController() {
 		server = new Thread(new NettyServer());
@@ -39,9 +42,8 @@ public class StartController {
 	}
 
 
-	@Command(description = "conntect to a server")
-	public void connect(@Param(name = "host") String host,
-			@Param(name = "port") String port) {
+
+	public void connect(String host,String port) {
 		if (core!= null) {
 			log.warn("client already connected!");
 			return;
@@ -49,8 +51,14 @@ public class StartController {
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
-		c.addConnectListener(e -> core = e.getClientHandler());
+		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
+	}
+	
+	public void onConnect(NettyClient client) {
+		core = client.getClientHandler();
+		//view shows success
+		start.showMaze();
 	}
 	
 	
