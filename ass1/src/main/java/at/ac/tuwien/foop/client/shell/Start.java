@@ -5,13 +5,22 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
+
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+
 import javax.swing.JTextPane;
+
+import at.ac.tuwien.foop.client.gamelogic.StartController;
+import at.ac.tuwien.foop.userInterface.Maze.Maze;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class Start extends JFrame {
@@ -47,6 +56,21 @@ public class Start extends JFrame {
 		contentPane.add(txtpnWelcomeToThe, gbc_txtpnWelcomeToThe);
 		
 		JButton btnNewButton = new JButton("Start game");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StartController sc = new StartController();
+				//Here we should check if client is connected
+				sc.connect("localhost", "20150");
+				if(sc.getCore()!=null) 
+				{
+					JOptionPane.showMessageDialog(null, "Try to connect again...");
+				}
+				else
+				{
+					Maze m = new Maze();
+				}
+			}
+		});
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
 		gbc_btnNewButton.gridx = 5;

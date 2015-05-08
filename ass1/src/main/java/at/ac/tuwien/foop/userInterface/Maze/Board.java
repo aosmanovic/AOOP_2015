@@ -26,10 +26,12 @@ public class Board extends JPanel implements ActionListener {
 		super.paint(w);
 		
 		for(int y=0; y<25; y++)	{
-			for(int x = 0; x<41; x++)	{
+			for(int x = 0; x<25; x++)	{
 				
 				if(m.getMap(x, y).equals("w"))
+				{
 					w.drawImage(m.getWall(), x*25, y*25, null);
+				}
 				
 				else if(m.getMap(x, y).equals("-")) 
 					w.drawImage(m.getPath(), x*25, y*25, null);

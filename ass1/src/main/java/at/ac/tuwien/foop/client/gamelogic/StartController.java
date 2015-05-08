@@ -42,7 +42,7 @@ public class StartController {
 	@Command(description = "conntect to a server")
 	public void connect(@Param(name = "host") String host,
 			@Param(name = "port") String port) {
-		if (core != null) {
+		if (core!= null) {
 			log.warn("client already connected!");
 			return;
 		}
