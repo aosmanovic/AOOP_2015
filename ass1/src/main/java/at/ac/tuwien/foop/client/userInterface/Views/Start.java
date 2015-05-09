@@ -59,6 +59,12 @@ public class Start extends JFrame {
 		contentPane.add(txtpnWelcomeToThe, gbc_txtpnWelcomeToThe);
 		
 		btnNewButton = new JButton("Start game");
+		btnNewButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				btnNewButton.setEnabled(false);
+			}
+		});
 		
 		
 		gbc_btnNewButton = new GridBagConstraints();
@@ -70,6 +76,7 @@ public class Start extends JFrame {
 	}
 
 	public void showFailure() {
+		btnNewButton.setEnabled(true);
 		JOptionPane.showMessageDialog(null, "Try to connect again...");
 	}
 	
