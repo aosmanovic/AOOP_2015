@@ -45,6 +45,7 @@ public class StartController implements ConnectListener {
 	public void connect(String host,String port) {
 		if (core!= null) {
 			log.warn("client already connected!");
+			showAlreadyConnected();
 			return;
 		}
 		log.debug("connect to {}:{}", host, port);
@@ -77,6 +78,10 @@ public class StartController implements ConnectListener {
 	
 	public void showStart() {
 		start.setVisible(true);
+	}
+	
+	public void showAlreadyConnected() {
+		start.showAlreadyConnected();
 	}
 
 }

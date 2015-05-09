@@ -19,24 +19,27 @@ public class App {
 	
 	public App() {
 		log.info("start system");
+		server = new Thread(new NettyServer());
 		StartController sc =  new StartController();
 		sc.showStart();
 	}
 
-	/*public void run() {
+	public void run() {
 		try {
 			server.start();
 			Thread.sleep(500);
 			
-			client.run();
+			//client.run();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	public static void main(String[] args) {
-		new App();
+		App app = new App();
+		
+		app.run();
 		
 	}
 

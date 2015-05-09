@@ -73,6 +73,10 @@ public class Start extends JFrame {
 		JOptionPane.showMessageDialog(null, "Try to connect again...");
 	}
 	
+	public void showAlreadyConnected() {
+		JOptionPane.showMessageDialog(null, "You are already connected...");
+	}
+	
 	public void showMaze() {
 		new Maze();
 	}

@@ -14,15 +14,17 @@ public class Map {
 
 	private Scanner m;
 	private String Map[] = new String[500];
-	private Image wall, path, cheese;
+	private Image wall, path, cheese, mouse;
 	private ImageIcon wallIcon = new ImageIcon("src\\main\\resources\\wall.png");
 	private ImageIcon pathIcon = new ImageIcon("src\\main\\resources\\path.jpg");
 	private ImageIcon cheeseIcon = new ImageIcon("src\\main\\resources\\cheese.jpg");
+	private ImageIcon mouseIcon = new ImageIcon("src\\main\\resources\\mouse.png");
 
 	public Map() {
 		wall = wallIcon.getImage();
 		path = pathIcon.getImage();
 		cheese = cheeseIcon.getImage();
+		mouse = mouseIcon.getImage();
 		openFile();
 		readFile();
 		closeFile();
@@ -45,7 +47,7 @@ public class Map {
 	public void readFile() 	{
 
 		while(m.hasNext())	{
-			for(int i=0; i<25; i++){
+			for(int i=0; i<21; i++){
 				Map[i] = m.next();
 			}	
 		}
@@ -67,4 +69,10 @@ public class Map {
 		return cheese;
 	}
 
+	public Image getMouse() {
+		return mouse;
+	}
+
+	
+	
 }
