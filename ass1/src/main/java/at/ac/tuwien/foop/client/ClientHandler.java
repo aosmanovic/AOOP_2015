@@ -27,8 +27,7 @@ import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ClientHandler extends ChannelHandlerAdapter implements
-		GameCore {
+public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	private static Logger log = LoggerFactory.getLogger(ClientHandler.class);
 
 	private Game game;
@@ -49,7 +48,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 		listeners.forEach(e -> e.active());
 	}
 
-
 	// messages from the server
 
 	@Override
@@ -66,8 +64,9 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 			game.addPlayer(new Player(mapper.readValue(str,
 					NewPlayerMessage.class).name, null)); // TODO, set coordinates
 		} else if (m.type == Type.S_BOARD) {
-			game.setBoard(Board.createBoard(mapper.readValue(str,
-					BoardMessage.class).fields));
+			BoardMessage boardMessage = mapper.readValue(str,
+					BoardMessage.class);
+			game.setBoard(Board.createBoard(boardMessage.fields, boardMessage.width));
 		} else if (m.type == Type.S_UPDATE) {
 			game.update(Update.createUpdate(mapper.readValue(str,
 					UpdateMessage.class)));
@@ -90,7 +89,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 	public void join(String name) {
 		System.out.println(channel);
 		channel.writeAndFlush(new JoinMessage(name));
-		
+
 	}
 
 	@Override
