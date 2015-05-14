@@ -31,7 +31,7 @@ public class StartController implements ConnectListener, GameEventListener {
 	public StartController() {
 		
 //		server = new Thread(new NettyServer());
-		start = new StartView(game);
+		start = new StartView();
 		connect("localhost", "20150");
 		game.addGameEventListener(this);
 		
@@ -47,13 +47,10 @@ public class StartController implements ConnectListener, GameEventListener {
 	}
 
 	public void connect(String host,String port) {
-		/*if (core!= null) {
-			log.warn("client already connected!");
-			showAlreadyConnected();
-			return;
-		}*/
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
+		start.setGame(game);
+		
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
 		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
@@ -63,22 +60,14 @@ public class StartController implements ConnectListener, GameEventListener {
 	
 	public void gameStart() {
 		service.start(game, core);
-		//start.showMaze();
 	}
 	
 	public void onConnect(NettyClient client) {
 		core = client.getClientHandler();
-		//view shows success
-		//start.showMaze();
 		service.join(game, core, "A");
 		start.setStart();
 	}
 	
-	
-//	public ClientHandler getCore() {
-//		return core;
-//	}
-
 	public void setCore(ClientHandler core) {
 		this.core = core;
 	}

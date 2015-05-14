@@ -1,36 +1,25 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
 
-import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-
-import java.awt.EventQueue;
-
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JButton;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
 import javax.swing.JTextPane;
-
-
-
-
+import javax.swing.border.EmptyBorder;
 
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.events.GameEvent;
-import at.ac.tuwien.foop.client.events.GameEventListener;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 
 public class StartView extends JFrame {
+
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 	private JButton btnNewButton;
@@ -44,8 +33,7 @@ public class StartView extends JFrame {
 	/**
 	* Create the frame.
 	*/
-	public StartView(Game game) {
-		this.game = game;
+	public StartView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -111,12 +99,16 @@ public class StartView extends JFrame {
 	}
 	
 	public void printMessage() {
-		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected" + 
+		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " players connected" + 
 				"\n \n \n \n Press start to start the game!");
 	}
 
 	public void setStart () {
 		btnNewButton.setEnabled(true);
+	}
+
+	public void setGame(Game game) {
+		this.game = game;
 	}
 	
 	
