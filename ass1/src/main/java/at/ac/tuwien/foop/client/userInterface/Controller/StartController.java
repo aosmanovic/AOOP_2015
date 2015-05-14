@@ -82,7 +82,6 @@ public class StartController implements ConnectListener {
 
 	@Override
 	public void onConnecitonFailure() {
-		// TODO Auto-generated method stub
 		start.showFailure();
 	}
 	

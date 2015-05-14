@@ -60,6 +60,9 @@ public class GameHandler extends ChannelHandlerAdapter implements
 				game.leave(player);
 			}
 		} else if (m.type == Type.C_WIND) {
+			// TODO: call wind logic here!
+		} else if (m.type == Type.C_START) {
+			game.start();
 		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
@@ -84,14 +87,11 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.NEW_PLAYER) {
-			channel.writeAndFlush(new NewPlayerMessage("foo")); // TODO: get
-																// player name..
-																// put it into
-																// the event?
+			channel.writeAndFlush(new NewPlayerMessage("foo"));
+			// TODO: get player name.. put it into the event?
 		} else if (e.type == GameEvent.Type.UPDATE) {
-			channel.writeAndFlush(new UpdateMessage(null)); // TODO: get the
-															// update data.. use
-															// event or ask game
+			channel.writeAndFlush(new UpdateMessage(null));
+			// TODO: get the update data.. use event or ask game
 		}
 	}
 }
