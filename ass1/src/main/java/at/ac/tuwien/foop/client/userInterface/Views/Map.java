@@ -5,9 +5,11 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 
 
 import java.awt.Image;
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class Map {
@@ -15,19 +17,24 @@ public class Map {
 	private Scanner m;
 	private String Map[] = new String[500];
 	private Image wall, path, cheese, mouse;
-	private ImageIcon wallIcon = new ImageIcon("src\\main\\resources\\wall.png");
-	private ImageIcon pathIcon = new ImageIcon("src\\main\\resources\\path.jpg");
-	private ImageIcon cheeseIcon = new ImageIcon("src\\main\\resources\\cheese.jpg");
-	private ImageIcon mouseIcon = new ImageIcon("src\\main\\resources\\mouse.png");
 
 	public Map() {
-		wall = wallIcon.getImage();
-		path = pathIcon.getImage();
-		cheese = cheeseIcon.getImage();
-		mouse = mouseIcon.getImage();
+		loadImages();
 		openFile();
 		readFile();
 		closeFile();
+	}
+	
+	private void loadImages() {
+		try {
+			wall = new ImageIcon(ImageIO.read(loadStream("wall.png"))).getImage();
+			path = new ImageIcon(ImageIO.read(loadStream("path.jpg"))).getImage();
+			cheese = new ImageIcon(ImageIO.read(loadStream("cheese.jpg"))).getImage();
+			mouse = new ImageIcon(ImageIO.read(loadStream("mouse.png"))).getImage();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getMap(int x, int y) {
@@ -38,10 +45,15 @@ public class Map {
 
 	public void openFile() {
 		try {
-			m = new Scanner(new File("src\\main\\resources\\Map.txt"));
+			m = new Scanner(loadStream("Map.txt"));
 		} catch(Exception e) {
 			System.out.println("Error loading map!");
+			// TODO: handle failure!
 		}
+	}
+
+	private InputStream loadStream(String path) {
+		return Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 	}
 
 	public void readFile() 	{
