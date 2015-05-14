@@ -18,6 +18,7 @@ public class Game {
 
 	private boolean started = false;
 	private List<Player> player = new ArrayList<>();
+	private BoardString board;
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -72,5 +73,13 @@ public class Game {
 			// TODO: stop game?
 		}
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
+	}
+	
+	public BoardString board() {
+		return board;
+	}
+	
+	public void setBoard(BoardString bs) {
+		board = bs;
 	}
 }
