@@ -35,15 +35,15 @@ public class BoardPanel extends JPanel implements ActionListener {
 				
 				if(m.getMap(x, y).equals("w"))
 				{
-					w.drawImage(m.getWall(), x*25, y*25, null);
+					w.drawImage(m.getWall(), x*26, y*26, null);
 				}
 				
 				else if(m.getMap(x, y).equals("C")) {
-					w.drawImage(m.getCheese(), x*25, y*25, null);
+					w.drawImage(m.getCheese(), x*26, y*26, null);
 				}
 				
 				else if(m.getMap(x, y).equals("m")) {
-					w.drawImage(m.getMouse(), x*25, y*25, null);
+					w.drawImage(m.getMouse(), x*26, y*26, null);
 				}
 				
 			}
