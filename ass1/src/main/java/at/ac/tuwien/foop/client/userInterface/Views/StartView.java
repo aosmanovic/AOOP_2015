@@ -85,9 +85,7 @@ public class StartView extends JFrame {
 		JOptionPane.showMessageDialog(null, "You are already connected...");
 	}
 	
-	public void showMaze() {
-		new Maze();
-	}
+	
 	
 	public void setStartControllerListener(ActionListener ac) {
 		this.btnNewButton.addActionListener(ac);

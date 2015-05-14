@@ -17,6 +17,7 @@ import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
+import at.ac.tuwien.foop.client.userInterface.Views.Maze;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
 
 public class StartController implements ConnectListener, GameEventListener {
@@ -91,8 +92,14 @@ public class StartController implements ConnectListener, GameEventListener {
 		if (e.type == GameEvent.Type.NEW_PLAYER ) {
 			start.printMessage();
 		} else if (e.type == GameEvent.Type.START) {
-			start.showMaze();
+			showMaze();
+		} else if (e.type == GameEvent.Type.BOARD) {
+			game.getBoard();
 		}
+	}
+	
+	public void showMaze() {
+		new Maze();
 	}
 
 }

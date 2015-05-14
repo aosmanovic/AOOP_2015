@@ -9,12 +9,15 @@ import java.awt.event.*;
 
 import javax.swing.*;
 
-public class Board extends JPanel implements ActionListener {
+import at.ac.tuwien.foop.client.domain.Board;
+
+public class BoardPanel extends JPanel implements ActionListener {
 	
 	private Timer timer;
 	private Map m;
+	private Board board;
 	
-	public Board() {
+	public BoardPanel() {
 		m = new Map();
 		timer = new Timer(25, this);
 		timer.start();
@@ -45,6 +48,8 @@ public class Board extends JPanel implements ActionListener {
 				
 			}
 		}
+		
+		
+		
 	}
-
 }
