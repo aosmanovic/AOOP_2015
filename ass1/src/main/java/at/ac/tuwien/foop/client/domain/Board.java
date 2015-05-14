@@ -12,12 +12,14 @@ public class Board {
 
 	private Field[][] fields; // y|x
 
+	private Board() {}
+	
 	/**
 	 * 
 	 * @param fieldString
 	 * @param width
 	 */
-	public void generateFields(String fieldString, int width) {
+	private void generateFields(String fieldString, int width) {
 		Objects.requireNonNull(fieldString);
 		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
 				width);
@@ -47,8 +49,9 @@ public class Board {
 		}
 	}
 
-	public static Board createBoard(String str) {
-		// TODO: implement!
-		return null;
+	public static Board createBoard(String fieldString, int width) {
+		Board b = new Board();
+		b.generateFields(fieldString, width);
+		return b;
 	}
 }
