@@ -87,7 +87,7 @@ public class NettyClient implements Runnable {
 			if (channel != null) {
 				try {
 					log.debug("connected, and waiting for close signal...");
-					fireConnectEvent();
+					clientHandler.addChannelActiveListener(() -> connectListeners.forEach(e -> e.onConnect(this)));
 					channel.closeFuture().sync();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
@@ -137,10 +137,6 @@ public class NettyClient implements Runnable {
 
 	public void removeConnectListener(ConnectListener l) {
 		connectListeners.remove(l);
-	}
-
-	private void fireConnectEvent() {
-		connectListeners.forEach(e -> e.onConnect(this));
 	}
 
 	public ClientHandler getClientHandler() {

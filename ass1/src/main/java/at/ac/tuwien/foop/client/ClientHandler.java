@@ -4,6 +4,9 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +35,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 	private ObjectMapper mapper = new ObjectMapper();
 	private Channel channel;
 
+	private List<ChannelActiveListener> listeners = new ArrayList<>();
+
 	public ClientHandler(Game game) {
 		this.game = game;
 	}
@@ -41,6 +46,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 		log.info("send ping");
 		ctx.writeAndFlush(new Message(Type.C_PING));
 		channel = ctx.channel();
+		listeners.forEach(e -> e.active());
 	}
 
 
@@ -78,7 +84,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 		}
 	}
 
-
 	// client requests
 
 	@Override
@@ -111,5 +116,9 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 	@Override
 	public void start() {
 		channel.writeAndFlush(new Message(Type.C_START));
+	}
+
+	public void addChannelActiveListener(ChannelActiveListener caListener) {
+		listeners.add(caListener);
 	}
 }

@@ -106,7 +106,7 @@ public class StartView extends JFrame {
 	}
 	
 	public int countPlayers() {
-		int i = game.getPlayers().size();
+		int i = game == null ? 0 : game.getPlayers().size();
 		return i;
 	}
 	
