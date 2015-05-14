@@ -65,7 +65,7 @@ public class NettyClient implements Runnable {
 						protected void initChannel(SocketChannel ch)
 								throws Exception {
 							ch.pipeline().addLast(
-									new LineBasedFrameDecoder(256));
+									new LineBasedFrameDecoder(16384));
 							ch.pipeline().addLast(
 									new StringDecoder(CharsetUtil.UTF_8));
 							ch.pipeline().addLast(

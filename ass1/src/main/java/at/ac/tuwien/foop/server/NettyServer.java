@@ -41,7 +41,7 @@ public class NettyServer implements Runnable {
 						protected void initChannel(SocketChannel ch)
 								throws Exception {
 							ch.pipeline().addLast(
-									new LineBasedFrameDecoder(2048));
+									new LineBasedFrameDecoder(16384)); //board size up to 126 width ;)
 							ch.pipeline().addLast(
 									new StringDecoder(CharsetUtil.UTF_8));
 							ch.pipeline().addLast(

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.Validate;
 public class Board {
 	public static enum Field { // TODO: just an example.. move to a separate
 								// file
-		wall, start, end
+		wall, floor, start, end
 	}
 
 	private Field[][] fields; // y|x
@@ -29,20 +29,24 @@ public class Board {
 					"field length does not match board width!");
 		}
 
+		fields = new Field[fieldString.length() / width][width];
+		
 		int i = 0;
 		int j = 0;
 		for (char c : fieldString.toCharArray()) {
 			if (c == 'w') {
 				fields[j][i] = Field.wall;
-			} else if (c == 's') {
+			} else if (c == '-') {
+				fields[j][i] = Field.floor;
+			} else if (c == 'm') {
 				fields[j][i] = Field.start;
-			} else if (c == 'e') {
+			} else if (c == 'C') {
 				fields[j][i] = Field.end;
 			} else {
 				throw new RuntimeException("unknown field type!");
 			}
 			i++;
-			if (i == width - 1) {
+			if (i == width) {
 				i = 0;
 				j++;
 			}

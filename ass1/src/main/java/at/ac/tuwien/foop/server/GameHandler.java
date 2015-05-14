@@ -4,19 +4,24 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
+import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -25,6 +30,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	private static Logger log = LoggerFactory.getLogger(GameHandler.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
+	private GameLogicService service = new GameLogicService();
 	private Game game;
 	private Player player;
 	private Channel channel;
@@ -49,6 +55,8 @@ public class GameHandler extends ChannelHandlerAdapter implements
 				player = new Player(jm.name);
 			}
 			if (game.join(player)) {
+				BoardString b = service.getBoard(game);
+				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
 				ctx.writeAndFlush(new Message(Type.S_JOINED));
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
