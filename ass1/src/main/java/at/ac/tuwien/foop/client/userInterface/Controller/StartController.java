@@ -5,6 +5,7 @@ package at.ac.tuwien.foop.client.userInterface.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,40 +15,43 @@ import asg.cliche.Param;
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.shell.ClientShell;
-import at.ac.tuwien.foop.client.userInterface.Views.Start;
+import at.ac.tuwien.foop.client.userInterface.Views.StartView;
 import at.ac.tuwien.foop.server.NettyServer;
 
 public class StartController implements ConnectListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
-	private Game game = null;
+	private Game game = new Game();
 	private ClientHandler core = null;
 //	private Thread server;
-	private Start start;
+	private StartView start;
 
 	public StartController() {
 		
 //		server = new Thread(new NettyServer());
-		start = new Start();
-		start.setStartControllerListener(new ActionListener() {
-			
+		start = new StartView(game);
+		connect("localhost", "20150");
+		
+		
+		start.setStartControllerListener(new ActionListener() {	
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				connect("localhost", "20150");
+				gameStart();
 			}
 		});
 	}
 
 	public void connect(String host,String port) {
-		if (core!= null) {
+		/*if (core!= null) {
 			log.warn("client already connected!");
 			showAlreadyConnected();
 			return;
-		}
+		}*/
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
@@ -55,10 +59,16 @@ public class StartController implements ConnectListener {
 		new Thread(c, "Network-Layer-Thread").start();
 	}
 	
+	
+	
+	public void gameStart() {
+		start.showMaze();
+	}
+	
 	public void onConnect(NettyClient client) {
 		core = client.getClientHandler();
 		//view shows success
-		start.showMaze();
+		//start.showMaze();
 	}
 	
 	

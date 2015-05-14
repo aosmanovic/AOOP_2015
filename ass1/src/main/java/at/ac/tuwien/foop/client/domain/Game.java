@@ -12,7 +12,7 @@ public class Game {
 
 	private boolean running = false;
 	private boolean joined = false;
-	private List<Player> players;
+	private List<Player> players = new ArrayList<>();
 	private Board board;
 
 	public void board(Board board) {

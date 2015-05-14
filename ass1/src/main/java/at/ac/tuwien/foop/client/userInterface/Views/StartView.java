@@ -19,16 +19,24 @@ import java.awt.Insets;
 import javax.swing.JTextPane;
 
 
+
+
+
+import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.client.events.GameEventListener;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class Start extends JFrame {
+public class StartView extends JFrame implements GameEventListener {
 
 	private JPanel contentPane;
 	private JButton btnNewButton;
 	private JTextPane txtpnWelcomeToThe;
 	private GridBagConstraints gbc_btnNewButton;
+	private Game game;
 	
 	/**
 	* Launch the application.
@@ -36,7 +44,9 @@ public class Start extends JFrame {
 	/**
 	* Create the frame.
 	*/
-	public Start() {
+	public StartView(Game game) {
+		this.game = game;
+		game.addGameEventListener(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -50,7 +60,9 @@ public class Start extends JFrame {
 		contentPane.setLayout(gbl_contentPane);
 		
 		txtpnWelcomeToThe = new JTextPane();
-		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! ");
+		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected." + 
+								"\n \n \n \n Press start to start the game!");
+
 		GridBagConstraints gbc_txtpnWelcomeToThe = new GridBagConstraints();
 		gbc_txtpnWelcomeToThe.insets = new Insets(0, 0, 5, 5);
 		gbc_txtpnWelcomeToThe.fill = GridBagConstraints.BOTH;
@@ -58,7 +70,7 @@ public class Start extends JFrame {
 		gbc_txtpnWelcomeToThe.gridy = 2;
 		contentPane.add(txtpnWelcomeToThe, gbc_txtpnWelcomeToThe);
 		
-		btnNewButton = new JButton("Start game");
+		btnNewButton = new JButton("Start");
 		
 		
 		gbc_btnNewButton = new GridBagConstraints();
@@ -83,6 +95,20 @@ public class Start extends JFrame {
 	
 	public void setStartControllerListener(ActionListener ac) {
 		this.btnNewButton.addActionListener(ac);
+	}
+	
+	public int countPlayers() {
+		int i = game.getPlayers().size();
+		return i;
+	}
+
+	@Override
+	public void onUpdate(GameEvent e) {
+		// TODO Auto-generated method stub
+		if (e.type == GameEvent.Type.NEW_PLAYER ) {
+			txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected" + 
+					"\n \n \n \n Press start to start the game!");
+		}
 	}
 	
 	
