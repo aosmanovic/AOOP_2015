@@ -83,7 +83,9 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 
 	@Override
 	public void join(String name) {
+		System.out.println(channel);
 		channel.writeAndFlush(new JoinMessage(name));
+		
 	}
 
 	@Override

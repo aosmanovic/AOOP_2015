@@ -17,24 +17,28 @@ import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.events.ConnectListener;
+import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.shell.ClientShell;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
 import at.ac.tuwien.foop.server.NettyServer;
 
-public class StartController implements ConnectListener {
+public class StartController implements ConnectListener, GameEventListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game = new Game();
 	private ClientHandler core = null;
 //	private Thread server;
 	private StartView start;
-
+	private GameService service = new GameService();
+	
 	public StartController() {
 		
 //		server = new Thread(new NettyServer());
 		start = new StartView(game);
 		connect("localhost", "20150");
+		game.addGameEventListener(this);
 		
 		
 		start.setStartControllerListener(new ActionListener() {	
@@ -44,6 +48,7 @@ public class StartController implements ConnectListener {
 				gameStart();
 			}
 		});
+			
 	}
 
 	public void connect(String host,String port) {
@@ -62,13 +67,16 @@ public class StartController implements ConnectListener {
 	
 	
 	public void gameStart() {
-		start.showMaze();
+		service.start(game, core);
+		//start.showMaze();
 	}
 	
 	public void onConnect(NettyClient client) {
 		core = client.getClientHandler();
 		//view shows success
 		//start.showMaze();
+		service.join(game, core, "A");
+		start.setStart();
 	}
 	
 	
@@ -91,6 +99,16 @@ public class StartController implements ConnectListener {
 	
 	public void showAlreadyConnected() {
 		start.showAlreadyConnected();
+	}
+	
+	@Override
+	public void onUpdate(GameEvent e) {
+		// TODO Auto-generated method stub
+		if (e.type == GameEvent.Type.NEW_PLAYER ) {
+			start.printMessage();
+		} else if (e.type == GameEvent.Type.START) {
+			start.showMaze();
+		}
 	}
 
 }

@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class StartView extends JFrame implements GameEventListener {
+public class StartView extends JFrame {
 
 	private JPanel contentPane;
 	private JButton btnNewButton;
@@ -46,7 +46,6 @@ public class StartView extends JFrame implements GameEventListener {
 	*/
 	public StartView(Game game) {
 		this.game = game;
-		game.addGameEventListener(this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -60,8 +59,7 @@ public class StartView extends JFrame implements GameEventListener {
 		contentPane.setLayout(gbl_contentPane);
 		
 		txtpnWelcomeToThe = new JTextPane();
-		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected." + 
-								"\n \n \n \n Press start to start the game!");
+		printMessage();
 
 		GridBagConstraints gbc_txtpnWelcomeToThe = new GridBagConstraints();
 		gbc_txtpnWelcomeToThe.insets = new Insets(0, 0, 5, 5);
@@ -72,6 +70,7 @@ public class StartView extends JFrame implements GameEventListener {
 		
 
 		btnNewButton = new JButton("Start");
+		btnNewButton.setEnabled(false);
 
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -110,14 +109,14 @@ public class StartView extends JFrame implements GameEventListener {
 		int i = game.getPlayers().size();
 		return i;
 	}
+	
+	public void printMessage() {
+		txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected" + 
+				"\n \n \n \n Press start to start the game!");
+	}
 
-	@Override
-	public void onUpdate(GameEvent e) {
-		// TODO Auto-generated method stub
-		if (e.type == GameEvent.Type.NEW_PLAYER ) {
-			txtpnWelcomeToThe.setText("Welcome to the Mouse Labyrinth Game! " + "\n \n \n \n \nThere are " + this.countPlayers() +  " other players connected" + 
-					"\n \n \n \n Press start to start the game!");
-		}
+	public void setStart () {
+		btnNewButton.setEnabled(true);
 	}
 	
 	
