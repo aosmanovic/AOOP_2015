@@ -8,12 +8,14 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.GameEvent;
 
 public class GameTest {
+	
+	private final Board board = Board.createBoard("www", 1);
 	@Test
 	public void testSetBoard_whileRunning_shouldThrowRuntimeException() {
 		Game g = new Game();
 		g.start();
 		try {
-			g.setBoard(new Board());
+			g.setBoard(board);
 			Assert.fail("expecting an exception!");
 		} catch (RuntimeException e) {
 			Assert.assertEquals("can't set board on a running game!",
@@ -26,6 +28,6 @@ public class GameTest {
 		Game g = new Game();
 		g.addGameEventListener(e -> Assert.assertEquals(GameEvent.Type.BOARD,
 				e.type));
-		g.setBoard(new Board());
+		g.setBoard(board);
 	}
 }
