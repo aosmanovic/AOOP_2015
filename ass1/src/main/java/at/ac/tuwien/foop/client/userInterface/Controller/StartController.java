@@ -11,12 +11,14 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
+import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
+import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
 import at.ac.tuwien.foop.client.userInterface.Views.Maze;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
 
@@ -28,6 +30,7 @@ public class StartController implements ConnectListener, GameEventListener {
 //	private Thread server;
 	private StartView start;
 	private GameService service = new GameService();
+	private BoardPanel boardpanel = new BoardPanel();
 	
 	public StartController() {
 		
@@ -94,7 +97,8 @@ public class StartController implements ConnectListener, GameEventListener {
 		} else if (e.type == GameEvent.Type.START) {
 			showMaze();
 		} else if (e.type == GameEvent.Type.BOARD) {
-			game.getBoard();
+			Board b = game.getBoard();
+			boardpanel.setBoard(b);
 		}
 	}
 	
