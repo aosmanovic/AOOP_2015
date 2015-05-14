@@ -69,6 +69,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 			game.join();
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
+		} else if (m.type == Type.S_START) {
+			game.start();
 		} else if (m.type == Type.S_UNKNOWN) {
 			log.warn("the server does not know the message '{}'", mapper.readValue(str,	UnknownMessage.class).unknownType);
 		} else {
@@ -102,5 +104,10 @@ public class ClientHandler extends ChannelHandlerAdapter implements
 	@Override
 	public void ping() {
 		channel.writeAndFlush(new Message(Type.C_PING));
+	}
+
+	@Override
+	public void start() {
+		channel.writeAndFlush(new Message(Type.C_START));
 	}
 }

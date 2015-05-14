@@ -8,4 +8,5 @@ public interface GameCore {
 	public void disconnect();
 	public void sendWind(Wind wind);
 	public void ping();
+	public void start();
 }

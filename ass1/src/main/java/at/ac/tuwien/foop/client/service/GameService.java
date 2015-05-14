@@ -32,6 +32,13 @@ public class GameService {
 		core.sendWind(wind);
 	}
 
+	public void start(Game game, GameCore core) {
+		if (!game.joined()) {
+			throw new IllegalStateException("Can't start if not joinde first!");
+		}
+		core.start();
+	}
+
 	public void ping(GameCore gameCore) {
 		gameCore.ping();
 	}
