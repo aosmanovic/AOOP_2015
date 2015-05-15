@@ -1,56 +1,47 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
-
-
-
-
 import java.awt.Graphics;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 
-import javax.swing.*;
+import javax.swing.JPanel;
 
 import at.ac.tuwien.foop.client.domain.Board;
+import at.ac.tuwien.foop.client.domain.Board.Field;
 
-public class BoardPanel extends JPanel implements ActionListener {
-	
-	private Timer timer;
+public class BoardPanel extends JPanel {
+
+	private static final long serialVersionUID = 1L;
 	private Map m;
 	private Board board;
 	
+	
 	public BoardPanel() {
 		m = new Map();
-		timer = new Timer(25, this);
-		timer.start();
 	}
-	
+
 	public void actionPerformed(ActionEvent e){
 		repaint();
 	}
-	
+
 	public void paint(Graphics w) {
 		super.paint(w);
+		if(board==null)return;
 		
-		for(int y=0; y<21; y++)	{
-			for(int x = 0; x<37; x++)	{
+		for(int i=0; i<board.fields().length; i++) {
+			for(int j=0; j<board.fields()[i].length; j ++) {
 				
-				if(m.getMap(x, y).equals("w"))
-				{
-					w.drawImage(m.getWall(), x*26, y*26, null);
-				}
-				
-				else if(m.getMap(x, y).equals("C")) {
-					w.drawImage(m.getCheese(), x*26, y*26, null);
-				}
-				
-				else if(m.getMap(x, y).equals("m")) {
-					w.drawImage(m.getMouse(), x*26, y*26, null);
+				if (board.fields()[i][j] == Field.wall) {
+					w.drawImage(m.getWall(), i*26, j*26, null);
+				} else if (board.fields()[i][j] == Field.start) {
+					w.drawImage(m.getMouse(), i*26, j*26, null);
+				} else if (board.fields()[i][j] == Field.floor) {
+					w.drawImage(m.getPath(), i*26, j*26, null);
+				} else if (board.fields()[i][j] == Field.end) {
+					w.drawImage(m.getCheese(), i*26, j*26, null);
 				}
 				
 			}
 		}
-		
-	
-		
 	}
 
 	public Board getBoard() {
@@ -58,6 +49,7 @@ public class BoardPanel extends JPanel implements ActionListener {
 	}
 
 	public void setBoard(Board board) {
+		System.out.println(board + "***********************");
 		this.board = board;
 	}
 }

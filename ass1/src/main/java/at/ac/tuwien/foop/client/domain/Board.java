@@ -16,11 +16,6 @@ public class Board {
 		this.fields = fields;
 	}
 
-	/**
-	 * 
-	 * @param fieldString
-	 * @param width
-	 */
 	private static Field[][] generateFields(String fieldString, int width) {
 		Objects.requireNonNull(fieldString);
 		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
@@ -35,6 +30,8 @@ public class Board {
 
 		int i = 0;
 		int j = 0;
+		
+		
 		for (char c : fieldString.toCharArray()) {
 			if (c == 'w') {
 				f[j][i] = Field.wall;
