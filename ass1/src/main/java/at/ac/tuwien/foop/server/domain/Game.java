@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
@@ -20,7 +21,8 @@ public class Game {
 
 	private boolean started = false;
 	private List<Player> player = new ArrayList<>();
-	private BoardString board;
+	private BoardString boardString;
+	private Board board;
 	private GameLogicService service = new GameLogicService();
 
 	public void addGameEventListener(GameEventListener listener) {
@@ -81,12 +83,17 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
 	
-	public BoardString board() {
+	public BoardString boardString() {
+		return boardString;
+	}
+	
+	public Board board() {
 		return board;
 	}
 	
 	public void setBoard(BoardString bs) {
-		board = bs;
+		boardString = bs;
+		board = Board.createBoard(bs.board, bs.width);
 	}
 	
 	public List<Player> getPlayer() {

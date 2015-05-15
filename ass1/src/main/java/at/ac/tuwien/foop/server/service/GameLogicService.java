@@ -12,8 +12,8 @@ public class GameLogicService {
 	private static String BOARD_PATH = "Map.txt";
 
 	public BoardString getBoard(Game game) {
-		if (game.board() != null) {
-			return game.board();
+		if (game.boardString() != null) {
+			return game.boardString();
 		}
 
 		// TODO: load random board

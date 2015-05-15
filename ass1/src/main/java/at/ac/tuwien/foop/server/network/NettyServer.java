@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server;
+package at.ac.tuwien.foop.server.network;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
