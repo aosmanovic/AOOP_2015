@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 
 
+
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Board.Field;
@@ -62,7 +63,7 @@ public class GameLogicService {
 			ls.add(new Coordinates(x+1,y+1));
 			ls.add(new Coordinates(x-1,y));
 			ls.add(new Coordinates(x,y-1));
-			
+
 
 			/*if (field  == Field.wall) {
 					w.drawImage(m.getWall(), j*26, i*26, null);
@@ -74,21 +75,45 @@ public class GameLogicService {
 					w.drawImage(m.getCheese(), j*26, i*26, null);
 				}*/
 
-	
-			
-							
+
+
+
 			String fieldString = game.boardString().toString();
 			int width = game.boardString().getWidth();
 			Field[][] f = new Field[fieldString.length() / width][width];
-			
-			for(int j = 0; j<ls.size(); j++) {
-				if(f[ls.get(j).getX()][ls.get(j).getY()] == Field.floor) {
-					game.getPlayer().get(i).setCoordinates(ls.get(j));
-				}
-			}
-			
-		}
+			int count = 0;
 
+			for(int j = 0; j<ls.size(); j++) {
+				if(f[ls.get(j).getX()][ls.get(j).getY()] != Field.floor ) {
+					ls.remove(j);
+				} 
+
+				// TODO game.getPlayer().get(i).setCoordinates(ls.get(j));
+
+			}
+
+			int o = 0;
+			while(o !=ls.size()) {
+				for(int k =0; k<ls.size();k++) {
+					//if(compareCoordinates(ls.get(o),ls.get(k));
+					
+				}
+				o++;
+			}
+		}
+	}
+
+	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
+
+		double x = (c2.getX() - c1.getX())*(c2.getX() - c1.getX());
+		double y = (c2.getY() - c1.getY())*(c2.getY() - c1.getY());
+		double d = Math.sqrt(x-y);
+
+		return d;
+	}
+
+	public void compareDistance(Coordinates c1, Coordinates c2) {
+		
 	}
 
 }
