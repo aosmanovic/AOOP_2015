@@ -31,13 +31,13 @@ public class BoardPanel extends JPanel {
 			for(int j=0; j<board.fields()[i].length; j ++) {
 				
 				if (board.fields()[i][j] == Field.wall) {
-					w.drawImage(m.getWall(), i*26, j*26, null);
+					w.drawImage(m.getWall(), j*26, i*26, null);
 				} else if (board.fields()[i][j] == Field.start) {
-					w.drawImage(m.getMouse(), i*26, j*26, null);
+					w.drawImage(m.getMouse(), j*26, i*26, null);
 				} else if (board.fields()[i][j] == Field.floor) {
-					w.drawImage(m.getPath(), i*26, j*26, null);
+					w.drawImage(m.getPath(), j*26, i*26, null);
 				} else if (board.fields()[i][j] == Field.end) {
-					w.drawImage(m.getCheese(), i*26, j*26, null);
+					w.drawImage(m.getCheese(), j*26, i*26, null);
 				}
 				
 			}
