@@ -3,7 +3,8 @@ package at.ac.tuwien.foop.client.domain;
 import org.junit.Assert;
 import org.junit.Test;
 
-import at.ac.tuwien.foop.client.domain.Board.Field;
+import at.ac.tuwien.foop.domain.Board;
+import at.ac.tuwien.foop.domain.Board.Field;
 
 public class BoardTest {
 	

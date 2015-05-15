@@ -10,10 +10,15 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+<<<<<<< HEAD
+=======
 import at.ac.tuwien.foop.client.domain.Board;
+import at.ac.tuwien.foop.client.domain.Coordinates;
+>>>>>>> 66fdd7570821c40a1e142d132ce29d46032ad80f
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.service.GameCore;
+import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Update;
 import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.domain.message.Message;
@@ -33,6 +38,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	private Game game;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Channel channel;
+
 
 	private List<ChannelActiveListener> listeners = new ArrayList<>();
 
@@ -62,7 +68,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(new Player(mapper.readValue(str,
-					NewPlayerMessage.class).name, null)); // TODO, set coordinates
+					NewPlayerMessage.class).name, new Coordinates(10,10))); // TODO, set coordinates
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);

@@ -16,4 +16,15 @@ public class Player {
 	public Coordinates coordinates() {
 		return coordinates;
 	}
+
+	public Coordinates getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(Coordinates coordinates) {
+		this.coordinates = coordinates;
+	}
+	
+	
+	
 }

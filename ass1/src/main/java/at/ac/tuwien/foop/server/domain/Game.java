@@ -6,9 +6,11 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
 	private static Logger log = LoggerFactory.getLogger(Game.class);
@@ -18,7 +20,13 @@ public class Game {
 
 	private boolean started = false;
 	private List<Player> player = new ArrayList<>();
+<<<<<<< HEAD
+	private BoardString boardString;
+	private Board board;
+=======
 	private BoardString board;
+	private GameLogicService service = new GameLogicService();
+>>>>>>> 66fdd7570821c40a1e142d132ce29d46032ad80f
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -50,6 +58,9 @@ public class Game {
 		}
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
+		
+		//call movementmethod here
+		service.movement();
 	}
 
 	/**
@@ -75,11 +86,16 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
 	
-	public BoardString board() {
+	public BoardString boardString() {
+		return boardString;
+	}
+	
+	public Board board() {
 		return board;
 	}
 	
 	public void setBoard(BoardString bs) {
-		board = bs;
+		boardString = bs;
+		board = Board.createBoard(bs.board, bs.width);
 	}
 }

@@ -3,9 +3,9 @@ package at.ac.tuwien.foop.client.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.domain.Board;
 
 public class GameTest {
 	

@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.client.NettyClient;
-import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.events.GameEvent;
@@ -18,6 +17,7 @@ import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
+import at.ac.tuwien.foop.domain.Board;
 
 public class StartController implements ConnectListener, GameEventListener {
 
@@ -95,7 +95,7 @@ public class StartController implements ConnectListener, GameEventListener {
 			showBoard();
 		} else if (e.type == GameEvent.Type.BOARD) {
 			Board b = game.getBoard();
-			boardFrame.getBoard().setBoard(b);
+			boardFrame.getBoard().setGame(game);
 			System.out.println(b);
 		}
 	}
