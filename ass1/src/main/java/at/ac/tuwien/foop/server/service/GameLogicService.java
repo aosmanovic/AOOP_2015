@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server.service;
 
 import java.util.Scanner;
 
+import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 
@@ -36,7 +37,9 @@ public class GameLogicService {
 		}
 	}
 	
-	public void movement() {
+	public void movement(Game game) {
+		
+		//game.getPlayer()
 		
 	}
 

@@ -55,7 +55,7 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.UPDATE));
 		
 		//call movementmethod here
-		service.movement();
+		service.movement(this);
 	}
 
 	/**
@@ -88,4 +88,9 @@ public class Game {
 	public void setBoard(BoardString bs) {
 		board = bs;
 	}
+	
+	public List<Player> getPlayer() {
+		return player;
+	}
+	
 }
