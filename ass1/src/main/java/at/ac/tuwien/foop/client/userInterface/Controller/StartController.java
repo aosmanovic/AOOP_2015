@@ -1,8 +1,5 @@
 package at.ac.tuwien.foop.client.userInterface.Controller;
 
-
-
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -19,7 +16,7 @@ import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
-import at.ac.tuwien.foop.client.userInterface.Views.Maze;
+import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
 
 public class StartController implements ConnectListener, GameEventListener {
@@ -27,17 +24,17 @@ public class StartController implements ConnectListener, GameEventListener {
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game;
 	private GameCore core = null;
-//	private Thread server;
 	private StartView start;
 	private GameService service = new GameService();
-	private BoardPanel boardpanel = new BoardPanel();
+	private BoardFrame boardFrame = new BoardFrame();
 	
 	public StartController() {
 		
-//		server = new Thread(new NettyServer());
 		start = new StartView();
 		connect("localhost", "20150");
 		game.addGameEventListener(this);
+		
+		boardFrame.setBoard(new BoardPanel());
 		
 		
 		start.setStartControllerListener(new ActionListener() {	
@@ -95,18 +92,15 @@ public class StartController implements ConnectListener, GameEventListener {
 		if (e.type == GameEvent.Type.NEW_PLAYER ) {
 			start.printMessage();
 		} else if (e.type == GameEvent.Type.START) {
-			showMaze();
+			showBoard();
 		} else if (e.type == GameEvent.Type.BOARD) {
 			Board b = game.getBoard();
-			boardpanel.setBoard(b);
+			boardFrame.getBoard().setBoard(b);
 			System.out.println(b);
 		}
 	}
 	
-	public void showMaze() {
-		new Maze();
+	public void showBoard() {
+		boardFrame.setVisible(true);
 	}
-	
-	
-
 }
