@@ -10,40 +10,42 @@ public class Board {
 		wall, floor, start, end
 	}
 
-	private Field[][] fields; // y|x
+	private final Field[][] fields; // y|x
 
-	private Board() {}
-	
+	private Board(Field[][] fields) {
+		this.fields = fields;
+	}
+
 	/**
 	 * 
 	 * @param fieldString
 	 * @param width
 	 */
-	private void generateFields(String fieldString, int width) {
+	private static Field[][] generateFields(String fieldString, int width) {
 		Objects.requireNonNull(fieldString);
 		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
 				width);
 
 		if (fieldString.length() % width != 0) {
-			throw new RuntimeException(
+			throw new IllegalArgumentException(
 					"field length does not match board width!");
 		}
 
-		fields = new Field[fieldString.length() / width][width];
-		
+		Field[][] f = new Field[fieldString.length() / width][width];
+
 		int i = 0;
 		int j = 0;
 		for (char c : fieldString.toCharArray()) {
 			if (c == 'w') {
-				fields[j][i] = Field.wall;
+				f[j][i] = Field.wall;
 			} else if (c == '-') {
-				fields[j][i] = Field.floor;
+				f[j][i] = Field.floor;
 			} else if (c == 'm') {
-				fields[j][i] = Field.start;
+				f[j][i] = Field.start;
 			} else if (c == 'C') {
-				fields[j][i] = Field.end;
+				f[j][i] = Field.end;
 			} else {
-				throw new RuntimeException("unknown field type!");
+				throw new IllegalArgumentException("unknown field type!");
 			}
 			i++;
 			if (i == width) {
@@ -51,11 +53,26 @@ public class Board {
 				j++;
 			}
 		}
+		return f;
 	}
 
+	/**
+	 * Create a board instance using a string where every character represents a
+	 * field type.<br/>
+	 * Allowed fields are:<br/>
+	 * <code>w</code>: wall, unpassable field<br/>
+	 * <code>-</code>: floor, passable field<br/>
+	 * <code>m</code>: mouse, starting field<br/>
+	 * <code>C</code>: cheese, goal field<br/>
+	 * 
+	 * @param width
+	 *            the width of the board
+	 */
 	public static Board createBoard(String fieldString, int width) {
-		Board b = new Board();
-		b.generateFields(fieldString, width);
-		return b;
+		return new Board(generateFields(fieldString, width));
+	}
+	
+	public Field[][] fields() {
+		return fields;
 	}
 }
