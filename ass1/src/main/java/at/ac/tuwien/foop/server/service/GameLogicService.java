@@ -1,9 +1,14 @@
 package at.ac.tuwien.foop.server.service;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-import at.ac.tuwien.foop.client.domain.Coordinates;
+
+
+import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 
@@ -44,23 +49,44 @@ public class GameLogicService {
 		for(int i =0; i<game.getPlayer().size();i++) {
 			Coordinates c = game.getPlayer().get(i).getCoordinates();
 
-			//while (c.getX()!=9 && c.getY()!=18) {
-				int x = game.getPlayer().get(i).getCoordinates().getX();
-				int y = game.getPlayer().get(i).getCoordinates().getY();
 
-				Coordinates c1 = new Coordinates(x+1,y);
-				Coordinates c2 = new Coordinates(x+1,y-1);
-				Coordinates c3 = new Coordinates(x-1,y+1);
-				Coordinates c4 = new Coordinates(x-1,y-1);
-				Coordinates c5 = new Coordinates(x,y+1);
-				Coordinates c6 = new Coordinates(x+1,y+1);
-				Coordinates c7 = new Coordinates(x-1,y);
-				Coordinates c8 = new Coordinates(x,y-1);
+			int x = game.getPlayer().get(i).getCoordinates().getX();
+			int y = game.getPlayer().get(i).getCoordinates().getY();
 
-				
-				
+			ArrayList<Coordinates> ls= new ArrayList<>();
+			ls.add(new Coordinates(x+1,y));
+			ls.add(new Coordinates(x+1,y-1));
+			ls.add(new Coordinates(x-1,y+1));
+			ls.add(new Coordinates(x-1,y-1));
+			ls.add(new Coordinates(x,y+1));
+			ls.add(new Coordinates(x+1,y+1));
+			ls.add(new Coordinates(x-1,y));
+			ls.add(new Coordinates(x,y-1));
 			
 
+			/*if (field  == Field.wall) {
+					w.drawImage(m.getWall(), j*26, i*26, null);
+				} else if (field  == Field.start) {
+					w.drawImage(m.getWall(), j*26, i*26, null);
+				} else if (field == Field.floor) {
+					w.drawImage(m.getPath(), j*26, i*26, null);
+				} else if (field  == Field.end) {
+					w.drawImage(m.getCheese(), j*26, i*26, null);
+				}*/
+
+	
+			
+							
+			String fieldString = game.boardString().toString();
+			int width = game.boardString().getWidth();
+			Field[][] f = new Field[fieldString.length() / width][width];
+			
+			for(int j = 0; j<ls.size(); j++) {
+				if(f[ls.get(j).getX()][ls.get(j).getY()] == Field.floor) {
+					game.getPlayer().get(i).setCoordinates(ls.get(j));
+				}
+			}
+			
 		}
 
 	}

@@ -1,7 +1,5 @@
 package at.ac.tuwien.foop.domain;
 
-import at.ac.tuwien.foop.client.domain.Coordinates;
-
 
 
 public class Player {
@@ -21,5 +19,8 @@ public class Player {
 		return coordinates;
 	}
 	
+	public void setCoordinates(Coordinates c) {
+		this.coordinates=c;
+	}
 	
 }
