@@ -5,7 +5,9 @@ import java.util.List;
 
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Update;
+
 
 public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();

@@ -9,6 +9,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
@@ -18,7 +19,6 @@ import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
-import at.ac.tuwien.foop.server.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.service.GameLogicService;
@@ -52,7 +52,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		} else if (m.type == Type.C_JOIN) {
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
 			if (player == null) {
-				player = new Player(jm.name);
+				player = new Player(jm.name, null); //TODO  PUT Coordinates 
 			}
 			if (game.join(player)) {
 				BoardString b = service.getBoard(game);

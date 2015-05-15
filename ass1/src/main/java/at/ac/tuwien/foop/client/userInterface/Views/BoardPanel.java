@@ -10,7 +10,8 @@ import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Board.Field;
 import at.ac.tuwien.foop.client.domain.Coordinates;
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.domain.Player;
+import at.ac.tuwien.foop.domain.Player;
+
 
 public class BoardPanel extends JPanel {
 

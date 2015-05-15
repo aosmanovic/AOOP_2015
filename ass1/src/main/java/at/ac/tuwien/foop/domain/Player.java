@@ -1,4 +1,8 @@
-package at.ac.tuwien.foop.client.domain;
+package at.ac.tuwien.foop.domain;
+
+import at.ac.tuwien.foop.client.domain.Coordinates;
+
+
 
 public class Player {
 	private final String name;
@@ -13,18 +17,9 @@ public class Player {
 		return name;
 	}
 
-	public Coordinates coordinates() {
-		return coordinates;
-	}
-
 	public Coordinates getCoordinates() {
 		return coordinates;
 	}
-
-	public void setCoordinates(Coordinates coordinates) {
-		this.coordinates = coordinates;
-	}
-	
 	
 	
 }
