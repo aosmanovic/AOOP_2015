@@ -99,11 +99,14 @@ public class StartController implements ConnectListener, GameEventListener {
 		} else if (e.type == GameEvent.Type.BOARD) {
 			Board b = game.getBoard();
 			boardpanel.setBoard(b);
+			System.out.println(b);
 		}
 	}
 	
 	public void showMaze() {
 		new Maze();
 	}
+	
+	
 
 }

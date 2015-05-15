@@ -11,6 +11,7 @@ import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 
 public class Map {
 
@@ -24,7 +25,7 @@ public class Map {
 		readFile();
 		closeFile();
 	}
-	
+
 	private void loadImages() {
 		try {
 			wall = new ImageIcon(ImageIO.read(loadStream("wall.png"))).getImage();
@@ -48,7 +49,7 @@ public class Map {
 			m = new Scanner(loadStream("Map.txt"));
 		} catch(Exception e) {
 			System.out.println("Error loading map!");
-			// TODO: handle failure!
+			JOptionPane.showMessageDialog(null, "An error occurrd, please try again!");
 		}
 	}
 
@@ -85,6 +86,6 @@ public class Map {
 		return mouse;
 	}
 
-	
-	
+
+
 }

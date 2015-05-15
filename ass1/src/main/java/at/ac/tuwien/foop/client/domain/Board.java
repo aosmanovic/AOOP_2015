@@ -12,7 +12,6 @@ public class Board {
 
 	private Field[][] fields; // y|x
 
-	private Board() {}
 	
 	/**
 	 * 
@@ -20,6 +19,7 @@ public class Board {
 	 * @param width
 	 */
 	private void generateFields(String fieldString, int width) {
+		System.out.println("DDD"+ fieldString.toString() +"w " + width);
 		Objects.requireNonNull(fieldString);
 		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
 				width);
@@ -33,6 +33,8 @@ public class Board {
 		
 		int i = 0;
 		int j = 0;
+		
+		
 		for (char c : fieldString.toCharArray()) {
 			if (c == 'w') {
 				fields[j][i] = Field.wall;
@@ -58,4 +60,14 @@ public class Board {
 		b.generateFields(fieldString, width);
 		return b;
 	}
+
+	public Field[][] getFields() {
+		return fields;
+	}
+
+	public void setFields(Field[][] fields) {
+		this.fields = fields;
+	}
+	
+	
 }
