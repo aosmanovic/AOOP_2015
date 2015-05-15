@@ -35,5 +35,9 @@ public class GameLogicService {
 			return new BoardString(buffer.toString(), width);
 		}
 	}
+	
+	public void movement() {
+		
+	}
 
 }

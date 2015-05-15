@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Board;
+import at.ac.tuwien.foop.client.domain.Coordinates;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.service.GameCore;
@@ -33,6 +34,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	private Game game;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Channel channel;
+
 
 	private List<ChannelActiveListener> listeners = new ArrayList<>();
 
@@ -62,7 +64,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(new Player(mapper.readValue(str,
-					NewPlayerMessage.class).name, null)); // TODO, set coordinates
+					NewPlayerMessage.class).name, new Coordinates(10,10))); // TODO, set coordinates
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);

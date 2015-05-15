@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
 	private static Logger log = LoggerFactory.getLogger(Game.class);
@@ -19,6 +20,7 @@ public class Game {
 	private boolean started = false;
 	private List<Player> player = new ArrayList<>();
 	private BoardString board;
+	private GameLogicService service = new GameLogicService();
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -50,6 +52,9 @@ public class Game {
 		}
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
+		
+		//call movementmethod here
+		service.movement();
 	}
 
 	/**
