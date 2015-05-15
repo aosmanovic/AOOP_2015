@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.userInterface.Controller.StartController;
-import at.ac.tuwien.foop.server.NettyServer;
+import at.ac.tuwien.foop.server.network.NettyServer;
 
 
 public class App {

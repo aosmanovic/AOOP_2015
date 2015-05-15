@@ -10,10 +10,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Coordinates;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.service.GameCore;
+import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Update;
 import at.ac.tuwien.foop.domain.Wind;

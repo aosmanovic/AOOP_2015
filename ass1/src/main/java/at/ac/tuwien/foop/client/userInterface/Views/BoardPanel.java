@@ -6,12 +6,10 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import at.ac.tuwien.foop.client.domain.Board;
-import at.ac.tuwien.foop.client.domain.Board.Field;
 import at.ac.tuwien.foop.client.domain.Coordinates;
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Player;
-
 
 public class BoardPanel extends JPanel {
 
