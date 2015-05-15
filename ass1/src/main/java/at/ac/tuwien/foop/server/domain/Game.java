@@ -20,13 +20,9 @@ public class Game {
 
 	private boolean started = false;
 	private List<Player> player = new ArrayList<>();
-<<<<<<< HEAD
 	private BoardString boardString;
 	private Board board;
-=======
-	private BoardString board;
 	private GameLogicService service = new GameLogicService();
->>>>>>> 66fdd7570821c40a1e142d132ce29d46032ad80f
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);

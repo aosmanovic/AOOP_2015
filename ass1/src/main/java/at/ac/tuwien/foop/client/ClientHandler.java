@@ -10,11 +10,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-<<<<<<< HEAD
-=======
-import at.ac.tuwien.foop.client.domain.Board;
 import at.ac.tuwien.foop.client.domain.Coordinates;
->>>>>>> 66fdd7570821c40a1e142d132ce29d46032ad80f
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.domain.Player;
 import at.ac.tuwien.foop.client.service.GameCore;
