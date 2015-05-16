@@ -12,7 +12,7 @@ public class Board {
 		wall, floor, start, end
 	}
 
-	private final Field[][] fields; // y|x
+	private Field[][] fields; // y|x
 
 	private Board(Field[][] fields) {
 		this.fields = fields;
@@ -74,6 +74,11 @@ public class Board {
 	
 	public Field[][] fields() {
 		return fields;
+	}
+	
+	public void setFields(Field[][] f) {
+		this.fields = f;
+		
 	}
 
 	public static Coordinates getCheesCoordinates() {

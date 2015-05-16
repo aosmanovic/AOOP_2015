@@ -3,6 +3,11 @@ package at.ac.tuwien.foop.server.service;
 import java.awt.List;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
@@ -13,6 +18,7 @@ import at.ac.tuwien.foop.server.domain.Game;
 public class GameLogicService {
 
 	private static String BOARD_PATH = "Map.txt";
+	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
 
 	public BoardString getBoard(Game game) {
 		if (game.boardString() != null) {
@@ -44,16 +50,17 @@ public class GameLogicService {
 	public void movement(Game game) {
 		Coordinates cheesCoordinates = Board.getCheesCoordinates();
 		boolean end = false;
-		Field[][] f = game.board().fields();
 
 		for(int i =0; i<game.getPlayer().size();i++) {
 			Player player =  game.getPlayer().get(i);
 
 			while(!player.getCoordinates().equals(cheesCoordinates) && end==false)
 			{
+				Field[][] f = game.board().fields();
 				Coordinates mouse = player.getCoordinates();
 				int x = mouse.getX();
 				int y = mouse.getY();
+				log.info("Pozicija misa" + mouse.toString());
 				
 				//Getting closes neighbpurs of the specific player
 				ArrayList<Coordinates> neighbourList= new ArrayList<>();
@@ -71,10 +78,17 @@ public class GameLogicService {
 						//Get path/floor neighbours
 						if(f[neighbour.getX()][neighbour.getY()].equals(Field.floor )) {
 							floorList.add(neighbour);
+							log.info(" komsije put" + neighbour);
 						} //Checked if chees/end is found
 						else if(f[neighbour.getX()][neighbour.getY()].equals(Field.end))
 						{
+							
+							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+							game.board().setFields(f);
+							
 							player.setCoordinates(neighbour);
+							//player.setVisitedCoordinates(player.getCoordinates());							
+							
 							end=true;
 							break;
 						}
@@ -83,6 +97,7 @@ public class GameLogicService {
 				if(end==false)
 				{	//Algorithm for mouse moving in chees direction
 					double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
+					System.out.println(floorList.size());
 					Coordinates closestNeigbour = floorList.get(0);
 					for(int k =0; k<floorList.size();k++) {
 						double distance = calculateDistanceToCheese(cheesCoordinates, floorList.get(k));
@@ -92,7 +107,21 @@ public class GameLogicService {
 							closestNeigbour = floorList.get(k);
 						}
 					}
+					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+					game.board().setFields(f);
+					
 					player.setCoordinates(closestNeigbour);
+					
+					
+					Coordinates lastVisitedPath = player.getVisitedCoordinates().get(player.getVisitedCoordinates().size()-2);
+					// when he is in a dead end
+					if(countNeighbourWals(f,player.getCoordinates())==3 && pathIsVisited(lastVisitedPath,player.getCoordinates()) == true) {	
+						log.info("OK");
+						//player.setCoordinates(new Coordinates(2,5));
+						end = true;
+						break;
+					} 
+		
 				}
 
 			}
@@ -106,5 +135,32 @@ public class GameLogicService {
 		double d = Math.sqrt(x+y);
 		return d;
 	}
+	
+	public int countNeighbourWals(Field[][] f, Coordinates c) {
+		int i = 0;
+		
+		if(f[c.getX()][c.getY()-1]== Field.wall) i++;
+		if(f[c.getX()][c.getY()+1]== Field.wall) i++;
+		if(f[c.getX()-1][c.getY()]== Field.wall) i++;
+		if(f[c.getX()+1][c.getY()]== Field.wall) i++;
+			
+		return i;
+	}
 
+	public boolean pathIsVisited(Coordinates lastPath, Coordinates mousePosition) {
+		boolean isVisited = false;
+		
+		Coordinates n1 = new Coordinates(mousePosition.getX(),mousePosition.getY()-1);
+		Coordinates n2 = new Coordinates(mousePosition.getX(),mousePosition.getY()+1);
+		Coordinates n3 = new Coordinates(mousePosition.getX()-1,mousePosition.getY());
+		Coordinates n4 = new Coordinates(mousePosition.getX()+1,mousePosition.getY());
+		
+		if(lastPath.equals(n1) || lastPath.equals(n2)|| lastPath.equals(n3)|| lastPath.equals(n4)) 
+			isVisited = true;
+
+		
+		return isVisited;
+	}
+	
+	
 }
