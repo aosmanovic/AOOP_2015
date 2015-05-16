@@ -24,8 +24,8 @@ public class GameLogicServiceTest {
 		Player player = new Player("Al", c);
 		game.join(player);
 		String b = 
-				  "wwwwwwww"
-				+ "w----Cww"
+				  "wwww---C"
+				+ "w----www"
 				+ "w-wmwwww"
 				+ "w---wwww"
 				+ "wwwwwwww";
@@ -34,7 +34,7 @@ public class GameLogicServiceTest {
 		game.setBoard(bs);
 		Player actual = game.getPlayer().get(0);
 		service.movement(game);
-		Assert.assertEquals(new Coordinates(1, 3), actual.getCoordinates());
+		Assert.assertEquals(new Coordinates(0, 7), actual.getCoordinates());
 		
 	}
 	
