@@ -48,7 +48,7 @@ public class GameLogicService {
 	}
 
 	public void movement(Game game) {
-		Coordinates cheesCoordinates = new Coordinates(1,5);
+		Coordinates cheesCoordinates = game.board().getCheesCoordinates();
 		boolean end = false;
 		Field[][] f = game.board().fields();
 
