@@ -5,12 +5,14 @@ import java.util.Objects;
 import org.apache.commons.lang3.Validate;
 
 public class Board {
+	private static Coordinates  cheesCoordinates;
+
 	public static enum Field { // TODO: just an example.. move to a separate
 								// file
 		wall, floor, start, end
 	}
 
-	private final Field[][] fields; // y|x
+	private Field[][] fields; // y|x
 
 	private Board(Field[][] fields) {
 		this.fields = fields;
@@ -41,6 +43,7 @@ public class Board {
 				f[j][i] = Field.start;
 			} else if (c == 'C') {
 				f[j][i] = Field.end;
+				cheesCoordinates = new Coordinates(j, i);
 			} else {
 				throw new IllegalArgumentException("unknown field type!");
 			}
@@ -71,5 +74,18 @@ public class Board {
 	
 	public Field[][] fields() {
 		return fields;
+	}
+	
+	public void setFields(Field[][] f) {
+		this.fields = f;
+		
+	}
+
+	public static Coordinates getCheesCoordinates() {
+		return cheesCoordinates;
+	}
+
+	public static void setCheesCoordinates(Coordinates cheesCoordinates) {
+		Board.cheesCoordinates = cheesCoordinates;
 	}
 }

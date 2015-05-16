@@ -20,21 +20,43 @@ public class GameLogicServiceTest {
 	public void testMovement() {
 		Game game = new Game();
 		//game.start();
-		Coordinates c = new Coordinates(3,4);
+		Coordinates c = new Coordinates(2,3);
+		Player player = new Player("Al", c);
+		game.join(player);
+		String b = 
+				"wwwwwwww"
+		      + "w----Cww"
+			  + "w-wmwwww"
+			  + "w---wwww"
+			  + "wwwwwwww";
+		BoardString bs = new BoardString(b,8);
+		
+		game.setBoard(bs);
+		Player actual = game.getPlayer().get(0);
+		service.movement(game);
+		Assert.assertEquals(new Coordinates(1, 5), actual.getCoordinates());
+		
+	}
+	
+	@Test
+	public void testMovementWithDeadEnd() {
+		Game game = new Game();
+		//game.start();
+		Coordinates c = new Coordinates(2,3);
 		Player player = new Player("Al", c);
 		game.join(player);
 		String b = 
 				  "wwwwwwww"
-				+ "w----Cww"
-				+ "w-wmwwww"
-				+ "w---wwww"
+				+ "www-wCww"
+				+ "w--mw-ww"
+				+ "w-----ww"
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b,8);
 		
 		game.setBoard(bs);
-		service.movement(game);
 		Player actual = game.getPlayer().get(0);
-		Assert.assertEquals(new Coordinates(2, 4), actual.getCoordinates());
+		service.movement(game);
+		Assert.assertEquals(new Coordinates(0, 7), actual.getCoordinates());
 		
 	}
 	
