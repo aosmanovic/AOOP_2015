@@ -1,7 +1,5 @@
 package at.ac.tuwien.foop.domain;
 
-
-
 public class Coordinates {
 	public final int x;
 	public final int y;
@@ -39,8 +37,4 @@ public class Coordinates {
 	public String toString() {
 		return "Coordinates [x=" + x + ", y=" + y + "]";
 	}
-	
-	
-	
-	
 }

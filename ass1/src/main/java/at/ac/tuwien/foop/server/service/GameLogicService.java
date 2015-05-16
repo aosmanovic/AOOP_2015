@@ -1,17 +1,15 @@
 package at.ac.tuwien.foop.server.service;
 
-import java.awt.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.ClientHandler;
 import at.ac.tuwien.foop.domain.Board;
+import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
-import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 
@@ -48,7 +46,7 @@ public class GameLogicService {
 	}
 
 	public void movement(Game game) {
-		Coordinates cheesCoordinates = Board.getCheesCoordinates();
+		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
 		boolean end = false;
 
 		for(int i =0; i<game.getPlayer().size();i++) {
@@ -83,8 +81,9 @@ public class GameLogicService {
 						else if(f[neighbour.getX()][neighbour.getY()].equals(Field.end))
 						{
 							
-							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
-							game.board().setFields(f);
+							// field will never be changed!
+//							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+//							game.board().setFields(f);
 							
 							player.setCoordinates(neighbour);
 							//player.setVisitedCoordinates(player.getCoordinates());							
@@ -107,8 +106,9 @@ public class GameLogicService {
 							closestNeigbour = floorList.get(k);
 						}
 					}
-					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
-					game.board().setFields(f);
+					// field will never be changed!
+//					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+//					game.board().setFields(f);
 					
 					player.setCoordinates(closestNeigbour);
 					
