@@ -71,7 +71,7 @@ public class GameLogicService {
 						//Get path/floor neighbours
 						if(f[neighbour.getX()][neighbour.getY()].equals(Field.floor )) {
 							floorList.add(neighbour);
-						} 
+						} //Checked if chees/end is found
 						else if(f[neighbour.getX()][neighbour.getY()].equals(Field.end))
 						{
 							player.setCoordinates(neighbour);
@@ -81,7 +81,7 @@ public class GameLogicService {
 					}
 				}
 				if(end==false)
-				{
+				{	//Algorithm for mouse moving in chees direction
 					double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
 					Coordinates closestNeigbour = floorList.get(0);
 					for(int k =0; k<floorList.size();k++) {
