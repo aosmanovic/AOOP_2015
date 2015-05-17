@@ -1,5 +1,8 @@
 package at.ac.tuwien.foop.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
@@ -13,13 +16,16 @@ public class Board {
 
 	private Field[][] fields; // y|x
 	private Coordinates cheeseCoordinates;
-//	private List<Coordinates> startCoordinates;
+	private List<Coordinates> startCoordinates;
 
-	private Board(Field[][] fields, Coordinates cheeseCoordinates) {
+
+
+	public Board(Field[][] fields, Coordinates cheeseCoordinates,
+			List<Coordinates> startCoordinates) {
 		this.fields = fields;
 		this.cheeseCoordinates = cheeseCoordinates;
+		this.startCoordinates = Collections.unmodifiableList(startCoordinates);
 	}
-
 
 	/**
 	 * Create a board instance using a string where every character represents a
@@ -42,6 +48,7 @@ public class Board {
 
 		Field[][] f = new Field[fieldString.length() / width][width];
 		Coordinates cc = null;
+		List<Coordinates> startCoordinates = new ArrayList<>();
 
 		int i = 0;
 		int j = 0;
@@ -53,9 +60,10 @@ public class Board {
 				f[j][i] = Field.floor;
 			} else if (c == 'm') {
 				f[j][i] = Field.start;
+				startCoordinates.add(new Coordinates(i, j));
 			} else if (c == 'C') {
 				f[j][i] = Field.end;
-				cc = new Coordinates(j, i);
+				cc = new Coordinates(i, j);
 			} else {
 				throw new IllegalArgumentException("unknown field type!");
 			}
@@ -67,7 +75,7 @@ public class Board {
 		}
 		Validate.notNull(cc, "no cheese found on map!");
 		
-		return new Board(f, cc);
+		return new Board(f, cc, startCoordinates);
 	}
 
 	public Field[][] fields() {
@@ -76,5 +84,9 @@ public class Board {
 
 	public Coordinates cheeseCoordinates() {
 		return cheeseCoordinates;
+	}
+	
+	public List<Coordinates> startCoordinates() {
+		return startCoordinates;
 	}
 }

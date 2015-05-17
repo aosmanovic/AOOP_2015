@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board;
-import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
@@ -17,7 +16,6 @@ import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
 	private static Logger log = LoggerFactory.getLogger(Game.class);
-	private static final int MAX_PLAYERS = 4;
 
 	private List<GameEventListener> listeners = new ArrayList<>();
 
@@ -30,7 +28,7 @@ public class Game {
 	public Game(BoardString bs) {
 		setBoard(bs);
 	}
-	
+
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
 	}
@@ -73,9 +71,10 @@ public class Game {
 	 * @return a player if joined, null otherwise
 	 */
 	public synchronized Player join(String name) {
-		//TODO: maybe handle full and name already used differently!
+		// TODO: maybe handle full and name already used differently!
 		Coordinates c;
-		if (player.size() < MAX_PLAYERS && !player.stream().anyMatch(p -> p.name().equals(name)) && (c = findFreeStartingCoordinates()) != null) {
+		if (!player.stream().anyMatch(p -> p.name().equals(name))
+				&& (c = findFreeStartingCoordinates()) != null) {
 			Player p = new Player(name, c);
 			player.add(p);
 			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
@@ -85,17 +84,11 @@ public class Game {
 	}
 
 	private Coordinates findFreeStartingCoordinates() {
-		Field[][] f = board.fields();
-		for (int i = 0; i < f.length; i++) {
-			for (int j = 0; j < f[i].length; j++) {
-				if (f[i][j] == Field.start) {
-					final Coordinates c = new Coordinates(j, i);
-					if (!player.stream().anyMatch(p -> p.getCoordinates().equals(c)))
-						return c;
-				}
-			}
-		}
-		return null;
+		return board.startCoordinates()
+				.stream()
+				.filter(c -> !player.stream().anyMatch(
+						p -> p.getCoordinates().equals(c))).findFirst()
+				.orElse(null);
 	}
 
 	public void leave(Player p) {

@@ -36,10 +36,9 @@ public class Player {
 		return visitedCoordinates;
 	}
 
-	/*public void setVisitedCoordinates(Coordinates visitedCoordinates) {
-	
-	}*/
-	
-	
-	
+	@Override
+	public String toString() {
+		return "Player [name=" + name + ", coordinates=" + coordinates
+				+ ", visitedCoordinates=" + visitedCoordinates + "]";
+	}
 }
