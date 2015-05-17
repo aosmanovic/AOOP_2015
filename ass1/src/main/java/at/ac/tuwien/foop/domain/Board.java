@@ -13,6 +13,7 @@ public class Board {
 
 	private Field[][] fields; // y|x
 	private Coordinates cheeseCoordinates;
+//	private List<Coordinates> startCoordinates;
 
 	private Board(Field[][] fields, Coordinates cheeseCoordinates) {
 		this.fields = fields;

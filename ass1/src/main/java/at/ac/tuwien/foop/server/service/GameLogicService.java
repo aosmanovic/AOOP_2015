@@ -6,7 +6,6 @@ import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
@@ -15,21 +14,22 @@ import at.ac.tuwien.foop.server.domain.Game;
 
 public class GameLogicService {
 
-	private static String BOARD_PATH = "Map.txt";
+	public static String BOARD_PATH = "Map.txt";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
 
-	public BoardString getBoard(Game game) {
-		if (game.boardString() != null) {
-			return game.boardString();
-		}
+//	public BoardString getBoard(Game game) {
+//		if (game.boardString() != null) {
+//			return game.boardString();
+//		}
+//
+//		// TODO: load random board
+//		BoardString bs = loadBoard(BOARD_PATH);
+//		game.setBoard(bs);
+//		return bs;
+//	}
 
-		// TODO: load random board
-		BoardString bs = loadBoard(BOARD_PATH);
-		game.setBoard(bs);
-		return bs;
-	}
-
-	private BoardString loadBoard(String path) {
+	public BoardString loadBoard(String path) {
+		log.debug("load board with path '{}'!", path);
 		try (Scanner s = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(path))) {
 			int width = 0;
 			StringBuffer buffer = new StringBuffer();

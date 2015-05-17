@@ -22,6 +22,10 @@ public class Player {
 	public Coordinates getCoordinates() {
 		return coordinates;
 	}
+
+	public void moveTo(int x, int y) {
+		coordinates = new Coordinates(x, y);
+	}
 	
 	public void setCoordinates(Coordinates c) {
 		this.coordinates=c;

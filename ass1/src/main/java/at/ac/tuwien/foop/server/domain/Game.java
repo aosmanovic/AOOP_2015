@@ -27,6 +27,10 @@ public class Game {
 	private Board board;
 	private GameLogicService service = new GameLogicService();
 
+	public Game(BoardString bs) {
+		setBoard(bs);
+	}
+	
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
 	}
@@ -66,25 +70,32 @@ public class Game {
 	 * A player joins the game if the maximum amount of players is not reached
 	 * yet and no other player with the same name joined before.
 	 * 
-	 * @return true if the player joined, false otherwise
+	 * @return a player if joined, null otherwise
 	 */
-	public synchronized boolean join(String name) {
-		if (player.size() < MAX_PLAYERS && !player.stream().anyMatch(p -> p.name().equals(name))) {
-			
-			player.add(new Player(name, findFreeStartingCoordinates()));
+	public synchronized Player join(String name) {
+		//TODO: maybe handle full and name already used differently!
+		Coordinates c;
+		if (player.size() < MAX_PLAYERS && !player.stream().anyMatch(p -> p.name().equals(name)) && (c = findFreeStartingCoordinates()) != null) {
+			Player p = new Player(name, c);
+			player.add(p);
 			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
-			return true;
+			return p;
 		}
-		return false;
+		return null;
 	}
 
 	private Coordinates findFreeStartingCoordinates() {
 		Field[][] f = board.fields();
 		for (int i = 0; i < f.length; i++) {
 			for (int j = 0; j < f[i].length; j++) {
-//				if (f[i][j] == Field.)
+				if (f[i][j] == Field.start) {
+					final Coordinates c = new Coordinates(j, i);
+					if (!player.stream().anyMatch(p -> p.getCoordinates().equals(c)))
+						return c;
+				}
 			}
 		}
+		return null;
 	}
 
 	public void leave(Player p) {
@@ -103,7 +114,7 @@ public class Game {
 		return board;
 	}
 
-	public void setBoard(BoardString bs) {
+	private void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
 	}
