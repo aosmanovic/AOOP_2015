@@ -17,17 +17,6 @@ public class GameLogicService {
 	public static String BOARD_PATH = "Map.txt";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
 
-//	public BoardString getBoard(Game game) {
-//		if (game.boardString() != null) {
-//			return game.boardString();
-//		}
-//
-//		// TODO: load random board
-//		BoardString bs = loadBoard(BOARD_PATH);
-//		game.setBoard(bs);
-//		return bs;
-//	}
-
 	public BoardString loadBoard(String path) {
 		log.debug("load board with path '{}'!", path);
 		try (Scanner s = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(path))) {
@@ -49,13 +38,13 @@ public class GameLogicService {
 		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
 		boolean end = false;
 
-		for(int i =0; i<game.getPlayer().size();i++) {
-			Player player =  game.getPlayer().get(i);
+		for(int i =0; i<game.getPlayers().size();i++) {
+			Player player =  game.getPlayers().get(i);
 
-			while(!player.getCoordinates().equals(cheesCoordinates) && end==false)
+			while(!player.coordinates().equals(cheesCoordinates) && end==false)
 			{
 				Field[][] f = game.board().fields();
-				Coordinates mouse = player.getCoordinates();
+				Coordinates mouse = player.coordinates();
 				int x = mouse.getX();
 				int y = mouse.getY();
 				log.info("Pozicija misa" + mouse.toString());
@@ -85,7 +74,7 @@ public class GameLogicService {
 //							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
 //							game.board().setFields(f);
 							
-							player.setCoordinates(neighbour);
+							game.movePlayer(player.name(), neighbour);
 							//player.setVisitedCoordinates(player.getCoordinates());							
 							
 							end=true;
@@ -110,12 +99,11 @@ public class GameLogicService {
 //					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
 //					game.board().setFields(f);
 					
-					player.setCoordinates(closestNeigbour);
-					
+					game.movePlayer(player.name(), closestNeigbour);
 					
 					Coordinates lastVisitedPath = player.getVisitedCoordinates().get(player.getVisitedCoordinates().size()-2);
 					// when he is in a dead end
-					if(countNeighbourWals(f,player.getCoordinates())==3 && pathIsVisited(lastVisitedPath,player.getCoordinates()) == true) {	
+					if(countNeighbourWals(f,player.coordinates())==3 && pathIsVisited(lastVisitedPath,player.coordinates()) == true) {	
 						log.info("OK");
 						//player.setCoordinates(new Coordinates(2,5));
 						end = true;
@@ -129,11 +117,11 @@ public class GameLogicService {
 	}
 	
 	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
-
-		double x = (c2.getX() - c1.getX())*(c2.getX() - c1.getX());
-		double y = (c2.getY() - c1.getY())*(c2.getY() - c1.getY());
-		double d = Math.sqrt(x+y);
-		return d;
+		double x = 1 << (c2.getX() - c1.getX());
+		double y = 1 << (c2.getY() - c1.getY());
+//		double x = (c2.getX() - c1.getX())*(c2.getX() - c1.getX());
+//		double y = (c2.getY() - c1.getY())*(c2.getY() - c1.getY());
+		return Math.sqrt(x+y);
 	}
 	
 	public int countNeighbourWals(Field[][] f, Coordinates c) {

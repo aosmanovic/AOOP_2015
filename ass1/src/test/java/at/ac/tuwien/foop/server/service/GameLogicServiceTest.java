@@ -24,9 +24,9 @@ public class GameLogicServiceTest {
 		Game game = new Game(bs);
 		game.join("Al");
 
-		Player actual = game.getPlayer().get(0);
+		Player actual = game.getPlayers().get(0);
 		service.movement(game);
-		Assert.assertEquals(new Coordinates(1, 5), actual.getCoordinates());
+		Assert.assertEquals(new Coordinates(1, 5), actual.coordinates());
 	}
 
 	@Test
@@ -41,8 +41,8 @@ public class GameLogicServiceTest {
 		Game game = new Game(bs);
 		game.join("Al");
 
-		Player actual = game.getPlayer().get(0);
+		Player actual = game.getPlayers().get(0);
 		service.movement(game);
-		Assert.assertEquals(new Coordinates(0, 7), actual.getCoordinates());
+		Assert.assertEquals(new Coordinates(0, 7), actual.coordinates());
 	}
 }

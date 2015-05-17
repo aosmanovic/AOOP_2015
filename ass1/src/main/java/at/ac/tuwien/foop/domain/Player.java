@@ -18,17 +18,12 @@ public class Player {
 		return name;
 	}
 
-	public Coordinates getCoordinates() {
+	public Coordinates coordinates() {
 		return coordinates;
 	}
 
 	public Player moveTo(int x, int y) {
 		return new Player(name, new Coordinates(x, y));
-	}
-
-	public void setCoordinates(Coordinates c) {
-		this.coordinates = c;
-		this.visitedCoordinates.add(c);
 	}
 
 	public ArrayList<Coordinates> getVisitedCoordinates() {

@@ -88,7 +88,7 @@ public class Game {
 				.startCoordinates()
 				.stream()
 				.filter(c -> !players.stream().anyMatch(
-						p -> p.getCoordinates().equals(c))).findFirst()
+						p -> p.coordinates().equals(c))).findFirst()
 				.orElse(null);
 	}
 
@@ -113,13 +113,12 @@ public class Game {
 		board = Board.createBoard(bs.board, bs.width);
 	}
 
-	public List<Player> getPlayer() {
+	public List<Player> getPlayers() {
 		return players;
 	}
 
 	public void movePlayer(String name, Coordinates coordinates) {
-		Player player = players.stream().filter(e -> e.name().equals(name))
-				.findFirst().orElseThrow(IllegalArgumentException::new);
+		Player player = getPlayer(name);
 		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x, coordinates.y) : p);
 	}
 

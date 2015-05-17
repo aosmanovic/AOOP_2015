@@ -61,7 +61,7 @@ public class GameTest {
 		Game game = new Game(bs);
 		Player actual = game.join("player1");
 		Assert.assertEquals("player1", actual.name());
-		Assert.assertEquals(new Coordinates(3, 2), actual.getCoordinates());
+		Assert.assertEquals(new Coordinates(3, 2), actual.coordinates());
 	}
 
 	@Test
@@ -76,7 +76,7 @@ public class GameTest {
 		Game game = new Game(bs);
 		try {
 			game.movePlayer("unknown", new Coordinates(1, 1));
-			Assert.fail("expect exception, as no user joindes the game!");
+			Assert.fail("expect exception, as no user joined the game!");
 		} catch (IllegalArgumentException e) {}
 	}
 
@@ -111,7 +111,7 @@ public class GameTest {
 		game.join(playerName);
 		Coordinates expected = new Coordinates(1, 1);
 		game.movePlayer(playerName, expected);
-		Assert.assertEquals(expected, game.getPlayer(playerName).getCoordinates());
+		Assert.assertEquals(expected, game.getPlayer(playerName).coordinates());
 	}
 
 	@Test
@@ -130,12 +130,12 @@ public class GameTest {
 		game.join(playerName2);
 		Coordinates coord1 = new Coordinates(2, 1);
 		Coordinates coord2 = new Coordinates(3, 2);
-		Assert.assertEquals(coord1, game.getPlayer(playerName1).getCoordinates());
-		Assert.assertEquals(coord2, game.getPlayer(playerName2).getCoordinates());
+		Assert.assertEquals(coord1, game.getPlayer(playerName1).coordinates());
+		Assert.assertEquals(coord2, game.getPlayer(playerName2).coordinates());
 
 		Coordinates expected = new Coordinates(1, 1);
 		game.movePlayer(playerName2, expected);
-		Assert.assertEquals(coord1, game.getPlayer(playerName1).getCoordinates());
-		Assert.assertEquals(expected, game.getPlayer(playerName2).getCoordinates());
+		Assert.assertEquals(coord1, game.getPlayer(playerName1).coordinates());
+		Assert.assertEquals(expected, game.getPlayer(playerName2).coordinates());
 	}
 }

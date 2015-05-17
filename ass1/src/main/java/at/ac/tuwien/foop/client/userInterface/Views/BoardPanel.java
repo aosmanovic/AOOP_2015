@@ -54,7 +54,7 @@ public class BoardPanel extends JPanel {
 		
 		List<Player> player = game.getPlayers();
 		for(int i = 0; i<player.size(); i++) {
-			Coordinates coordinates = player.get(i).getCoordinates();
+			Coordinates coordinates = player.get(i).coordinates();
 			w.drawImage(m.getMouse(), coordinates.getY()*26, coordinates.getX()*26, null);
 		}
 		

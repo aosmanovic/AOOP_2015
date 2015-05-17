@@ -9,12 +9,11 @@ import org.apache.commons.lang3.Validate;
 
 public class Board {
 
-	public static enum Field { // TODO: just an example.. move to a separate
-								// file
+	public static enum Field {
 		wall, floor, start, end
 	}
 
-	private Field[][] fields; // y|x
+	private Field[][] fields; // f[y][x]
 	private Coordinates cheeseCoordinates;
 	private List<Coordinates> startCoordinates;
 
