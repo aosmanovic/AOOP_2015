@@ -20,7 +20,7 @@ public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();
 
 	private boolean started = false;
-	private List<Player> player = new ArrayList<>();
+	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
 	private GameLogicService service = new GameLogicService();
@@ -73,10 +73,10 @@ public class Game {
 	public synchronized Player join(String name) {
 		// TODO: maybe handle full and name already used differently!
 		Coordinates c;
-		if (!player.stream().anyMatch(p -> p.name().equals(name))
+		if (!players.stream().anyMatch(p -> p.name().equals(name))
 				&& (c = findFreeStartingCoordinates()) != null) {
 			Player p = new Player(name, c);
-			player.add(p);
+			players.add(p);
 			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
 			return p;
 		}
@@ -84,16 +84,17 @@ public class Game {
 	}
 
 	private Coordinates findFreeStartingCoordinates() {
-		return board.startCoordinates()
+		return board
+				.startCoordinates()
 				.stream()
-				.filter(c -> !player.stream().anyMatch(
+				.filter(c -> !players.stream().anyMatch(
 						p -> p.getCoordinates().equals(c))).findFirst()
 				.orElse(null);
 	}
 
 	public void leave(Player p) {
-		player.remove(p);
-		if (player.size() == 0) {
+		players.remove(p);
+		if (players.size() == 0) {
 			// TODO: stop game?
 		}
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
@@ -113,17 +114,17 @@ public class Game {
 	}
 
 	public List<Player> getPlayer() {
-		return player;
+		return players;
 	}
 
 	public void movePlayer(String name, Coordinates coordinates) {
-		player.stream().filter(e -> e.name().equals(name)).findFirst()
-				.orElseThrow(IllegalArgumentException::new)
-				.moveTo(coordinates.x, coordinates.y);
+		Player player = players.stream().filter(e -> e.name().equals(name))
+				.findFirst().orElseThrow(IllegalArgumentException::new);
+		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x, coordinates.y) : p);
 	}
 
 	public Player getPlayer(String name) {
-		return player.stream().filter(e -> e.name().equals(name)).findFirst()
+		return players.stream().filter(e -> e.name().equals(name)).findFirst()
 				.orElseThrow(IllegalArgumentException::new);
 	}
 }

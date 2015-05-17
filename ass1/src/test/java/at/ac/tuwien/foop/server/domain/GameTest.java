@@ -63,4 +63,79 @@ public class GameTest {
 		Assert.assertEquals("player1", actual.name());
 		Assert.assertEquals(new Coordinates(3, 2), actual.getCoordinates());
 	}
+
+	@Test
+	public void testMovePlayer_noPlayer_expectIllegalArgumentException() {
+		String b = 
+				  "wwwwwwww"
+				+ "w----Cww"
+				+ "w-wmwwww"
+				+ "w---wwww"
+				+ "wwwwwwww";
+		BoardString bs = new BoardString(b, 8);
+		Game game = new Game(bs);
+		try {
+			game.movePlayer("unknown", new Coordinates(1, 1));
+			Assert.fail("expect exception, as no user joindes the game!");
+		} catch (IllegalArgumentException e) {}
+	}
+
+	@Test
+	public void testMovePlayer_unknownPlayer_expectIllegalArgumentException() {
+		String b = 
+				  "wwwwwwww"
+				+ "w----Cww"
+				+ "w-wmwwww"
+				+ "w---wwww"
+				+ "wwwwwwww";
+		BoardString bs = new BoardString(b, 8);
+		Game game = new Game(bs);
+		game.join("player1");
+		try {
+			game.movePlayer("unknown", new Coordinates(1, 1));
+			Assert.fail("expect exception, as player 'unknown' did not join the game!");
+		} catch (IllegalArgumentException e) {}
+	}
+
+	@Test
+	public void testMovePlayer_move_expectNewCoordinates() {
+		String playerName = "player1";
+		String b = 
+				  "wwwwwwww"
+				+ "w----Cww"
+				+ "w-wmwwww"
+				+ "w---wwww"
+				+ "wwwwwwww";
+		BoardString bs = new BoardString(b, 8);
+		Game game = new Game(bs);
+		game.join(playerName);
+		Coordinates expected = new Coordinates(1, 1);
+		game.movePlayer(playerName, expected);
+		Assert.assertEquals(expected, game.getPlayer(playerName).getCoordinates());
+	}
+
+	@Test
+	public void testMovePlayer_moveSecondPlayer_expectFirstPlayerNotMoved() {
+		String playerName1 = "player1";
+		String playerName2 = "player2";
+		String b = 
+				  "wwwwwwww"
+				+ "w-m--Cww"
+				+ "w-wmwwww"
+				+ "w---wwww"
+				+ "wwwwwwww";
+		BoardString bs = new BoardString(b, 8);
+		Game game = new Game(bs);
+		game.join(playerName1);
+		game.join(playerName2);
+		Coordinates coord1 = new Coordinates(2, 1);
+		Coordinates coord2 = new Coordinates(3, 2);
+		Assert.assertEquals(coord1, game.getPlayer(playerName1).getCoordinates());
+		Assert.assertEquals(coord2, game.getPlayer(playerName2).getCoordinates());
+
+		Coordinates expected = new Coordinates(1, 1);
+		game.movePlayer(playerName2, expected);
+		Assert.assertEquals(coord1, game.getPlayer(playerName1).getCoordinates());
+		Assert.assertEquals(expected, game.getPlayer(playerName2).getCoordinates());
+	}
 }
