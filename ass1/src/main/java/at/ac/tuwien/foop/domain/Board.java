@@ -1,56 +1,29 @@
 package at.ac.tuwien.foop.domain;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
 
 public class Board {
-	public static enum Field { // TODO: just an example.. move to a separate
-								// file
+
+	public static enum Field {
 		wall, floor, start, end
 	}
 
-	private final Field[][] fields; // y|x
+	private Field[][] fields; // f[y][x]
+	private Coordinates cheeseCoordinates;
+	private List<Coordinates> startCoordinates;
 
-	private Board(Field[][] fields) {
+
+
+	public Board(Field[][] fields, Coordinates cheeseCoordinates,
+			List<Coordinates> startCoordinates) {
 		this.fields = fields;
-	}
-
-	private static Field[][] generateFields(String fieldString, int width) {
-		Objects.requireNonNull(fieldString);
-		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
-				width);
-
-		if (fieldString.length() % width != 0) {
-			throw new IllegalArgumentException(
-					"field length does not match board width!");
-		}
-
-		Field[][] f = new Field[fieldString.length() / width][width];
-
-		int i = 0;
-		int j = 0;
-		
-		
-		for (char c : fieldString.toCharArray()) {
-			if (c == 'w') {
-				f[j][i] = Field.wall;
-			} else if (c == '-') {
-				f[j][i] = Field.floor;
-			} else if (c == 'm') {
-				f[j][i] = Field.start;
-			} else if (c == 'C') {
-				f[j][i] = Field.end;
-			} else {
-				throw new IllegalArgumentException("unknown field type!");
-			}
-			i++;
-			if (i == width) {
-				i = 0;
-				j++;
-			}
-		}
-		return f;
+		this.cheeseCoordinates = cheeseCoordinates;
+		this.startCoordinates = Collections.unmodifiableList(startCoordinates);
 	}
 
 	/**
@@ -66,10 +39,53 @@ public class Board {
 	 *            the width of the board
 	 */
 	public static Board createBoard(String fieldString, int width) {
-		return new Board(generateFields(fieldString, width));
+		Objects.requireNonNull(fieldString);
+		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
+				width);
+		Validate.isTrue(fieldString.length() % width == 0,
+				"field length does not match board width!");
+
+		Field[][] f = new Field[fieldString.length() / width][width];
+		Coordinates cc = null;
+		List<Coordinates> startCoordinates = new ArrayList<>();
+
+		int i = 0;
+		int j = 0;
+
+		for (char c : fieldString.toCharArray()) {
+			if (c == 'w') {
+				f[j][i] = Field.wall;
+			} else if (c == '-') {
+				f[j][i] = Field.floor;
+			} else if (c == 'm') {
+				f[j][i] = Field.start;
+				startCoordinates.add(new Coordinates(i, j));
+			} else if (c == 'C') {
+				f[j][i] = Field.end;
+				cc = new Coordinates(i, j);
+			} else {
+				throw new IllegalArgumentException("unknown field type!");
+			}
+			i++;
+			if (i == width) {
+				i = 0;
+				j++;
+			}
+		}
+		Validate.notNull(cc, "no cheese found on map!");
+		
+		return new Board(f, cc, startCoordinates);
 	}
-	
+
 	public Field[][] fields() {
 		return fields;
+	}
+
+	public Coordinates cheeseCoordinates() {
+		return cheeseCoordinates;
+	}
+	
+	public List<Coordinates> startCoordinates() {
+		return startCoordinates;
 	}
 }

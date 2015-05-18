@@ -17,18 +17,21 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.message.MessageEncoder;
 import at.ac.tuwien.foop.server.domain.Game;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class NettyServer implements Runnable {
 	private static Logger log = LoggerFactory.getLogger(NettyServer.class);
 
 	private final EventLoopGroup dispatcherGroup = new NioEventLoopGroup();
 	private final EventLoopGroup workerGroup = new NioEventLoopGroup();
+	
+	private final GameLogicService gameLogicService = new GameLogicService();
 
 	private int port = 20150;
 
 	public void run() {
 		log.info("run server");
-		final Game game = new Game();
+		final Game game = new Game(gameLogicService.loadBoard(GameLogicService.BOARD_PATH));
 
 		try {
 			ServerBootstrap bootstrap = new ServerBootstrap();

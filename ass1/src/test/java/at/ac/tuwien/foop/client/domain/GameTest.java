@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.model;
+package at.ac.tuwien.foop.client.domain;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board;
+import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
@@ -15,15 +16,18 @@ import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
 	private static Logger log = LoggerFactory.getLogger(Game.class);
-	private static final int MAX_PLAYERS = 4;
 
 	private List<GameEventListener> listeners = new ArrayList<>();
 
 	private boolean started = false;
-	private List<Player> player = new ArrayList<>();
+	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
 	private GameLogicService service = new GameLogicService();
+
+	public Game(BoardString bs) {
+		setBoard(bs);
+	}
 
 	public void addGameEventListener(GameEventListener listener) {
 		listeners.add(listener);
@@ -55,49 +59,71 @@ public class Game {
 		}
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
-		
-		//call movementmethod here
+
+		// call movementmethod here
 		service.movement(this);
 	}
 
 	/**
 	 * A player joins the game if the maximum amount of players is not reached
-	 * yet.
+	 * yet and no other player with the same name joined before.
 	 * 
-	 * @return true if the player joined, false otherwise
+	 * @return a player if joined, null otherwise
 	 */
-	public synchronized boolean join(Player newPlayer) {
-		if (player.size() < MAX_PLAYERS) {
-			player.add(newPlayer);
+	public synchronized Player join(String name) {
+		// TODO: maybe handle full and name already used differently!
+		Coordinates c;
+		if (!players.stream().anyMatch(p -> p.name().equals(name))
+				&& (c = findFreeStartingCoordinates()) != null) {
+			Player p = new Player(name, c);
+			players.add(p);
 			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
-			return true;
+			return p;
 		}
-		return false;
+		return null;
+	}
+
+	private Coordinates findFreeStartingCoordinates() {
+		return board
+				.startCoordinates()
+				.stream()
+				.filter(c -> !players.stream().anyMatch(
+						p -> p.coordinates().equals(c))).findFirst()
+				.orElse(null);
 	}
 
 	public void leave(Player p) {
-		player.remove(p);
-		if (player.size() == 0) {
+		players.remove(p);
+		if (players.size() == 0) {
 			// TODO: stop game?
 		}
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
-	
+
 	public BoardString boardString() {
 		return boardString;
 	}
-	
+
 	public Board board() {
 		return board;
 	}
-	
-	public void setBoard(BoardString bs) {
+
+	private void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
 	}
-	
-	public List<Player> getPlayer() {
-		return player;
+
+	public List<Player> getPlayers() {
+		return players;
 	}
-	
+
+	public void movePlayer(String name, Coordinates coordinates) {
+		Player player = getPlayer(name);
+		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x, coordinates.y) : p);
+	}
+
+	public Player getPlayer(String name) {
+		return players.stream().filter(e -> e.name().equals(name)).findFirst()
+				.orElseThrow(IllegalArgumentException::new);
+	}
 }

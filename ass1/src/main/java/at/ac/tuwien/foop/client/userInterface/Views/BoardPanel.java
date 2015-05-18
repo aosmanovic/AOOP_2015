@@ -6,9 +6,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
-import at.ac.tuwien.foop.client.domain.Coordinates;
+
+
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.domain.Board.Field;
+import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 
 public class BoardPanel extends JPanel {
@@ -52,7 +54,7 @@ public class BoardPanel extends JPanel {
 		
 		List<Player> player = game.getPlayers();
 		for(int i = 0; i<player.size(); i++) {
-			Coordinates coordinates = player.get(i).getCoordinates();
+			Coordinates coordinates = player.get(i).coordinates();
 			w.drawImage(m.getMouse(), coordinates.getY()*26, coordinates.getX()*26, null);
 		}
 		

@@ -21,7 +21,6 @@ import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
-import at.ac.tuwien.foop.server.service.GameLogicService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,7 +29,6 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	private static Logger log = LoggerFactory.getLogger(GameHandler.class);
 
 	private ObjectMapper mapper = new ObjectMapper();
-	private GameLogicService service = new GameLogicService();
 	private Game game;
 	private Player player;
 	private Channel channel;
@@ -51,11 +49,10 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			ctx.writeAndFlush(new Message(Type.S_PONG));
 		} else if (m.type == Type.C_JOIN) {
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
-			if (player == null) {
-				player = new Player(jm.name, null); //TODO  PUT Coordinates 
-			}
-			if (game.join(player)) {
-				BoardString b = service.getBoard(game);
+			Player player = game.join(jm.name); 
+			if (player != null) {
+//				BoardString b = service.getBoard(game);
+				BoardString b = game.boardString();
 				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
 				ctx.writeAndFlush(new Message(Type.S_JOINED));
 			} else {
