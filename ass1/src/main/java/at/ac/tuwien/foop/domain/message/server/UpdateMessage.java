@@ -1,17 +1,19 @@
 package at.ac.tuwien.foop.domain.message.server;
 
+import java.util.List;
+
+import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.message.Message;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import at.ac.tuwien.foop.domain.Update;
-import at.ac.tuwien.foop.domain.message.Message;
-
 public class UpdateMessage extends Message {
-	public final Update update;
+	public final List<Player> players;
 
 	@JsonCreator
-	public UpdateMessage(@JsonProperty("update") Update update) {
+	public UpdateMessage(@JsonProperty("players") List<Player> players) {
 		super(Type.S_UPDATE);
-		this.update = update;
+		this.players = players;
 	}
 }

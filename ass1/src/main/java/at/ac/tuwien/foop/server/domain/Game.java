@@ -12,18 +12,22 @@ import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
-import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
+	public enum State {
+		ready, running, paused, over
+	}
+
 	private static Logger log = LoggerFactory.getLogger(Game.class);
 
 	private List<GameEventListener> listeners = new ArrayList<>();
 
-	private boolean started = false;
+	private State state = State.ready;
+
 	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
-	private GameLogicService service = new GameLogicService();
+//	private GameLogicService service = new GameLogicService();
 
 	public Game(BoardString bs) {
 		setBoard(bs);
@@ -46,22 +50,57 @@ public class Game {
 	 */
 	public void start() {
 		log.info("start game");
-		started = true;
+		if (state != State.ready && state != State.paused) {
+			throw new IllegalStateException(
+					"game must be 'ready' or 'paused' so it can be started");
+		}
+
+		state = State.running;
 		fireGameEvent(new GameEvent(Type.START));
 	}
 
 	/**
-	 * Calculates the game progress.
+	 * Stops the game so it's over.
 	 */
-	public void next() { // maybe use a delta later on
-		if (!started) {
+	public void stop() {
+		if (state != State.running && state != State.paused) {
+			throw new IllegalStateException(
+					"game must be 'running' or 'paused' so it can be over");
+		}
+
+		state = State.over;
+		fireGameEvent(new GameEvent(Type.OVER));
+	}
+
+	/**
+	 * Pause the game.
+	 */
+	public void pause() {
+		if (state != State.running) {
+			throw new IllegalStateException(
+					"game must be 'running' so it can be paused");
+		}
+
+		state = State.paused;
+		fireGameEvent(new GameEvent(Type.PAUSE));
+	}
+
+	/**
+	 * Calculates the game progress.
+	 * 
+	 * <p>
+	 * This method will be called periodically to upgrade the players on the
+	 * board as well as the game state if a player reached the goal.
+	 */
+	public void next() {
+		if (state != State.running) {
 			return;
 		}
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
 
 		// call movementmethod here
-		service.movement(this);
+//		service.movement(this);
 	}
 
 	/**
@@ -119,11 +158,16 @@ public class Game {
 
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
-		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x, coordinates.y) : p);
+		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
+				coordinates.y) : p);
 	}
 
 	public Player getPlayer(String name) {
 		return players.stream().filter(e -> e.name().equals(name)).findFirst()
 				.orElseThrow(IllegalArgumentException::new);
+	}
+
+	public State state() {
+		return state;
 	}
 }

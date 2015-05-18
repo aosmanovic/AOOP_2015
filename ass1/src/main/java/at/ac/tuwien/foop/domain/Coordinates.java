@@ -1,20 +1,16 @@
 package at.ac.tuwien.foop.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Coordinates {
 	public final int x;
 	public final int y;
 
-	public Coordinates(int x, int y) {
+	@JsonCreator
+	public Coordinates(@JsonProperty("x") int x, @JsonProperty("y") int y) {
 		this.x = x;
 		this.y = y;
-	}
-
-	public int getX() {
-		return x;
-	}
-
-	public int getY() {
-		return y;
 	}
 
 	@Override

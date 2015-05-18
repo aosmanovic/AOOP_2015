@@ -2,22 +2,30 @@ package at.ac.tuwien.foop.domain;
 
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Player {
 	private final String name;
 	private Coordinates coordinates;
 	// TODO: what is this used for?
+	@JsonIgnore
 	private ArrayList<Coordinates> visitedCoordinates = new ArrayList<>();
 
-	public Player(String name, Coordinates coordinates) {
+	@JsonCreator
+	public Player(@JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates) {
 		this.name = name;
 		this.coordinates = coordinates;
 		this.visitedCoordinates.add(coordinates);
 	}
 
+	@JsonProperty("name")
 	public String name() {
 		return name;
 	}
 
+	@JsonProperty("coordinates")
 	public Coordinates coordinates() {
 		return coordinates;
 	}

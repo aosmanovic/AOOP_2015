@@ -95,7 +95,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			channel.writeAndFlush(new NewPlayerMessage("foo"));
 			// TODO: get player name.. put it into the event?
 		} else if (e.type == GameEvent.Type.UPDATE) {
-			channel.writeAndFlush(new UpdateMessage(null));
+			channel.writeAndFlush(new UpdateMessage(game.getPlayers()));
 			// TODO: get the update data.. use event or ask game
 		}
 	}

@@ -45,8 +45,8 @@ public class GameLogicService {
 			{
 				Field[][] f = game.board().fields();
 				Coordinates mouse = player.coordinates();
-				int x = mouse.getX();
-				int y = mouse.getY();
+				int x = mouse.x;
+				int y = mouse.y;
 				log.info("Pozicija misa" + mouse.toString());
 				
 				//Getting closes neighbpurs of the specific player
@@ -60,18 +60,18 @@ public class GameLogicService {
 				for(int j=0; j<neighbourList.size(); j++) {
 					Coordinates neighbour = neighbourList.get(j);
 					//Checked the boarders
-					if(neighbour.getX()<f.length && neighbour.getX() >=0 && neighbour.getY()<f[1].length && neighbour.getY()>=0)
+					if(neighbour.x<f.length && neighbour.x >=0 && neighbour.y<f[1].length && neighbour.y>=0)
 					{
 						//Get path/floor neighbours
-						if(f[neighbour.getX()][neighbour.getY()].equals(Field.floor )) {
+						if(f[neighbour.x][neighbour.y].equals(Field.floor )) {
 							floorList.add(neighbour);
 							log.info(" komsije put" + neighbour);
 						} //Checked if chees/end is found
-						else if(f[neighbour.getX()][neighbour.getY()].equals(Field.end))
+						else if(f[neighbour.x][neighbour.y].equals(Field.end))
 						{
 							
 							// field will never be changed!
-//							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+//							f[player.getCoordinates().x][player.getCoordinates().y] = Field.floor;
 //							game.board().setFields(f);
 							
 							game.movePlayer(player.name(), neighbour);
@@ -96,7 +96,7 @@ public class GameLogicService {
 						}
 					}
 					// field will never be changed!
-//					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
+//					f[player.getCoordinates().x][player.getCoordinates().y] = Field.floor;
 //					game.board().setFields(f);
 					
 					game.movePlayer(player.name(), closestNeigbour);
@@ -117,20 +117,20 @@ public class GameLogicService {
 	}
 	
 	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
-		double x = 1 << (c2.getX() - c1.getX());
-		double y = 1 << (c2.getY() - c1.getY());
-//		double x = (c2.getX() - c1.getX())*(c2.getX() - c1.getX());
-//		double y = (c2.getY() - c1.getY())*(c2.getY() - c1.getY());
+		double x = 1 << (c2.x - c1.x);
+		double y = 1 << (c2.y - c1.y);
+//		double x = (c2.x - c1.x)*(c2.x - c1.x);
+//		double y = (c2.y - c1.y)*(c2.y - c1.y);
 		return Math.sqrt(x+y);
 	}
 	
 	public int countNeighbourWals(Field[][] f, Coordinates c) {
 		int i = 0;
 		
-		if(f[c.getX()][c.getY()-1]== Field.wall) i++;
-		if(f[c.getX()][c.getY()+1]== Field.wall) i++;
-		if(f[c.getX()-1][c.getY()]== Field.wall) i++;
-		if(f[c.getX()+1][c.getY()]== Field.wall) i++;
+		if(f[c.x][c.y-1]== Field.wall) i++;
+		if(f[c.x][c.y+1]== Field.wall) i++;
+		if(f[c.x-1][c.y]== Field.wall) i++;
+		if(f[c.x+1][c.y]== Field.wall) i++;
 			
 		return i;
 	}
@@ -138,10 +138,10 @@ public class GameLogicService {
 	public boolean pathIsVisited(Coordinates lastPath, Coordinates mousePosition) {
 		boolean isVisited = false;
 		
-		Coordinates n1 = new Coordinates(mousePosition.getX(),mousePosition.getY()-1);
-		Coordinates n2 = new Coordinates(mousePosition.getX(),mousePosition.getY()+1);
-		Coordinates n3 = new Coordinates(mousePosition.getX()-1,mousePosition.getY());
-		Coordinates n4 = new Coordinates(mousePosition.getX()+1,mousePosition.getY());
+		Coordinates n1 = new Coordinates(mousePosition.x,mousePosition.y-1);
+		Coordinates n2 = new Coordinates(mousePosition.x,mousePosition.y+1);
+		Coordinates n3 = new Coordinates(mousePosition.x-1,mousePosition.y);
+		Coordinates n4 = new Coordinates(mousePosition.x+1,mousePosition.y);
 		
 		if(lastPath.equals(n1) || lastPath.equals(n2)|| lastPath.equals(n3)|| lastPath.equals(n4)) 
 			isVisited = true;
