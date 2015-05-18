@@ -7,7 +7,6 @@ import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
-import at.ac.tuwien.foop.domain.Update;
 
 
 public class Game {
@@ -52,7 +51,7 @@ public class Game {
 		return running;
 	}
 
-	public void update(Update update) {
+	public void update(List<Player> players) {
 		// TODO: implement
 		throw new UnsupportedOperationException("not implemented yet");
 	}

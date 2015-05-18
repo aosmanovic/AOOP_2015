@@ -21,6 +21,7 @@ import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -91,12 +92,13 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(GameEvent e) {
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
-		} else if (e.type == GameEvent.Type.NEW_PLAYER) {
-			channel.writeAndFlush(new NewPlayerMessage("foo"));
-			// TODO: get player name.. put it into the event?
 		} else if (e.type == GameEvent.Type.UPDATE) {
 			channel.writeAndFlush(new UpdateMessage(game.getPlayers()));
-			// TODO: get the update data.. use event or ask game
 		}
+	}
+
+	@Override
+	public void onUpdate(NewPlayerEvent e) {
+		channel.writeAndFlush(new NewPlayerMessage(e.player));
 	}
 }

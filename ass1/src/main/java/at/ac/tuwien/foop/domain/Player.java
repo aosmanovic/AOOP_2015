@@ -30,12 +30,12 @@ public class Player {
 		return coordinates;
 	}
 
-	public Player moveTo(int x, int y) {
-		return new Player(name, new Coordinates(x, y));
-	}
-
 	public ArrayList<Coordinates> getVisitedCoordinates() {
 		return visitedCoordinates;
+	}
+
+	public Player moveTo(int x, int y) {
+		return new Player(name, new Coordinates(x, y));
 	}
 
 	@Override

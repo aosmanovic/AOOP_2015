@@ -12,6 +12,7 @@ import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 
 public class Game {
 	public enum State {
@@ -116,7 +117,7 @@ public class Game {
 				&& (c = findFreeStartingCoordinates()) != null) {
 			Player p = new Player(name, c);
 			players.add(p);
-			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
+			listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
 			return p;
 		}
 		return null;
