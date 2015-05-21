@@ -7,12 +7,19 @@ public class Player {
 	private Coordinates coordinates;
 	// TODO: what is this used for?
 	private ArrayList<Coordinates> visitedCoordinates = new ArrayList<>();
+	private Coordinates lastCoordinates;
 
-	public Player(String name, Coordinates coordinates) {
+	public Player(String name, Coordinates coordinates, Coordinates lastCoordinates) {
 		this.name = name;
 		this.coordinates = coordinates;
-		this.visitedCoordinates.add(coordinates);
+		this.lastCoordinates = lastCoordinates;
+		//this.visitedCoordinates.add(coordinates);
 	}
+	
+	public Player(String name, Coordinates coordinates) {
+		this(name, coordinates, null);
+	}
+
 
 	public String name() {
 		return name;
@@ -22,8 +29,8 @@ public class Player {
 		return coordinates;
 	}
 
-	public Player moveTo(int x, int y) {
-		return new Player(name, new Coordinates(x, y));
+	public Player moveTo(int x, int y, Coordinates lastCoordinates) {
+		return new Player(name, new Coordinates(x, y), lastCoordinates);
 	}
 
 	public ArrayList<Coordinates> getVisitedCoordinates() {

@@ -54,7 +54,7 @@ public class GameLogicServiceTest {
 	
 	@Test
 	public void testMovement3() {
-		log.info("------------Test 4 ----------");
+		log.info("------------Test 3 ----------");
 		
 		String b = 
 				"wwwmwwww"
@@ -73,7 +73,7 @@ public class GameLogicServiceTest {
 
 	@Test
 	public void testMovementWithDeadEnd() {
-		log.info("------------Test 3 ----------");
+		log.info("------------Test 4 ----------");
 		String b = 
 				  "wwwwwwww"
 				+ "www-wCww"

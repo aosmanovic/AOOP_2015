@@ -1,7 +1,10 @@
 package at.ac.tuwien.foop.server.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,32 +50,16 @@ public class GameLogicService {
 			int y = mouse.getY();
 			log.info("Position of the mouse: " + mouse.toString());
 
-			//Getting closest neighbours of the specific player
-			ArrayList<Coordinates> neighbourList= new ArrayList<>();
-			neighbourList.add(new Coordinates(x,y-1));
-			neighbourList.add(new Coordinates(x,y+1));
-			neighbourList.add(new Coordinates(x-1,y));
-			neighbourList.add(new Coordinates(x+1,y));
+			List<Coordinates> floorList= calculateNeighbor(f, x, y);
 
-			ArrayList<Coordinates> floorList= new ArrayList<>();
-			for(int j=0; j<neighbourList.size(); j++) {
-				Coordinates neighbour = neighbourList.get(j);
-				log.info("Neighbors: " + neighbour);
-
-				//Checked the boarders
-				if(neighbour.getX()<f[0].length && neighbour.getX() >=0 && neighbour.getY()<f.length && neighbour.getY()>=0) {
-					//Get path/floor neighbors
-					if(f[neighbour.getY()][neighbour.getX()].equals(Field.floor)) {
-						floorList.add(neighbour);
-						log.info(" Neighbours with path: " + neighbour);
-					}
-				} // TO DO CHECK IF CHEESE IS REACHED
-			}
-			
 
 			double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
 			log.info("Size: " + floorList.size());
 			Coordinates closestNeigbour = floorList.get(0);
+			// Dead end
+			if (floorList.size() == 1) {
+				//goBack();
+			}
 
 			for(int k =0; k<floorList.size();k++) {
 				double distance = calculateDistanceToCheese(cheesCoordinates, floorList.get(k));
@@ -82,10 +69,10 @@ public class GameLogicService {
 					log.info("Clos ne:" + closestNeigbour);
 				}
 			}
-			
+
 			game.movePlayer(player.name(), closestNeigbour);
-			
-			
+
+
 
 			/*ArrayList<Coordinates> floorList= new ArrayList<>();
 			for(int j=0; j<neighbourList.size(); j++) {
@@ -148,6 +135,20 @@ public class GameLogicService {
 		}
 	}
 
+	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {
+		return Arrays.asList(new Coordinates[] {new Coordinates(x, y-1), new Coordinates(x, y+1), new Coordinates(x-1, y), new Coordinates(x+1, y)})
+				.stream().filter(neighbour -> {
+					if(neighbour.getX()<f[0].length 
+							&& neighbour.getX() >=0 
+							&& neighbour.getY()<f.length 
+							&& neighbour.getY()>=0 
+							&& !f[neighbour.getY()][neighbour.getX()].equals(Field.wall)) {
+						return true;
+					}
+					return false;
+				}).collect(Collectors.toList());
+	}
+
 	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
 		//double x = 1 << (c2.getX() - c1.getX());
 		//double y = 1 << (c2.getY() - c1.getY());
@@ -167,7 +168,7 @@ public class GameLogicService {
 		return i;
 	}
 
-	public boolean pathIsVisited(Coordinates lastPath, Coordinates mousePosition) {
+	/*public boolean pathIsVisited(Coordinates lastPath, Coordinates mousePosition) {
 		boolean isVisited = false;
 
 		Coordinates n1 = new Coordinates(mousePosition.getX(),mousePosition.getY()-1);
@@ -180,7 +181,8 @@ public class GameLogicService {
 
 
 		return isVisited;
-	}
+	}*/
+
 
 
 }
