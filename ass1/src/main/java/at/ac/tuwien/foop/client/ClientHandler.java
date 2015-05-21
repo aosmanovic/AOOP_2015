@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.domain.Board;
-import at.ac.tuwien.foop.domain.Wind;
+import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
@@ -101,7 +101,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	}
 
 	@Override
-	public void sendWind(Wind wind) {
+	public void sendWind(WindGust wind) {
 		channel.writeAndFlush(new WindMessage(wind));
 	}
 

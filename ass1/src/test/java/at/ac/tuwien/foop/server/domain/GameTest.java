@@ -5,6 +5,8 @@ import org.junit.Test;
 
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.WindGust.Direction;
 
 public class GameTest {
 
@@ -137,5 +139,42 @@ public class GameTest {
 		game.movePlayer(playerName2, expected);
 		Assert.assertEquals(coord1, game.getPlayer(playerName1).coordinates());
 		Assert.assertEquals(expected, game.getPlayer(playerName2).coordinates());
+	}
+
+	@Test(expected=NullPointerException.class)
+	public void testSendGust_null_expectNullPointerException() {
+		Game game = new Game(new BoardString("wCw", 1));
+		game.sendGust(null);
+	}
+
+	@Test
+	public void testSendGust_noStrength_expectSameWind() {
+		Game game = new Game(new BoardString("wCw", 1));
+		game.sendGust(new WindGust(Direction.NORTH, 0));
+		Assert.assertEquals(Wind.fromCoordinates(0, 0), game.wind());
+	}
+
+	@Test
+	public void testSendGust_noWindNorthWind_expectSameWind() {
+		Game game = new Game(new BoardString("wCw", 1));
+		game.sendGust(new WindGust(Direction.NORTH, 1));
+		Assert.assertEquals(Wind.fromCoordinates(0, -1), game.wind());
+	}
+
+	@Test
+	public void testSendGust_NorthWindSouthWind_expectSameWind() {
+		Game game = new Game(new BoardString("wCw", 1));
+		game.sendGust(new WindGust(Direction.NORTH, 1));
+		game.sendGust(new WindGust(Direction.SOUTH, 1));
+		Assert.assertEquals(Wind.fromCoordinates(0, 0), game.wind());
+	}
+	
+	@Test
+	public void testSendGust_SouthWindWestWind_expectSameWind() {
+		Game game = new Game(new BoardString("wCw", 1));
+		game.sendGust(new WindGust(Direction.SOUTH, 1));
+		game.sendGust(new WindGust(Direction.WEST, 1));
+		Assert.assertEquals(-1, game.wind().x, 0.01);
+		Assert.assertEquals(1, game.wind().y, 0.01);
 	}
 }

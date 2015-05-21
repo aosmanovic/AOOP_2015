@@ -13,8 +13,8 @@ import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.service.GameService;
-import at.ac.tuwien.foop.domain.Wind;
-import at.ac.tuwien.foop.domain.Wind.Direction;
+import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.WindGust.Direction;
 
 public class ClientShell {
 	private static Logger log = LoggerFactory.getLogger(ClientShell.class);
@@ -94,7 +94,7 @@ public class ClientShell {
 			return;
 		}
 		log.debug("send a wind");
-		service.sendWind(game, core, new Wind(Direction.valueOf(direction.toUpperCase()), strength));
+		service.sendWind(game, core, new WindGust(Direction.valueOf(direction.toUpperCase()), strength));
 	}
 	
 	@Command(description = "show some system information")

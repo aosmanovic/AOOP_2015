@@ -3,12 +3,15 @@ package at.ac.tuwien.foop.server.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
@@ -28,6 +31,8 @@ public class Game {
 	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
+	private Wind wind = Wind.fromCoordinates(0, 0);
+	
 //	private GameLogicService service = new GameLogicService();
 
 	public Game(BoardString bs) {
@@ -140,6 +145,23 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
 
+	public synchronized void sendGust(WindGust gust) {
+		Validate.notNull(gust);
+
+		Coordinates c;
+		if (gust.direction == Direction.NORTH) {
+			c = new Coordinates(0, -1 * gust.strength);
+		} else if (gust.direction == Direction.SOUTH) {
+			c = new Coordinates(0, 1 * gust.strength);
+		} else if (gust.direction == Direction.WEST) {
+			c = new Coordinates(-1 * gust.strength, 0);
+		} else {
+			c = new Coordinates(1 * gust.strength, 0);
+		}
+//		System.out.println(String.format(" %d + %d , %d + %d", wind.x , c.x, wind.y , c.y));
+		wind = Wind.fromCoordinates(wind.x + c.x, wind.y + c.y);
+	}
+	
 	public BoardString boardString() {
 		return boardString;
 	}
@@ -170,5 +192,9 @@ public class Game {
 
 	public State state() {
 		return state;
+	}
+	
+	public Wind wind() {
+		return wind;
 	}
 }

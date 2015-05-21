@@ -1,7 +1,7 @@
 package at.ac.tuwien.foop.client.service;
 
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.domain.Wind;
+import at.ac.tuwien.foop.domain.WindGust;
 
 public class GameService {
 	public void join(Game game, GameCore core, String name) {
@@ -25,7 +25,7 @@ public class GameService {
 		core.disconnect();
 	}
 
-	public void sendWind(Game game, GameCore core, Wind wind) {
+	public void sendWind(Game game, GameCore core, WindGust wind) {
 		if (!game.joined() && !game.running()) {
 			throw new IllegalStateException("Can't send wind if not joined and game is not running!");
 		}

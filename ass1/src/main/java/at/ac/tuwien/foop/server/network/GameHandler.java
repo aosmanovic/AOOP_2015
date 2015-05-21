@@ -13,6 +13,7 @@ import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
@@ -66,7 +67,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 				game.leave(player);
 			}
 		} else if (m.type == Type.C_WIND) {
-			// TODO: call wind logic here!
+			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
 		} else {
