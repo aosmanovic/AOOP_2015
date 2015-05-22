@@ -1,5 +1,8 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
 import javax.swing.JFrame;
 
 public class BoardFrame extends JFrame{
@@ -13,6 +16,7 @@ public class BoardFrame extends JFrame{
 		setSize(1100, 690);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.addKeyListener();
 	}
 
 	public BoardPanel getBoard() {

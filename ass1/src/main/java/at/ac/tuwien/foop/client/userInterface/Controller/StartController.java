@@ -2,6 +2,8 @@ package at.ac.tuwien.foop.client.userInterface.Controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +19,11 @@ import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
+import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.WindGust.Direction;
 
-public class StartController implements ConnectListener, GameEventListener {
+public class StartController implements ConnectListener, GameEventListener,
+		KeyListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game;
@@ -26,48 +31,46 @@ public class StartController implements ConnectListener, GameEventListener {
 	private StartView start;
 	private GameService service = new GameService();
 	private BoardFrame boardFrame = new BoardFrame();
-	
+
 	public StartController() {
-		
+
 		start = new StartView();
 		connect("localhost", "20150");
-		
+
 		boardFrame.setBoard(new BoardPanel());
+		boardFrame.addKeyListener(this);
 		
-		
-		start.setStartControllerListener(new ActionListener() {	
+		start.setStartControllerListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				gameStart();
 			}
 		});
-			
+
 	}
 
-	public void connect(String host,String port) {
+	public void connect(String host, String port) {
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
 		start.setGame(game);
 		game.addGameEventListener(this);
-		
+
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
 		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
 	}
-	
-	
-	
+
 	public void gameStart() {
 		service.start(game, core);
 	}
-	
+
 	public void onConnect(NettyClient client) {
 		core = client.getClientHandler();
 		service.join(game, core, "A");
 		start.setStart();
 	}
-	
+
 	public void setCore(ClientHandler core) {
 		this.core = core;
 	}
@@ -76,30 +79,50 @@ public class StartController implements ConnectListener, GameEventListener {
 	public void onConnecitonFailure() {
 		start.showFailure();
 	}
-	
+
 	public void showStart() {
 		start.setVisible(true);
 	}
-	
+
 	public void showAlreadyConnected() {
 		start.showAlreadyConnected();
 	}
-	
+
 	@Override
 	public void onUpdate(GameEvent e) {
-		if (e.type == GameEvent.Type.NEW_PLAYER ) {
+		if (e.type == GameEvent.Type.NEW_PLAYER) {
 			start.printMessage();
 		} else if (e.type == GameEvent.Type.START) {
 			showBoard();
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardFrame.getBoard().setGame(game);
-			//System.out.println(b);
-		} else if(e.type == GameEvent.Type.UPDATE) {
+		} else if (e.type == GameEvent.Type.UPDATE) {
 			boardFrame.getBoard().repaint();
 		}
 	}
-	
+
 	public void showBoard() {
 		boardFrame.setVisible(true);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_UP) {
+			service.sendWind(game, core, new WindGust(Direction.NORTH, 1));
+		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+			service.sendWind(game, core, new WindGust(Direction.SOUTH, 1));
+		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+			service.sendWind(game, core, new WindGust(Direction.WEST, 1));
+		} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+			service.sendWind(game, core, new WindGust(Direction.EAST, 1));
+		}
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
 	}
 }
