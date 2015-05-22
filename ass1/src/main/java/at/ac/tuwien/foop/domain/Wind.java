@@ -1,6 +1,10 @@
-package at.ac.tuwien.foop.server.domain;
+package at.ac.tuwien.foop.domain;
 
 import org.apache.commons.lang3.Validate;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Handling of directions (map a navigation-map to a display):<br/>
@@ -10,6 +14,7 @@ import org.apache.commons.lang3.Validate;
  * EAST = (x>0, y=0), angle = PI/2 (or -3 PI/2 ..)<br/>
  */
 public class Wind {
+	@JsonIgnore
 	public static final int MAX_STRENGTH = 4;
 	
 	public final double angle;
@@ -24,27 +29,14 @@ public class Wind {
 		this.y = y;
 	}
 	
-//	public Wind(double angle, double strength) {
-//		this.angle = angle;
-//		this.strength = strength;
-//		x = Math.sin(angle);
-//		y = Math.cos(angle);
-//	}
-//	
-//	public Wind(double x, double y) {
-//		this.x = x;
-//		this.y = y;
-//		angle = Math.atan2(y, x);
-//		strength = Math.sqrt(x*x + y*y);
-//	}
-
 	public static Wind fromCoordinates(double x, double y) {
 		double angle = Math.atan2(x, -y);
 		double strength = Math.sqrt(x*x + y*y);
-//		return new Wind(angle, strength, x, y);
 		return fromAngle(angle, strength);
 	}
-	public static Wind fromAngle(double angle, double strength) {
+	
+	@JsonCreator
+	public static Wind fromAngle(@JsonProperty("angle") double angle, @JsonProperty("strnegth") double strength) {
 		Validate.isTrue(strength >= 0);
 
 		strength = Math.min(MAX_STRENGTH, strength);
