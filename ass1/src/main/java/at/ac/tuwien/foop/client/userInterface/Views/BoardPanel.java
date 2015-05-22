@@ -28,6 +28,7 @@ public class BoardPanel extends JPanel {
 		repaint();
 	}
 
+	@Override
 	public void paint(Graphics w) {
 		
 		super.paint(w);

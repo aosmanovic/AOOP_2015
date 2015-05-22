@@ -55,7 +55,7 @@ public class Game {
 		// TODO: implement
 		//throw new UnsupportedOperationException("not implemented yet");
 		this.players = players;
-	
+		fireGameEvent(new GameEvent(GameEvent.Type.UPDATE));
 	}
 
 	public void addPlayer(Player player) {

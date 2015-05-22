@@ -14,10 +14,9 @@ import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
-import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
+import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
 import at.ac.tuwien.foop.client.userInterface.Views.StartView;
-import at.ac.tuwien.foop.domain.Board;
 
 public class StartController implements ConnectListener, GameEventListener {
 
@@ -88,20 +87,15 @@ public class StartController implements ConnectListener, GameEventListener {
 	
 	@Override
 	public void onUpdate(GameEvent e) {
-		// TODO Auto-generated method stub
 		if (e.type == GameEvent.Type.NEW_PLAYER ) {
 			start.printMessage();
 		} else if (e.type == GameEvent.Type.START) {
 			showBoard();
 		} else if (e.type == GameEvent.Type.BOARD) {
-			Board b = game.getBoard();
 			boardFrame.getBoard().setGame(game);
 			//System.out.println(b);
 		} else if(e.type == GameEvent.Type.UPDATE) {
-			//boardFrame.getBoard().revalidate();
-			//boardFrame.getBoard().repaint();
-			boardFrame.repaint();
-			
+			boardFrame.getBoard().repaint();
 		}
 	}
 	
