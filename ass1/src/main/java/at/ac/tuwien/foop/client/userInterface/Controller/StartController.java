@@ -32,7 +32,6 @@ public class StartController implements ConnectListener, GameEventListener {
 		
 		start = new StartView();
 		connect("localhost", "20150");
-		game.addGameEventListener(this);
 		
 		boardFrame.setBoard(new BoardPanel());
 		
@@ -51,6 +50,7 @@ public class StartController implements ConnectListener, GameEventListener {
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
 		start.setGame(game);
+		game.addGameEventListener(this);
 		
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
 		c.addConnectListener(this);

@@ -1,30 +1,30 @@
 package at.ac.tuwien.foop.domain;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Player {
 	private final String name;
 	private Coordinates coordinates;
-	// TODO: what is this used for?
-//	private ArrayList<Coordinates> visitedCoordinates = new ArrayList<>();
 	private Coordinates lastCoordinates;
 
-	public Player(String name, Coordinates coordinates, Coordinates lastCoordinates) {
+	@JsonCreator
+	public Player(@JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("lastCoordinates") Coordinates lastCoordinates) {
 		this.name = name;
 		this.coordinates = coordinates;
 		this.lastCoordinates = lastCoordinates;
-		//this.visitedCoordinates.add(coordinates);
 	}
 	
 	public Player(String name, Coordinates coordinates) {
 		this(name, coordinates, null);
 	}
 
-
+	@JsonProperty("name")
 	public String name() {
 		return name;
 	}
 
+	@JsonProperty("coordinates")
 	public Coordinates coordinates() {
 		return coordinates;
 	}
@@ -33,9 +33,9 @@ public class Player {
 		return new Player(name, new Coordinates(x, y), lastCoordinates);
 	}
 
-	/*public ArrayList<Coordinates> getVisitedCoordinates() {
-		return visitedCoordinates;
-	}*/
+	public Player moveTo(int x, int y) {
+		return new Player(name, new Coordinates(x, y));
+	}
 
 	@Override
 	public int hashCode() {

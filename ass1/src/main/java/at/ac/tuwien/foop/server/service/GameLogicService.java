@@ -1,6 +1,5 @@
 package at.ac.tuwien.foop.server.service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -44,8 +43,8 @@ public class GameLogicService {
 			Player player =  game.getPlayers().get(i);
 
 			Field[][] f = game.board().fields();
-			int x = player.coordinates().getX();
-			int y = player.coordinates().getY();
+			int x = player.coordinates().x;
+			int y = player.coordinates().y;
 			log.info("Position of the mouse: " + player.coordinates().toString());
 
 			// get neighbors with paths
@@ -86,11 +85,11 @@ public class GameLogicService {
 	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {
 		return Arrays.asList(new Coordinates[] {new Coordinates(x, y-1), new Coordinates(x, y+1), new Coordinates(x-1, y), new Coordinates(x+1, y)})
 				.stream().filter(neighbour -> {
-					if(neighbour.getX()<f[0].length 
-							&& neighbour.getX() >=0 
-							&& neighbour.getY()<f.length 
-							&& neighbour.getY()>=0 
-							&& !f[neighbour.getY()][neighbour.getX()].equals(Field.wall)) {
+					if(neighbour.x<f[0].length 
+							&& neighbour.x >=0 
+							&& neighbour.y<f.length 
+							&& neighbour.y>=0 
+							&& !f[neighbour.y][neighbour.x].equals(Field.wall)) {
 						return true;
 					}
 					return false;
@@ -99,10 +98,8 @@ public class GameLogicService {
 
 	// calculates distance to cheese
 	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
-		//double x = 1 << (c2.getX() - c1.getX());
-		//double y = 1 << (c2.getY() - c1.getY());
-		double x = (c2.getX() - c1.getX())*(c2.getX() - c1.getX());
-		double y = (c2.getY() - c1.getY())*(c2.getY() - c1.getY());
+		double x = (c2.x - c1.x)*(c2.x - c1.x);
+		double y = (c2.y - c1.y)*(c2.y - c1.y);
 		return Math.sqrt(x+y);
 	}
 
@@ -110,31 +107,13 @@ public class GameLogicService {
 	public int countNeighbourWals(Field[][] f, Coordinates c) {
 		int i = 0;
 
-		if(c.getX()-1>=0 && c.getY()-1 >=0) {
-			if(f[c.getY()-1][c.getX()]== Field.wall) i++;
-			if(f[c.getY()+1][c.getX()]== Field.wall) i++;
-			if(f[c.getY()][c.getX()-1]== Field.wall) i++;
-			if(f[c.getY()][c.getX()+1]== Field.wall) i++;
+		if(c.x-1>=0 && c.y-1 >=0) {
+			if(f[c.y-1][c.x]== Field.wall) i++;
+			if(f[c.y+1][c.x]== Field.wall) i++;
+			if(f[c.y][c.x-1]== Field.wall) i++;
+			if(f[c.y][c.x+1]== Field.wall) i++;
 		}
 
 		return i;
 	}
-
-	/*public boolean pathIsVisited(Coordinates lastPath, Coordinates mousePosition) {
-		boolean isVisited = false;
-
-		Coordinates n1 = new Coordinates(mousePosition.getX(),mousePosition.getY()-1);
-		Coordinates n2 = new Coordinates(mousePosition.getX(),mousePosition.getY()+1);
-		Coordinates n3 = new Coordinates(mousePosition.getX()-1,mousePosition.getY());
-		Coordinates n4 = new Coordinates(mousePosition.getX()+1,mousePosition.getY());
-
-		if(lastPath.equals(n1) || lastPath.equals(n2)|| lastPath.equals(n3)|| lastPath.equals(n4)) 
-			isVisited = true;
-
-
-		return isVisited;
-	}*/
-
-
-
 }

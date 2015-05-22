@@ -13,6 +13,7 @@ import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
@@ -21,6 +22,7 @@ import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -65,7 +67,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 				game.leave(player);
 			}
 		} else if (m.type == Type.C_WIND) {
-			// TODO: call wind logic here!
+			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
 		} else {
@@ -91,12 +93,13 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(GameEvent e) {
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
-		} else if (e.type == GameEvent.Type.NEW_PLAYER) {
-			channel.writeAndFlush(new NewPlayerMessage("foo"));
-			// TODO: get player name.. put it into the event?
 		} else if (e.type == GameEvent.Type.UPDATE) {
-			channel.writeAndFlush(new UpdateMessage(null));
-			// TODO: get the update data.. use event or ask game
+			channel.writeAndFlush(new UpdateMessage(game.getPlayers()));
 		}
+	}
+
+	@Override
+	public void onUpdate(NewPlayerEvent e) {
+		channel.writeAndFlush(new NewPlayerMessage(e.player));
 	}
 }

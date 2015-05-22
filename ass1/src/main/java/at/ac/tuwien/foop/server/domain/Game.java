@@ -3,27 +3,37 @@ package at.ac.tuwien.foop.server.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
-import at.ac.tuwien.foop.server.service.GameLogicService;
+import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 
 public class Game {
+	public enum State {
+		ready, running, paused, over
+	}
+
 	private static Logger log = LoggerFactory.getLogger(Game.class);
 
 	private List<GameEventListener> listeners = new ArrayList<>();
 
-	private boolean started = false;
+	private State state = State.ready;
+
 	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
-	private GameLogicService service = new GameLogicService();
+	private Wind wind = Wind.fromCoordinates(0, 0);
+
+	// private GameLogicService service = new GameLogicService();
 
 	public Game(BoardString bs) {
 		setBoard(bs);
@@ -46,22 +56,57 @@ public class Game {
 	 */
 	public void start() {
 		log.info("start game");
-		started = true;
+		if (state != State.ready && state != State.paused) {
+			throw new IllegalStateException(
+					"game must be 'ready' or 'paused' so it can be started");
+		}
+
+		state = State.running;
 		fireGameEvent(new GameEvent(Type.START));
 	}
 
 	/**
-	 * Calculates the game progress.
+	 * Stops the game so it's over.
 	 */
-	public void next() { // maybe use a delta later on
-		if (!started) {
+	public void stop() {
+		if (state != State.running && state != State.paused) {
+			throw new IllegalStateException(
+					"game must be 'running' or 'paused' so it can be over");
+		}
+
+		state = State.over;
+		fireGameEvent(new GameEvent(Type.OVER));
+	}
+
+	/**
+	 * Pause the game.
+	 */
+	public void pause() {
+		if (state != State.running) {
+			throw new IllegalStateException(
+					"game must be 'running' so it can be paused");
+		}
+
+		state = State.paused;
+		fireGameEvent(new GameEvent(Type.PAUSE));
+	}
+
+	/**
+	 * Calculates the game progress.
+	 * 
+	 * <p>
+	 * This method will be called periodically to upgrade the players on the
+	 * board as well as the game state if a player reached the goal.
+	 */
+	public void next() {
+		if (state != State.running) {
 			return;
 		}
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
 
 		// call movementmethod here
-		service.movement(this);
+		// service.movement(this);
 	}
 
 	/**
@@ -77,7 +122,7 @@ public class Game {
 				&& (c = findFreeStartingCoordinates()) != null) {
 			Player p = new Player(name, c);
 			players.add(p);
-			fireGameEvent(new GameEvent(Type.NEW_PLAYER));
+			listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
 			return p;
 		}
 		return null;
@@ -100,6 +145,24 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
 
+	public synchronized void sendGust(WindGust gust) {
+		Validate.notNull(gust);
+
+		Coordinates c;
+		if (gust.direction == Direction.NORTH) {
+			c = new Coordinates(0, -1 * gust.strength);
+		} else if (gust.direction == Direction.SOUTH) {
+			c = new Coordinates(0, 1 * gust.strength);
+		} else if (gust.direction == Direction.WEST) {
+			c = new Coordinates(-1 * gust.strength, 0);
+		} else {
+			c = new Coordinates(1 * gust.strength, 0);
+		}
+		// System.out.println(String.format(" %d + %d , %d + %d", wind.x , c.x,
+		// wind.y , c.y));
+		wind = Wind.fromCoordinates(wind.x + c.x, wind.y + c.y);
+	}
+
 	public BoardString boardString() {
 		return boardString;
 	}
@@ -119,12 +182,20 @@ public class Game {
 
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
-		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x, coordinates.y, p.coordinates()) : p);
-		
+		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
+				coordinates.y, p.coordinates()) : p);
 	}
 
 	public Player getPlayer(String name) {
 		return players.stream().filter(e -> e.name().equals(name)).findFirst()
 				.orElseThrow(IllegalArgumentException::new);
+	}
+
+	public State state() {
+		return state;
+	}
+
+	public Wind wind() {
+		return wind;
 	}
 }

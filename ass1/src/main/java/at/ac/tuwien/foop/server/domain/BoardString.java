@@ -8,14 +8,4 @@ public class BoardString {
 		this.board = board;
 		this.width = width;
 	}
-
-	public String getBoard() {
-		return board;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-	
-	
 }

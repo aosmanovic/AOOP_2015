@@ -13,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.domain.Board;
-import at.ac.tuwien.foop.domain.Coordinates;
-import at.ac.tuwien.foop.domain.Player;
-import at.ac.tuwien.foop.domain.Update;
-import at.ac.tuwien.foop.domain.Wind;
+import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
@@ -34,7 +31,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	private Game game;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Channel channel;
-
 
 	private List<ChannelActiveListener> listeners = new ArrayList<>();
 
@@ -63,15 +59,14 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		if (m.type == Type.S_PONG) {
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
-			game.addPlayer(new Player(mapper.readValue(str,
-					NewPlayerMessage.class).name, new Coordinates(10,10))); // TODO, set coordinates
+			game.addPlayer(mapper.readValue(str, NewPlayerMessage.class).player);
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);
-			game.setBoard(Board.createBoard(boardMessage.fields, boardMessage.width));
+			game.setBoard(Board.createBoard(boardMessage.fields,
+					boardMessage.width));
 		} else if (m.type == Type.S_UPDATE) {
-			game.update(Update.createUpdate(mapper.readValue(str,
-					UpdateMessage.class)));
+			game.update(mapper.readValue(str, UpdateMessage.class).players);
 		} else if (m.type == Type.S_JOINED) {
 			game.join();
 		} else if (m.type == Type.S_ALREADY_FULL) {
@@ -79,7 +74,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		} else if (m.type == Type.S_START) {
 			game.start();
 		} else if (m.type == Type.S_UNKNOWN) {
-			log.warn("the server does not know the message '{}'", mapper.readValue(str,	UnknownMessage.class).unknownType);
+			log.warn("the server does not know the message '{}'",
+					mapper.readValue(str, UnknownMessage.class).unknownType);
 		} else {
 			log.warn("unknown message");
 		}
@@ -105,7 +101,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	}
 
 	@Override
-	public void sendWind(Wind wind) {
+	public void sendWind(WindGust wind) {
 		channel.writeAndFlush(new WindMessage(wind));
 	}
 

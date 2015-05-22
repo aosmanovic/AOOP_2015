@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import asg.cliche.Command;
 import asg.cliche.ShellFactory;
+import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.network.NettyServer;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class ServerShell {
 	private static Logger log = LoggerFactory.getLogger(ServerShell.class);
@@ -15,7 +17,8 @@ public class ServerShell {
 	private NettyServer server;
 
 	public ServerShell() {
-		server = new NettyServer();
+		server = new NettyServer(new Game(
+				new GameLogicService().loadBoard(GameLogicService.BOARD_PATH)));
 		new Thread(server).start();
 	}
 	
