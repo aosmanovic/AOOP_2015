@@ -19,6 +19,7 @@ import at.ac.tuwien.foop.domain.message.Message.Type;
 import at.ac.tuwien.foop.domain.message.client.JoinMessage;
 import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
+import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
@@ -76,7 +77,11 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		} else if (m.type == Type.S_UNKNOWN) {
 			log.warn("the server does not know the message '{}'",
 					mapper.readValue(str, UnknownMessage.class).unknownType);
-		} else {
+		}	else if(m.type == Type.S_OVER) {
+			log.info("UUU" + mapper.readValue(str, GameOverMessage.class).player);
+			game.over();
+		} 
+		else {
 			log.warn("unknown message");
 		}
 	}
@@ -117,5 +122,11 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 
 	public void addChannelActiveListener(ChannelActiveListener caListener) {
 		listeners.add(caListener);
+	}
+
+	@Override
+	public void over() {
+		channel.writeAndFlush(new Message(Type.C_OVER));
+		
 	}
 }

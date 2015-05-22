@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.server.domain.Game;
+import at.ac.tuwien.foop.server.domain.Game.GameState;
 import at.ac.tuwien.foop.server.network.NettyServer;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
@@ -37,9 +38,9 @@ public class Server {
 		public void run() {
 			log.debug("execute game loop!");
 			
-			if (game.state() == Game.State.running) {
+			if (game.state() == GameState.running) {
 				game.next();
-			} else if (game.state() == Game.State.over) {
+			} else if (game.state() == GameState.over) {
 				timer.cancel();
 			}
 		}

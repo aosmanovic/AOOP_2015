@@ -2,7 +2,7 @@ package at.ac.tuwien.foop.client.events;
 
 public class GameEvent {
 	public enum Type {
-		NEW_PLAYER, BOARD, START, STOP, UPDATE
+		NEW_PLAYER, BOARD, START, STOP, UPDATE, OVER
 	}
 
 	public final Type type;

@@ -9,4 +9,5 @@ public interface GameCore {
 	public void sendWind(WindGust wind);
 	public void ping();
 	public void start();
+	public void over();
 }

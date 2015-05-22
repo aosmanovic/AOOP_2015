@@ -15,6 +15,7 @@ import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
+import at.ac.tuwien.foop.server.domain.Game.GameState;
 
 public class GameLogicService {
 
@@ -52,21 +53,10 @@ public class GameLogicService {
 
 			// get neighbors with paths
 			List<Coordinates> floorList= calculateNeighbor(f, x, y);
-
-
 			Coordinates closestNeigbour = floorList.get(0);
-			//player = new Player(player.name(), player.coordinates(), closestNeigbour);
-
-			// dead end
-			/*if (countNeighbourWals(f,player.coordinates()) == 3) {
-				/*player.getLastCoordinates();
-				log.info("UUUUUU" + player.getLastCoordinates());
-				game.movePlayer(player.name(), player.getLastCoordinates());
-				log.info("AAAA" + player.coordinates());*/
 
 			
 			if(countNeighbourWals(f,player.coordinates()) == 3 && player.getLastCoordinates() != null) {
-				log.info("INNNNNNNNNNNN 11111111111");
 				player.setState(State.crazy);
 				game.movePlayer(player.name(), player.getLastCoordinates());
 				break;
@@ -74,7 +64,6 @@ public class GameLogicService {
 			}
 			
 			if(!player.getState().equals(State.notCrazy))  {
-				log.info("INFOOOOOO 22222222222");
 				if(floorList.size()>=3) {
 					if(player.getState().equals(State.crazy)) {
 						player.setState(State.notSoCrazy);
@@ -107,17 +96,15 @@ public class GameLogicService {
 			// move the player
 			game.movePlayer(player.name(), closestNeigbour);
 			//player = new Player(player.name(), player.coordinates(), closestNeigbour);
+			
+			// cheese found
+			if(player.coordinates().equals(cheesCoordinates)) {
+				game.setState(GameState.over);
+			}
 			log.info("Last Coordinates: " + player.getLastCoordinates());
 		}
 	}
 
-	/*private int goBack(Player player) {
-		// TODO Auto-generated method stub
-		
-		
-		
-		return 0;
-	}*/
 
 	// calculates the neighbors that are not a wall
 	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {

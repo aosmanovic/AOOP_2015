@@ -20,7 +20,7 @@ import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
-	public enum State {
+	public enum GameState {
 		ready, running, paused, over
 	}
 
@@ -28,7 +28,7 @@ public class Game {
 
 	private List<GameEventListener> listeners = new ArrayList<>();
 
-	private State state = State.ready;
+	private GameState state = GameState.ready;
 
 	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
@@ -58,12 +58,12 @@ public class Game {
 	 */
 	public void start() {
 		log.info("start game");
-		if (state != State.ready && state != State.paused) {
+		if (state != GameState.ready && state != GameState.paused) {
 			throw new IllegalStateException(
 					"game must be 'ready' or 'paused' so it can be started");
 		}
 
-		state = State.running;
+		state = GameState.running;
 		fireGameEvent(new GameEvent(Type.START));
 	}
 
@@ -71,12 +71,12 @@ public class Game {
 	 * Stops the game so it's over.
 	 */
 	public void stop() {
-		if (state != State.running && state != State.paused) {
+		if (state != GameState.running && state != GameState.paused) {
 			throw new IllegalStateException(
 					"game must be 'running' or 'paused' so it can be over");
 		}
 
-		state = State.over;
+		state = GameState.over;
 		fireGameEvent(new GameEvent(Type.OVER));
 	}
 
@@ -84,12 +84,12 @@ public class Game {
 	 * Pause the game.
 	 */
 	public void pause() {
-		if (state != State.running) {
+		if (state != GameState.running) {
 			throw new IllegalStateException(
 					"game must be 'running' so it can be paused");
 		}
 
-		state = State.paused;
+		state = GameState.paused;
 		fireGameEvent(new GameEvent(Type.PAUSE));
 	}
 
@@ -101,7 +101,7 @@ public class Game {
 	 * board as well as the game state if a player reached the goal.
 	 */
 	public void next() {
-		if (state != State.running) {
+		if (state != GameState.running) {
 			return;
 		}
 		// calculate next step
@@ -193,8 +193,12 @@ public class Game {
 				.orElseThrow(IllegalArgumentException::new);
 	}
 
-	public State state() {
+	public GameState state() {
 		return state;
+	}
+	
+	public void setState(GameState state) {
+		this.state = state;
 	}
 
 	public Wind wind() {

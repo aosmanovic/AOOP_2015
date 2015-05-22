@@ -42,6 +42,11 @@ public class Game {
 		running = false;
 		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
 	}
+	
+	public void over() {
+		running = false;
+		fireGameEvent(new GameEvent(GameEvent.Type.OVER));
+	}
 
 	public void join() {
 		joined = true;
