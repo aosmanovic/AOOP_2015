@@ -7,16 +7,24 @@ public class Player {
 	private final String name;
 	private Coordinates coordinates;
 	private Coordinates lastCoordinates;
+	private State state;
+	
+	public static enum State {
+		crazy, notSoCrazy, notCrazy
+	} ;
+	
+	
 
 	@JsonCreator
-	public Player(@JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("lastCoordinates") Coordinates lastCoordinates) {
+	public Player(@JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("lastCoordinates") Coordinates lastCoordinates, @JsonProperty("state") State crazyState) {
 		this.name = name;
 		this.coordinates = coordinates;
 		this.lastCoordinates = lastCoordinates;
+		this.state = crazyState;
 	}
 	
 	public Player(String name, Coordinates coordinates) {
-		this(name, coordinates, null);
+		this(name, coordinates, null, State.notCrazy);
 	}
 
 	@JsonProperty("name")
@@ -29,8 +37,8 @@ public class Player {
 		return coordinates;
 	}
 
-	public Player moveTo(int x, int y, Coordinates lastCoordinates) {
-		return new Player(name, new Coordinates(x, y), lastCoordinates);
+	public Player moveTo(int x, int y, Coordinates lastCoordinates, State state) {
+		return new Player(name, new Coordinates(x, y), lastCoordinates, state);
 	}
 
 	public Player moveTo(int x, int y) {
@@ -69,6 +77,14 @@ public class Player {
 
 	public Coordinates getLastCoordinates() {
 		return lastCoordinates;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}	
 	
 	

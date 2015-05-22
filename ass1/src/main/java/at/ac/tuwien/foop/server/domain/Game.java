@@ -184,7 +184,7 @@ public class Game {
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
 		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
-				coordinates.y, p.coordinates()) : p);
+				coordinates.y, p.coordinates(), p.getState()) : p);
 	}
 
 	public Player getPlayer(String name) {

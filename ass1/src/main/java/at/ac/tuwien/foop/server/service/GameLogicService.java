@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board.Field;
+import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.server.domain.BoardString;
@@ -38,9 +40,10 @@ public class GameLogicService {
 
 	public void movement(Game game) {
 		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
+		
 
 		for(int i =0; i<game.getPlayers().size();i++) {
-			Player player =  game.getPlayers().get(i);
+			final Player player =  game.getPlayers().get(i);
 
 			Field[][] f = game.board().fields();
 			int x = player.coordinates().x;
@@ -61,6 +64,32 @@ public class GameLogicService {
 				game.movePlayer(player.name(), player.getLastCoordinates());
 				log.info("AAAA" + player.coordinates());*/
 
+			
+			if(countNeighbourWals(f,player.coordinates()) == 3 && player.getLastCoordinates() != null) {
+				log.info("INNNNNNNNNNNN 11111111111");
+				player.setState(State.crazy);
+				game.movePlayer(player.name(), player.getLastCoordinates());
+				break;
+				
+			}
+			
+			if(!player.getState().equals(State.notCrazy))  {
+				log.info("INFOOOOOO 22222222222");
+				if(floorList.size()>=3) {
+					if(player.getState().equals(State.crazy)) {
+						player.setState(State.notSoCrazy);
+						List<Coordinates> p = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
+						game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+						break;
+					}else
+						player.setState(State.notCrazy);
+				}else {
+					game.movePlayer(player.name(), floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).findFirst().orElse(null));
+					break;
+				}
+			}
+				
+			
 
 
 			// calculate cheese distance
@@ -76,10 +105,18 @@ public class GameLogicService {
 
 			// move the player
 			game.movePlayer(player.name(), closestNeigbour);
-			player = new Player(player.name(), player.coordinates(), closestNeigbour);
+			//player = new Player(player.name(), player.coordinates(), closestNeigbour);
 			log.info("Last Coordinates: " + player.getLastCoordinates());
 		}
 	}
+
+	/*private int goBack(Player player) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		return 0;
+	}*/
 
 	// calculates the neighbors that are not a wall
 	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {

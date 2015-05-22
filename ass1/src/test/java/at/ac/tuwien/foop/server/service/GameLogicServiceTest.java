@@ -75,17 +75,23 @@ public class GameLogicServiceTest {
 	public void testMovementWithDeadEnd() {
 		log.info("------------Test 4 ----------");
 		String b = 
-				  "wwwwwwww"
-				+ "wwwmwCww"
-				+ "w---w-ww"
-				+ "w-----ww"
-				+ "wwwwwwww";
+				  "wwwmwwww"
+				+ "www---ww"
+				+ "wCw-w-ww"
+				+ "w-www-ww"
+				+ "w-----ww"+
+				  "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
 		game.join("Al");
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game);
-		Assert.assertEquals(new Coordinates(3, 2), actual.coordinates());
+		service.movement(game);
+		
+		service.movement(game);
+		service.movement(game);
+		service.movement(game);
+		Assert.assertEquals(new Coordinates(3, 2), game.getPlayer(actual.name()).coordinates());
 	}
 }
