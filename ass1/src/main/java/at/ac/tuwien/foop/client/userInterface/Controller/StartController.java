@@ -18,7 +18,7 @@ import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
-import at.ac.tuwien.foop.client.userInterface.Views.StartView;
+import at.ac.tuwien.foop.client.userInterface.Views.StartFrame;
 import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 
@@ -28,26 +28,23 @@ public class StartController implements ConnectListener, GameEventListener,
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game;
 	private GameCore core = null;
-	private StartView start;
+	private StartFrame start;
 	private GameService service = new GameService();
 	private BoardFrame boardFrame = new BoardFrame();
 
 	public StartController() {
-
-		start = new StartView();
+		start = new StartFrame();
 		connect("localhost", "20150");
 
 		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
-		
+
 		start.setStartControllerListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				gameStart();
 			}
 		});
-
 	}
 
 	public void connect(String host, String port) {
