@@ -16,7 +16,7 @@ public class GameLogicServiceTest {
 	private static Logger log = LoggerFactory.getLogger(GameLogicServiceTest.class);
 
 	@Test
-	public void testMovement() {
+	public void testMovement1() {
 		log.info("------------Test 1 ----------");
 		String b = 
 				"wwwwwwww"
@@ -76,8 +76,8 @@ public class GameLogicServiceTest {
 		log.info("------------Test 4 ----------");
 		String b = 
 				  "wwwwwwww"
-				+ "www-wCww"
-				+ "w--mw-ww"
+				+ "wwwmwCww"
+				+ "w---w-ww"
 				+ "w-----ww"
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
@@ -86,6 +86,6 @@ public class GameLogicServiceTest {
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game);
-		Assert.assertEquals(new Coordinates(0, 7), actual.coordinates());
+		Assert.assertEquals(new Coordinates(3, 2), actual.coordinates());
 	}
 }

@@ -6,7 +6,7 @@ public class Player {
 	private final String name;
 	private Coordinates coordinates;
 	// TODO: what is this used for?
-	private ArrayList<Coordinates> visitedCoordinates = new ArrayList<>();
+//	private ArrayList<Coordinates> visitedCoordinates = new ArrayList<>();
 	private Coordinates lastCoordinates;
 
 	public Player(String name, Coordinates coordinates, Coordinates lastCoordinates) {
@@ -33,9 +33,9 @@ public class Player {
 		return new Player(name, new Coordinates(x, y), lastCoordinates);
 	}
 
-	public ArrayList<Coordinates> getVisitedCoordinates() {
+	/*public ArrayList<Coordinates> getVisitedCoordinates() {
 		return visitedCoordinates;
-	}
+	}*/
 
 	@Override
 	public int hashCode() {
@@ -66,4 +66,10 @@ public class Player {
 	public String toString() {
 		return "Player [name=" + name + ", coordinates=" + coordinates + "]";
 	}
+
+	public Coordinates getLastCoordinates() {
+		return lastCoordinates;
+	}	
+	
+	
 }

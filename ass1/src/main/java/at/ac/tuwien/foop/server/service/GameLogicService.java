@@ -39,102 +39,50 @@ public class GameLogicService {
 
 	public void movement(Game game) {
 		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
-		boolean end = false;
 
 		for(int i =0; i<game.getPlayers().size();i++) {
 			Player player =  game.getPlayers().get(i);
 
 			Field[][] f = game.board().fields();
-			Coordinates mouse = player.coordinates();
-			int x = mouse.getX();
-			int y = mouse.getY();
-			log.info("Position of the mouse: " + mouse.toString());
+			int x = player.coordinates().getX();
+			int y = player.coordinates().getY();
+			log.info("Position of the mouse: " + player.coordinates().toString());
 
+			// get neighbors with paths
 			List<Coordinates> floorList= calculateNeighbor(f, x, y);
 
 
-			double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
-			log.info("Size: " + floorList.size());
 			Coordinates closestNeigbour = floorList.get(0);
-			// Dead end
-			if (floorList.size() == 1) {
-				//goBack();
-			}
+			//player = new Player(player.name(), player.coordinates(), closestNeigbour);
 
+			// dead end
+			/*if (countNeighbourWals(f,player.coordinates()) == 3) {
+				/*player.getLastCoordinates();
+				log.info("UUUUUU" + player.getLastCoordinates());
+				game.movePlayer(player.name(), player.getLastCoordinates());
+				log.info("AAAA" + player.coordinates());*/
+
+
+
+			// calculate cheese distance
+			double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
 			for(int k =0; k<floorList.size();k++) {
 				double distance = calculateDistanceToCheese(cheesCoordinates, floorList.get(k));
 				if(distance<=minDistance) {
 					minDistance = distance;
 					closestNeigbour = floorList.get(k);
-					log.info("Clos ne:" + closestNeigbour);
+					log.info("Closest neighbor:" + closestNeigbour);
 				}
 			}
 
+			// move the player
 			game.movePlayer(player.name(), closestNeigbour);
-
-
-
-			/*ArrayList<Coordinates> floorList= new ArrayList<>();
-			for(int j=0; j<neighbourList.size(); j++) {
-				Coordinates neighbour = neighbourList.get(j);
-
-				//Checked the boarders
-				if(neighbour.getX()<f.length && neighbour.getX() >=0 && neighbour.getY()<f[1].length && neighbour.getY()>=0) {
-					//Get path/floor neighbors
-					if(f[neighbour.getX()][neighbour.getY()].equals(Field.floor )) {
-						floorList.add(neighbour);
-						log.info(" Neighbours with path: " + neighbour);
-					} 
-					//Checked if cheese/end is found
-					else if(f[neighbour.getX()][neighbour.getY()].equals(Field.end)) {
-
-						// field will never be changed!
-						//							f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
-						//							game.board().setFields(f);
-
-						game.movePlayer(player.name(), neighbour);
-						//player.setVisitedCoordinates(player.getCoordinates());							
-
-						end=true;
-						break;
-					}
-				}
-			}
-
-			//Algorithm for mouse moving in cheese direction
-			if(end==false) {	
-				double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
-				log.info("Size:" + floorList.size());
-				Coordinates closestNeigbour = floorList.get(0);
-
-				for(int k =0; k<floorList.size();k++) {
-					double distance = calculateDistanceToCheese(cheesCoordinates, floorList.get(k));
-					if(distance<=minDistance) {
-						minDistance = distance;
-						closestNeigbour = floorList.get(k);
-					}
-				}
-				// field will never be changed!
-				//					f[player.getCoordinates().getX()][player.getCoordinates().getY()] = Field.floor;
-				//					game.board().setFields(f);
-
-				game.movePlayer(player.name(), closestNeigbour);
-
-				Coordinates lastVisitedPath = player.getVisitedCoordinates().get(player.getVisitedCoordinates().size()-2);
-				// when he is in a dead end
-				if(countNeighbourWals(f,player.coordinates())==3 && pathIsVisited(lastVisitedPath,player.coordinates()) == true) {	
-					log.info("OK");
-					//player.setCoordinates(new Coordinates(2,5));
-					end = true;
-					break;
-				} 
-
-			}*/
-
-			//}
+			player = new Player(player.name(), player.coordinates(), closestNeigbour);
+			log.info("Last Coordinates: " + player.getLastCoordinates());
 		}
 	}
 
+	// calculates the neighbors that are not a wall
 	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {
 		return Arrays.asList(new Coordinates[] {new Coordinates(x, y-1), new Coordinates(x, y+1), new Coordinates(x-1, y), new Coordinates(x+1, y)})
 				.stream().filter(neighbour -> {
@@ -149,6 +97,7 @@ public class GameLogicService {
 				}).collect(Collectors.toList());
 	}
 
+	// calculates distance to cheese
 	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
 		//double x = 1 << (c2.getX() - c1.getX());
 		//double y = 1 << (c2.getY() - c1.getY());
@@ -157,13 +106,16 @@ public class GameLogicService {
 		return Math.sqrt(x+y);
 	}
 
+	// counts neigbors that are walls
 	public int countNeighbourWals(Field[][] f, Coordinates c) {
 		int i = 0;
 
-		if(f[c.getX()][c.getY()-1]== Field.wall) i++;
-		if(f[c.getX()][c.getY()+1]== Field.wall) i++;
-		if(f[c.getX()-1][c.getY()]== Field.wall) i++;
-		if(f[c.getX()+1][c.getY()]== Field.wall) i++;
+		if(c.getX()-1>=0 && c.getY()-1 >=0) {
+			if(f[c.getY()-1][c.getX()]== Field.wall) i++;
+			if(f[c.getY()+1][c.getX()]== Field.wall) i++;
+			if(f[c.getY()][c.getX()-1]== Field.wall) i++;
+			if(f[c.getY()][c.getX()+1]== Field.wall) i++;
+		}
 
 		return i;
 	}
