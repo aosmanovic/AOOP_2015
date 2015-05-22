@@ -53,7 +53,9 @@ public class Game {
 
 	public void update(List<Player> players) {
 		// TODO: implement
-		throw new UnsupportedOperationException("not implemented yet");
+		//throw new UnsupportedOperationException("not implemented yet");
+		this.players = players;
+	
 	}
 
 	public void addPlayer(Player player) {

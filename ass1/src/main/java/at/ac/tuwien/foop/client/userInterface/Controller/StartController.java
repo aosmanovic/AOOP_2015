@@ -96,7 +96,12 @@ public class StartController implements ConnectListener, GameEventListener {
 		} else if (e.type == GameEvent.Type.BOARD) {
 			Board b = game.getBoard();
 			boardFrame.getBoard().setGame(game);
-			System.out.println(b);
+			//System.out.println(b);
+		} else if(e.type == GameEvent.Type.UPDATE) {
+			//boardFrame.getBoard().revalidate();
+			//boardFrame.getBoard().repaint();
+			boardFrame.repaint();
+			
 		}
 	}
 	

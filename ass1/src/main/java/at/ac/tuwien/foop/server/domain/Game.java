@@ -16,6 +16,7 @@ import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
 	public enum State {
@@ -33,7 +34,7 @@ public class Game {
 	private Board board;
 	private Wind wind = Wind.fromCoordinates(0, 0);
 
-	// private GameLogicService service = new GameLogicService();
+	private GameLogicService service = new GameLogicService();
 
 	public Game(BoardString bs) {
 		setBoard(bs);
@@ -106,7 +107,7 @@ public class Game {
 		fireGameEvent(new GameEvent(Type.UPDATE));
 
 		// call movementmethod here
-		// service.movement(this);
+		service.movement(this);
 	}
 
 	/**
