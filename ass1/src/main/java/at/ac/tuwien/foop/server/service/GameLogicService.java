@@ -90,7 +90,8 @@ public class GameLogicService {
 			}
 				
 			
-
+			// TODO: just a hack!
+			floorList = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
 
 			// calculate cheese distance
 			double minDistance = calculateDistanceToCheese(cheesCoordinates, floorList.get(0));
