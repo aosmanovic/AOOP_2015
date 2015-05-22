@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.server.domain;
+package at.ac.tuwien.foop.domain;
 
 import org.junit.Assert;
 import org.junit.Test;

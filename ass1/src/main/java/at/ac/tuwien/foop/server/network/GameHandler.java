@@ -94,7 +94,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.UPDATE) {
-			channel.writeAndFlush(new UpdateMessage(game.getPlayers()));
+			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game.wind()));
 		}
 	}
 

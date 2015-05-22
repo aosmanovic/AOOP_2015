@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;

@@ -2,68 +2,54 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.util.List;
 
 import javax.swing.JPanel;
 
-
-
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.domain.Board.Field;
-import at.ac.tuwien.foop.domain.Coordinates;
-import at.ac.tuwien.foop.domain.Player;
 
 public class BoardPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private Map m;
+	private FieldImages images;
 	private Game game;
-	
-	
+
 	public BoardPanel() {
-		m = new Map();
+		images = new FieldImages();
 	}
 
-	public void actionPerformed(ActionEvent e){
+	public void actionPerformed(ActionEvent e) {
 		repaint();
 	}
 
 	@Override
-	public void paint(Graphics w) {
-		
-		super.paint(w);
-		if(game==null)return;
-	
-		
-		for(int i=0; i<game.getBoard().fields().length; i++) {
-			for(int j=0; j<game.getBoard().fields()[i].length; j ++) {
-				
-				Field field = game.getBoard().fields()[i][j];
-				
-				if (field  == Field.wall) {
-					w.drawImage(m.getWall(), j*26, i*26, null);
-				} else if (field  == Field.start) {
-					w.drawImage(m.getWall(), j*26, i*26, null);
+	public void paint(Graphics g) {
+		super.paint(g);
+
+		if (game == null) {
+			return;
+		}
+
+		Field[][] f = game.getBoard().fields();
+		for (int i = 0; i < f.length; i++) {
+			for (int j = 0; j < f[i].length; j++) {
+				Field field = f[i][j];
+
+				if (field == Field.wall) {
+					g.drawImage(images.getWall(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
+				} else if (field == Field.start) {
+					g.drawImage(images.getPath(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				} else if (field == Field.floor) {
-					w.drawImage(m.getPath(), j*26, i*26, null);
-				} else if (field  == Field.end) {
-					w.drawImage(m.getCheese(), j*26, i*26, null);
+					g.drawImage(images.getPath(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
+				} else if (field == Field.end) {
+					g.drawImage(images.getCheese(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				}
-				
 			}
 		}
-		
-		List<Player> player = game.getPlayers();
-		for(int i = 0; i<player.size(); i++) {
-			Coordinates coordinates = player.get(i).coordinates();
-			w.drawImage(m.getMouse(), coordinates.x*26, coordinates.y*26, null);
-		}
-		
-		
-	}
 
-	public Game getGame() {
-		return game;
+		game.getPlayers().forEach(
+				p -> g.drawImage(images.getMouse(), p.coordinates().x * FieldImages.IMAGE_SIZE,
+						p.coordinates().y * FieldImages.IMAGE_SIZE, null));
 	}
 
 	public void setGame(Game game) {
