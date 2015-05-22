@@ -30,25 +30,26 @@ public class BoardPanel extends JPanel {
 			return;
 		}
 
-		for (int i = 0; i < game.getBoard().fields().length; i++) {
-			for (int j = 0; j < game.getBoard().fields()[i].length; j++) {
-				Field field = game.getBoard().fields()[i][j];
+		Field[][] f = game.getBoard().fields();
+		for (int i = 0; i < f.length; i++) {
+			for (int j = 0; j < f[i].length; j++) {
+				Field field = f[i][j];
 
 				if (field == Field.wall) {
-					g.drawImage(images.getWall(), j * 26, i * 26, null);
+					g.drawImage(images.getWall(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				} else if (field == Field.start) {
-					g.drawImage(images.getWall(), j * 26, i * 26, null);
+					g.drawImage(images.getPath(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				} else if (field == Field.floor) {
-					g.drawImage(images.getPath(), j * 26, i * 26, null);
+					g.drawImage(images.getPath(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				} else if (field == Field.end) {
-					g.drawImage(images.getCheese(), j * 26, i * 26, null);
+					g.drawImage(images.getCheese(), j * FieldImages.IMAGE_SIZE, i * FieldImages.IMAGE_SIZE, null);
 				}
 			}
 		}
 
 		game.getPlayers().forEach(
-				p -> g.drawImage(images.getMouse(), p.coordinates().x * 26,
-						p.coordinates().y * 26, null));
+				p -> g.drawImage(images.getMouse(), p.coordinates().x * FieldImages.IMAGE_SIZE,
+						p.coordinates().y * FieldImages.IMAGE_SIZE, null));
 	}
 
 	public void setGame(Game game) {

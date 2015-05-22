@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 
 public class FieldImages {
 
+	public static final int IMAGE_SIZE = 26;
 	private Image wall, path, cheese, mouse;
 
 	public FieldImages() {
