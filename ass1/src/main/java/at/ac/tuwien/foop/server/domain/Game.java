@@ -16,6 +16,7 @@ import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
+import at.ac.tuwien.foop.server.event.GameOverEvent;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
@@ -70,14 +71,14 @@ public class Game {
 	/**
 	 * Stops the game so it's over.
 	 */
-	public void stop() {
+	public void stop(Player winner) {
 		if (state != GameState.running && state != GameState.paused) {
 			throw new IllegalStateException(
 					"game must be 'running' or 'paused' so it can be over");
 		}
 
 		state = GameState.over;
-		fireGameEvent(new GameEvent(Type.OVER));
+		listeners.forEach(l -> l.onUpdate(new GameOverEvent(winner)));
 	}
 
 	/**
@@ -104,11 +105,12 @@ public class Game {
 		if (state != GameState.running) {
 			return;
 		}
+
+		// call movement method here
+		service.movement(this);
+
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));
-
-		// call movementmethod here
-		service.movement(this);
 	}
 
 	/**
@@ -195,10 +197,6 @@ public class Game {
 
 	public GameState state() {
 		return state;
-	}
-	
-	public void setState(GameState state) {
-		this.state = state;
 	}
 
 	public Wind wind() {

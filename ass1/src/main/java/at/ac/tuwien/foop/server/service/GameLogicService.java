@@ -10,12 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Board.Field;
-import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
-import at.ac.tuwien.foop.server.domain.Game.GameState;
 
 public class GameLogicService {
 
@@ -43,9 +42,7 @@ public class GameLogicService {
 		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
 		
 
-		for(int i =0; i<game.getPlayers().size();i++) {
-			final Player player =  game.getPlayers().get(i);
-
+		for (Player player : game.getPlayers()) {
 			Field[][] f = game.board().fields();
 			int x = player.coordinates().x;
 			int y = player.coordinates().y;
@@ -99,7 +96,8 @@ public class GameLogicService {
 			
 			// cheese found
 			if(player.coordinates().equals(cheesCoordinates)) {
-				game.setState(GameState.over);
+				game.stop(player);
+				break;
 			}
 			log.info("Last Coordinates: " + player.getLastCoordinates());
 		}

@@ -9,7 +9,6 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
@@ -73,11 +72,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
-		} else if(m.type == Type.C_OVER) {
-			ctx.writeAndFlush(new GameOverMessage(new Player("ALMA", new Coordinates(2,2))));
-			game.stop();
-		} 
-		else {
+		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
@@ -102,10 +97,9 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.UPDATE) {
 			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game.wind()));
-		} /*else if (e.type == GameEvent.Type.OVER) {
-			log.info("USO JE; NO SIKIRIKI");
-			channel.writeAndFlush(new GameOverMessage(game.getPlayers().get(0))); // TO DO
-		}*/
+//		} else if (e.type == GameEvent.Type.OVER) {
+//			channel.writeAndFlush(new GameOverMessage(game.getPlayers().get(0))); // TO DO
+		}
 	}
 
 	@Override
