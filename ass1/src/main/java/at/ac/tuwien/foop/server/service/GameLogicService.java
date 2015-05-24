@@ -39,17 +39,15 @@ public class GameLogicService {
 	}
 
 	public void movement(Game game) {
-		Coordinates cheesCoordinates = game.board().cheeseCoordinates();
+		Coordinates cheeseCoordinates = game.board().cheeseCoordinates();
 
 		for (Player player : game.getPlayers()) {
-			Field[][] f = game.board().fields();
-			int x = player.coordinates().x;
-			int y = player.coordinates().y;
 			log.info("Position of the mouse: " + player.coordinates().toString());
 
 			// get neighbors with paths
-			List<Coordinates> floorList = calculateNeighbor(f, x, y);
+			List<Coordinates> floorList = calculateNeighbor(game.board().fields(), player.coordinates());
 
+			// check for dead end
 			if (floorList.size() == 1 && player.getLastCoordinates() != null) {
 				player.setState(State.crazy);
 				game.movePlayer(player.name(), player.getLastCoordinates());
@@ -72,26 +70,17 @@ public class GameLogicService {
 				}
 			}
 			
-			// TODO: just a hack!
+			// TODO: just a hack: removes last cordinates from possible neighbors
 			floorList = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
 
-			// calculate cheese distance
-			double minDistance = Double.POSITIVE_INFINITY;
-			Coordinates closestNeighbor = null;
-			for (Coordinates neighbor : floorList) {
-				double distance = calculateDistanceToCheese(cheesCoordinates, neighbor);
-				if (distance <= minDistance) {
-					minDistance = distance;
-					closestNeighbor = neighbor;
-					log.info("Closest neighbor:" + closestNeighbor);
-				}
-			}
+			// calculate closest neighbor
+			Coordinates closestNeighbor = calculateClosestNeighbor(floorList, cheeseCoordinates);
 
 			// move the player
 			game.movePlayer(player.name(), closestNeighbor);
 
-			// cheese found
-			if (closestNeighbor.equals(cheesCoordinates)) {
+			// check if cheese was found
+			if (closestNeighbor.equals(cheeseCoordinates)) {
 				log.info("player '{}' wins the game!", player.name());
 				game.stop(player);
 				break;
@@ -100,25 +89,52 @@ public class GameLogicService {
 		}
 	}
 
-	// calculates the neighbors that are not a wall
-	private List<Coordinates> calculateNeighbor(Field[][] f, int x, int y) {
-		return Arrays.asList(new Coordinates[] {new Coordinates(x, y-1), new Coordinates(x, y+1), new Coordinates(x-1, y), new Coordinates(x+1, y)})
-				.stream().filter(neighbour -> {
-					if(neighbour.x<f[0].length 
-							&& neighbour.x >=0 
-							&& neighbour.y<f.length 
-							&& neighbour.y>=0 
-							&& !f[neighbour.y][neighbour.x].equals(Field.wall)) {
+	/**
+	 * Calculate the closest neighbor to the cheese.
+	 * @param neighbors
+	 * @param cheeseCoordinates
+	 * @return
+	 */
+	private Coordinates calculateClosestNeighbor(List<Coordinates> neighbors, Coordinates cheeseCoordinates) {
+		double minDistance = Double.POSITIVE_INFINITY;
+		Coordinates closestNeighbor = null;
+		for (Coordinates neighbor : neighbors) {
+			double distance = calculateDistanceToCheese(cheeseCoordinates, neighbor);
+			if (distance <= minDistance) {
+				minDistance = distance;
+				closestNeighbor = neighbor;
+				log.info("Closest neighbor:" + closestNeighbor);
+			}
+		}
+		return closestNeighbor;
+	}
+
+	/**
+	 * Calculate neighbor fields of {@code position} that are not of type wall.
+	 */
+	private List<Coordinates> calculateNeighbor(Field[][] fields, Coordinates position) {
+		int x = position.x;
+		int y = position.y;
+		
+		return Arrays
+				.asList(new Coordinates[] { new Coordinates(x, y - 1), new Coordinates(x, y + 1), new Coordinates(x - 1, y), new Coordinates(x + 1, y) })
+				.stream()
+				.filter(neighbour -> {
+					if (neighbour.x < fields[0].length && neighbour.x >= 0
+							&& neighbour.y < fields.length && neighbour.y >= 0
+							&& !fields[neighbour.y][neighbour.x].equals(Field.wall)) {
 						return true;
 					}
 					return false;
 				}).collect(Collectors.toList());
 	}
 
-	// calculates distance to cheese
-	public double calculateDistanceToCheese(Coordinates c1, Coordinates c2) {
-		double x = (c2.x - c1.x)*(c2.x - c1.x);
-		double y = (c2.y - c1.y)*(c2.y - c1.y);
-		return Math.sqrt(x+y);
+	/**
+	 * Calculate the distance between {@code position} and {@code cheese}.
+	 */
+	private double calculateDistanceToCheese(Coordinates position, Coordinates cheese) {
+		double x = (cheese.x - position.x) * (cheese.x - position.x);
+		double y = (cheese.y - position.y) * (cheese.y - position.y);
+		return Math.sqrt(x + y);
 	}
 }
