@@ -31,8 +31,8 @@ public class StartFrame extends JFrame {
 	public StartFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
-		
-		
+
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -103,5 +103,18 @@ public class StartFrame extends JFrame {
 
 	public void setGame(Game game) {
 		this.game = game;
+	}
+
+	public int showGameOver(Game game) {
+		Object[] options = {"Go to next level","Leave the game"};
+		int answer = JOptionPane.showOptionDialog(null,
+				"The game is finished!\nThe winner of the game is: " + game.winner(),
+				"Game Over",
+				JOptionPane.DEFAULT_OPTION,
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				options[0]);
+		return answer;
 	}
 }

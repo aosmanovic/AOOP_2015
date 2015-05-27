@@ -23,7 +23,7 @@ import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 
 public class StartController implements ConnectListener, GameEventListener,
-		KeyListener {
+KeyListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private Game game;
@@ -95,11 +95,24 @@ public class StartController implements ConnectListener, GameEventListener,
 			boardFrame.getBoard().setGame(game);
 		} else if (e.type == GameEvent.Type.UPDATE) {
 			boardFrame.getBoard().repaint();
+		} else if (e.type == GameEvent.Type.OVER) {
+			int gameover= start.showGameOver(game);
+			if(gameover ==0) { 
+				log.info("LOAD new level");
+			} else if (gameover == 1) { 
+				log.info("Leave");
+				service.leave(game, core);
+				hideBoard();
+			}
 		}
 	}
 
 	public void showBoard() {
 		boardFrame.setVisible(true);
+	}
+	
+	public void hideBoard() {
+		 System.exit(0);
 	}
 
 	@Override
