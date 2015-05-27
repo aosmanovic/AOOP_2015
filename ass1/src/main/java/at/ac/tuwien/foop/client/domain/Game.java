@@ -16,6 +16,7 @@ public class Game {
 	private boolean joined = false;
 	private List<Player> players = new ArrayList<>();
 	private Board board;
+	private String winner = "";
 
 	public void board(Board board) {
 		this.board = board;
@@ -43,8 +44,9 @@ public class Game {
 		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
 	}
 	
-	public void over() {
+	public void over(String name) {
 		running = false;
+		winner = name;
 		fireGameEvent(new GameEvent(GameEvent.Type.OVER));
 	}
 
@@ -57,8 +59,6 @@ public class Game {
 	}
 
 	public void update(List<Player> players) {
-		// TODO: implement
-		//throw new UnsupportedOperationException("not implemented yet");
 		this.players = players;
 		fireGameEvent(new GameEvent(GameEvent.Type.UPDATE));
 	}
@@ -86,5 +86,9 @@ public class Game {
 
 	public boolean joined() {
 		return joined;
+	}
+	
+	public String winner() {
+		return winner;
 	}
 }

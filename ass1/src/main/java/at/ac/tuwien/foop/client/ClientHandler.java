@@ -77,11 +77,11 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		} else if (m.type == Type.S_UNKNOWN) {
 			log.warn("the server does not know the message '{}'",
 					mapper.readValue(str, UnknownMessage.class).unknownType);
-		}	else if(m.type == Type.S_OVER) {
-			log.info("UUU" + mapper.readValue(str, GameOverMessage.class).player);
-			game.over();
-		} 
-		else {
+		} else if (m.type == Type.S_OVER) {
+			GameOverMessage gameOverMessage = mapper.readValue(str,
+					GameOverMessage.class);
+			game.over(gameOverMessage.player.name());
+		} else {
 			log.warn("unknown message");
 		}
 	}
@@ -127,6 +127,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	@Override
 	public void over() {
 		channel.writeAndFlush(new Message(Type.C_OVER));
-		
+
 	}
 }
