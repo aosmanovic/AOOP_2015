@@ -1,7 +1,5 @@
 package at.ac.tuwien.foop.client.userInterface.Controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -26,31 +24,28 @@ public class StartController implements ConnectListener, GameEventListener,
 		KeyListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
+	private static final int DEFAULT_PORT = 20150;
+
 	private Game game;
 	private GameCore core = null;
-	private StartFrame start;
+	private StartFrame startFrame;
 	private GameService service = new GameService();
 	private BoardFrame boardFrame = new BoardFrame();
 
 	public StartController() {
-		start = new StartFrame();
-		connect("localhost", "20150");
+		startFrame = new StartFrame();
 
 		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
 
-		start.setStartControllerListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameStart();
-			}
-		});
+		startFrame.addNewGameButtonListener(e -> gameStart());
+		startFrame.addConnectButtonListener(e -> connect(startFrame.getServerAddress(), String.valueOf(DEFAULT_PORT)));
 	}
 
 	public void connect(String host, String port) {
 		log.debug("connect to {}:{}", host, port);
 		game = new Game();
-		start.setGame(game);
+		startFrame.setGame(game);
 		game.addGameEventListener(this);
 
 		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
@@ -65,7 +60,7 @@ public class StartController implements ConnectListener, GameEventListener,
 	public void onConnect(NettyClient client) {
 		core = client.getClientHandler();
 		service.join(game, core, "A");
-		start.setStart();
+		startFrame.enableStartButton();
 	}
 
 	public void setCore(ClientHandler core) {
@@ -74,21 +69,21 @@ public class StartController implements ConnectListener, GameEventListener,
 
 	@Override
 	public void onConnecitonFailure() {
-		start.showFailure();
+		startFrame.showFailure();
 	}
 
 	public void showStart() {
-		start.setVisible(true);
+		startFrame.setVisible(true);
 	}
 
 	public void showAlreadyConnected() {
-		start.showAlreadyConnected();
+		startFrame.showAlreadyConnected();
 	}
 
 	@Override
 	public void onUpdate(GameEvent e) {
 		if (e.type == GameEvent.Type.NEW_PLAYER) {
-			start.printMessage();
+			startFrame.printMessage();
 		} else if (e.type == GameEvent.Type.START) {
 			showBoard();
 		} else if (e.type == GameEvent.Type.BOARD) {
