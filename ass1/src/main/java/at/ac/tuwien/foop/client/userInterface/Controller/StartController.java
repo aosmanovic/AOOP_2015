@@ -39,10 +39,13 @@ public class StartController implements ConnectListener, GameEventListener,
 		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
 
-		startFrame.addJoinGameButtonListener(e -> join(startFrame
-				.getPlayerName()));
+		startFrame.addJoinGameButtonListener(e -> service.join(game, core,
+				startFrame.getPlayerName()));
 		startFrame.addConnectButtonListener(e -> connect(
 				startFrame.getServerAddress(), DEFAULT_PORT));
+		startFrame.addDisconnectButtonListener(e -> service.disconnect(game,
+				core));
+		startFrame.addStartGameButtonListener(e -> service.start(game, core));
 	}
 
 	private void connect(String host, int port) {
@@ -56,15 +59,6 @@ public class StartController implements ConnectListener, GameEventListener,
 		NettyClient c = new NettyClient(game, host, port);
 		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
-	}
-
-	private void join(String playerName) {
-		log.debug("join game");
-		service.join(game, core, playerName);
-	}
-
-	private void startGame() {
-		service.start(game, core);
 	}
 
 	public void setCore(ClientHandler core) {
@@ -103,7 +97,7 @@ public class StartController implements ConnectListener, GameEventListener,
 		} else if (e.type == GameEvent.Type.START) {
 			showBoard();
 		} else if (e.type == GameEvent.Type.JOIN) {
-			// TODO: implement
+			startFrame.showStartGamePanel();
 		}
 	}
 

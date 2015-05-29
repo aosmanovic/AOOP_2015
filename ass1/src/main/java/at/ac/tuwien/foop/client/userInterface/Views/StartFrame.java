@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -43,7 +44,6 @@ public class StartFrame extends JFrame {
 
 		pnlContent = new JPanel(new BorderLayout(2, 2));
 		getContentPane().add(pnlContent, BorderLayout.CENTER);
-		// Container cp = getContentPane();
 		pnlContent.setLayout(new BorderLayout(2, 2));
 
 		// TODO: somehow set an outer margin
@@ -51,6 +51,7 @@ public class StartFrame extends JFrame {
 		// bottom panels
 		pnlConnect = prepareServerPanel();
 		pnlJoinGame = prepareJoinGamePanel();
+		pnlStartGame = prepareStartGamePanel();
 		pnlContent.add(pnlConnect, BorderLayout.SOUTH);
 
 		// log field
@@ -92,21 +93,18 @@ public class StartFrame extends JFrame {
 	}
 
 	private JPanel prepareStartGamePanel() {
-		JPanel panel = new JPanel(new BorderLayout(2, 2));
-		
-		jtfPlayerName = new JTextField(RandomNameGenerator.name());
-		panel.add(jtfPlayerName, BorderLayout.CENTER);
-		
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
+
 		btnStartGame = new JButton("start");
-		btnStartGame.addActionListener(e -> btnJoinGame.setEnabled(false));
+		btnStartGame.addActionListener(e -> btnStartGame.setEnabled(false));
 		panel.add(btnStartGame, BorderLayout.EAST);
-		
-		btnLeaveGame = new JButton("leave");
-		btnLeaveGame.addActionListener(e -> btnJoinGame.setEnabled(false));
+
+		btnLeaveGame = new JButton("disconnect");
+		btnLeaveGame.addActionListener(e -> showConnectPanel());
 		panel.add(btnLeaveGame, BorderLayout.EAST);
 		return panel;
 	}
-	
+
 	public void showFailure() {
 		btnConnect.setEnabled(true);
 		JOptionPane.showMessageDialog(null, "Try to connect again...");
@@ -124,6 +122,14 @@ public class StartFrame extends JFrame {
 		this.btnConnect.addActionListener(ac);
 	}
 
+	public void addDisconnectButtonListener(ActionListener ac) {
+		this.btnLeaveGame.addActionListener(ac);
+	}
+
+	public void addStartGameButtonListener(ActionListener ac) {
+		this.btnStartGame.addActionListener(ac);
+	}
+
 	public int countPlayers() {
 		int i = game == null ? 0 : game.getPlayers().size();
 		return i;
@@ -138,13 +144,30 @@ public class StartFrame extends JFrame {
 	}
 
 	public void showConnectPanel() {
+		btnConnect.setEnabled(true);
+
+		pnlContent.remove(pnlStartGame);
 		pnlContent.add(pnlConnect, BorderLayout.SOUTH);
-		pnlContent.remove(pnlJoinGame);
+		pnlContent.validate();
+		pnlContent.repaint();
 	}
 
 	public void showJoinGamePanel() {
-		pnlContent.add(pnlJoinGame, BorderLayout.SOUTH);
+		btnJoinGame.setEnabled(true);
+
 		pnlContent.remove(pnlConnect);
+		pnlContent.add(pnlJoinGame, BorderLayout.SOUTH);
+		pnlContent.validate();
+		pnlContent.repaint();
+	}
+
+	public void showStartGamePanel() {
+		btnStartGame.setEnabled(true);
+
+		pnlContent.remove(pnlJoinGame);
+		pnlContent.add(pnlStartGame, BorderLayout.SOUTH);
+		pnlContent.validate();
+		pnlContent.repaint();
 	}
 
 	public void printMessage(String msg) {
