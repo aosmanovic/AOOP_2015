@@ -5,9 +5,9 @@ import java.util.List;
 
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
-
 
 public class Game {
 	private List<GameEventListener> listeners = new ArrayList<>();
@@ -43,7 +43,7 @@ public class Game {
 		running = false;
 		fireGameEvent(new GameEvent(GameEvent.Type.STOP));
 	}
-	
+
 	public void over(String name) {
 		running = false;
 		winner = name;
@@ -52,6 +52,7 @@ public class Game {
 
 	public void join() {
 		joined = true;
+		fireGameEvent(new GameEvent(GameEvent.Type.JOIN));
 	}
 
 	public boolean running() {
@@ -65,7 +66,7 @@ public class Game {
 
 	public void addPlayer(Player player) {
 		players.add(player);
-		fireGameEvent(new GameEvent(GameEvent.Type.NEW_PLAYER));
+		listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(player.name())));
 	}
 
 	public List<Player> getPlayers() {
@@ -87,7 +88,7 @@ public class Game {
 	public boolean joined() {
 		return joined;
 	}
-	
+
 	public String winner() {
 		return winner;
 	}

@@ -12,6 +12,7 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
@@ -38,63 +39,78 @@ public class StartController implements ConnectListener, GameEventListener,
 		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
 
-		startFrame.addNewGameButtonListener(e -> gameStart());
-		startFrame.addConnectButtonListener(e -> connect(startFrame.getServerAddress(), String.valueOf(DEFAULT_PORT)));
+		startFrame.addJoinGameButtonListener(e -> join(startFrame
+				.getPlayerName()));
+		startFrame.addConnectButtonListener(e -> connect(
+				startFrame.getServerAddress(), DEFAULT_PORT));
 	}
 
-	public void connect(String host, String port) {
+	private void connect(String host, int port) {
 		log.debug("connect to {}:{}", host, port);
+		startFrame.printMessage(String.format("Connect to server '%s:%d'!",
+				host, port));
 		game = new Game();
 		startFrame.setGame(game);
 		game.addGameEventListener(this);
 
-		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
+		NettyClient c = new NettyClient(game, host, port);
 		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
 	}
 
-	public void gameStart() {
-		service.start(game, core);
+	private void join(String playerName) {
+		log.debug("join game");
+		service.join(game, core, playerName);
 	}
 
-	public void onConnect(NettyClient client) {
-		core = client.getClientHandler();
-		service.join(game, core, "A");
-		startFrame.enableStartButton();
+	private void startGame() {
+		service.start(game, core);
 	}
 
 	public void setCore(ClientHandler core) {
 		this.core = core;
 	}
 
-	@Override
-	public void onConnecitonFailure() {
-		startFrame.showFailure();
-	}
-
-	public void showStart() {
+	public void showStartView() {
 		startFrame.setVisible(true);
 	}
 
-	public void showAlreadyConnected() {
-		startFrame.showAlreadyConnected();
+	private void showBoard() {
+		boardFrame.setVisible(true);
+	}
+
+	@Override
+	public void onConnect(NettyClient client) {
+		core = client.getClientHandler();
+		startFrame.printMessage("Connected to server!");
+		startFrame.showJoinGamePanel();
+		// service.join(game, core, "A");
+		// startFrame.showNewGamePanel();
+	}
+
+	@Override
+	public void onConnecitonFailure() {
+		startFrame.printMessage("Connection to server failed!");
+		startFrame.showFailure();
 	}
 
 	@Override
 	public void onUpdate(GameEvent e) {
-		if (e.type == GameEvent.Type.NEW_PLAYER) {
-			startFrame.printMessage();
-		} else if (e.type == GameEvent.Type.START) {
-			showBoard();
+		if (e.type == GameEvent.Type.UPDATE) {
+			boardFrame.getBoard().repaint();
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardFrame.getBoard().setGame(game);
-		} else if (e.type == GameEvent.Type.UPDATE) {
-			boardFrame.getBoard().repaint();
+		} else if (e.type == GameEvent.Type.START) {
+			showBoard();
+		} else if (e.type == GameEvent.Type.JOIN) {
+			// TODO: implement
 		}
 	}
 
-	public void showBoard() {
-		boardFrame.setVisible(true);
+	@Override
+	public void onUpdate(NewPlayerEvent e) {
+		startFrame.printMessage(String.format("Player '%s' joined the game!",
+				e.name));
 	}
 
 	@Override
