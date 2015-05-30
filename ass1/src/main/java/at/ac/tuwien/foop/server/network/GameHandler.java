@@ -19,12 +19,15 @@ import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
+import at.ac.tuwien.foop.server.Server;
+import at.ac.tuwien.foop.server.Server.GameLoop;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,7 +75,15 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
-		} else {
+		} else if (m.type == Type.C_NEWLEVEL) {
+			Game.setLevelCounter(Game.getLevelCounter()+1);
+			game.setBoard(new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH()));
+			
+			BoardString b = game.boardString();
+			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+			// TODO MOVEMENT FOR THIS NEW LEVEL
+		}
+		else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
@@ -97,9 +108,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.UPDATE) {
 			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game.wind()));
-//		} else if (e.type == GameEvent.Type.OVER) {
-//			channel.writeAndFlush(new GameOverMessage(game.getPlayers().get(0))); // TO DO
-		}
+		} 
 	}
 
 	@Override
@@ -111,6 +120,10 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(GameOverEvent e) {
 		// TODO Auto-generated method stub
 		channel.writeAndFlush(new GameOverMessage(e.player));
+		BoardString b = game.boardString();
+		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+		channel.writeAndFlush(new Message(Type.S_JOINED));
+		
 	}
 	
 	

@@ -35,6 +35,7 @@ public class Game {
 	private BoardString boardString;
 	private Board board;
 	private Wind wind = Wind.fromCoordinates(0, 0);
+	private static int levelCounter = 0;
 
 	private GameLogicService service = new GameLogicService();
 
@@ -175,7 +176,7 @@ public class Game {
 		return board;
 	}
 
-	private void setBoard(BoardString bs) {
+	public void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
 	}
@@ -202,4 +203,16 @@ public class Game {
 	public Wind wind() {
 		return wind;
 	}
+
+	public static int getLevelCounter() {
+		return levelCounter;
+	}
+
+	public static void setLevelCounter(int levelCounter) {
+		Game.levelCounter = levelCounter;
+	}
+	
+	
+	
+	
 }

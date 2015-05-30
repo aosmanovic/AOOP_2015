@@ -18,7 +18,7 @@ public class ServerShell {
 
 	public ServerShell() {
 		server = new NettyServer(new Game(
-				new GameLogicService().loadBoard(GameLogicService.BOARD_PATH)));
+				new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH())));
 		new Thread(server).start();
 	}
 	

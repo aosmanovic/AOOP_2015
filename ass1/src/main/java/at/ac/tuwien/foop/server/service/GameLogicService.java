@@ -18,12 +18,16 @@ import at.ac.tuwien.foop.server.domain.Game;
 
 public class GameLogicService {
 
-	public static String BOARD_PATH = "Map.txt";
+	private static String BOARD_PATH = "Map";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
+	//private int boardCounter = 0;
 
 	public BoardString loadBoard(String path) {
-		log.debug("load board with path '{}'!", path);
-		try (Scanner s = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(path))) {
+		
+		//setBOARD_PATH(path + boardCounter + ".txt");
+		log.debug("load board with path '{}'!", getBOARD_PATH());
+		log.info("EEEEEE" +Game.getLevelCounter());
+		try (Scanner s = new Scanner(Thread.currentThread().getContextClassLoader().getResourceAsStream(path + Game.getLevelCounter() + ".txt"))) {
 			int width = 0;
 			StringBuffer buffer = new StringBuffer();
 			while (s.hasNextLine()) {
@@ -34,6 +38,8 @@ public class GameLogicService {
 					throw new RuntimeException(String.format("Board file '%s' has a bad format!", path));
 				buffer.append(line);
 			}
+			//boardCounter += 1;
+			log.info("Level: " + Game.getLevelCounter());
 			return new BoardString(buffer.toString(), width);
 		}
 	}
@@ -137,4 +143,14 @@ public class GameLogicService {
 		double y = (cheese.y - position.y) * (cheese.y - position.y);
 		return Math.sqrt(x + y);
 	}
+
+	public static String getBOARD_PATH() {
+		return BOARD_PATH;
+	}
+
+	public static void setBOARD_PATH(String bOARD_PATH) {
+		BOARD_PATH = bOARD_PATH;
+	}
+	
+	
 }
