@@ -8,6 +8,7 @@ public class Player {
 	private Coordinates coordinates;
 	private Coordinates lastCoordinates;
 	private State state;
+	private String color = "";
 	
 	public static enum State {
 		crazy, notSoCrazy, notCrazy
@@ -85,7 +86,16 @@ public class Player {
 
 	public void setState(State state) {
 		this.state = state;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}	
+	
 	
 	
 }
