@@ -37,19 +37,6 @@ public class FieldImages {
 				.getResourceAsStream(path);
 	}
 
-	/*public JLabel getMouse() {
-
-		JLabel l;
-		try {
-			l = new JLabel(new ImageIcon(ImageIO.read(loadStream("mouse.png"))));
-			return l;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-
-	}*/
 	
 	public Image getMouse() {
 		return mouse;

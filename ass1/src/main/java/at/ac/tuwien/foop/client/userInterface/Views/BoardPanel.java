@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.domain.Board.Field;
 
@@ -15,6 +18,7 @@ public class BoardPanel extends JPanel {
 	private Game game;
 	private static ArrayList<Color> colors = new ArrayList<>();
 	private String result ="";
+	private JLabel label = new JLabel();
 	
 
 	public BoardPanel() {
@@ -65,9 +69,16 @@ public class BoardPanel extends JPanel {
 		for (int i=0; i<game.getPlayers().size(); i++) {
 			g.drawImage(images.getMouse(), game.getPlayers().get(i).coordinates().x * FieldImages.IMAGE_SIZE, game.getPlayers().get(i).coordinates().y * FieldImages.IMAGE_SIZE, 27, 27, colors.get(i), null);
 			result += game.getPlayers().get(i).toString() + "COLOR: ";
-			System.out.println("PLAYER" + result + game.toString());
+			System.out.println("PLAYER" + result );
 		} 
 
+	}
+	
+	public void getPlayers(Game game) {
+		for (int i=0; i<game.getPlayers().size(); i++) {
+			result += game.getPlayers().get(i).toString() + "COLOR: ";
+			System.out.println("PLAYER" + result );
+		} 
 	}
 
 	public void setGame(Game game) {
@@ -75,6 +86,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public String getResult() {
+	
 		return result;
 	}
 
