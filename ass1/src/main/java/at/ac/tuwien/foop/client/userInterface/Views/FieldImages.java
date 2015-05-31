@@ -3,10 +3,9 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
+
 
 public class FieldImages {
 

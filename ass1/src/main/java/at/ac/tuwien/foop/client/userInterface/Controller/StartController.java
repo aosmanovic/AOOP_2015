@@ -99,9 +99,6 @@ KeyListener {
 			int gameover= start.showGameOver(game);
 			if(gameover ==0) { 
 				log.info("LOAD new level");
-				//boardFrame.getBoard().setGame(game);
-				//showBoard();
-				//boardFrame.getBoard().toString();
 				service.changeLevel(core);
 				boardFrame.getBoard().setGame(game);
 			} else if (gameover == 1) { 

@@ -19,8 +19,6 @@ import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
-import at.ac.tuwien.foop.server.Server;
-import at.ac.tuwien.foop.server.Server.GameLoop;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.event.GameEvent;

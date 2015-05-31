@@ -2,13 +2,9 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.domain.Board.Field;
 
@@ -19,8 +15,7 @@ public class BoardPanel extends JPanel {
 	private Game game;
 	private static ArrayList<Color> colors = new ArrayList<>();
 	private String result ="";
-	private int counter= 0;
-	private JLabel l = new JLabel();
+	
 
 	public BoardPanel() {
 		images = new FieldImages();
@@ -30,7 +25,7 @@ public class BoardPanel extends JPanel {
 	public void actionPerformed(ActionEvent e) {
 		repaint();
 	}
-	
+
 
 	@Override
 	public void paint(Graphics g) {
@@ -69,11 +64,10 @@ public class BoardPanel extends JPanel {
 
 		for (int i=0; i<game.getPlayers().size(); i++) {
 			g.drawImage(images.getMouse(), game.getPlayers().get(i).coordinates().x * FieldImages.IMAGE_SIZE, game.getPlayers().get(i).coordinates().y * FieldImages.IMAGE_SIZE, 27, 27, colors.get(i), null);
-			setResult(game.getPlayers().get(i).toString() + "COLOR: ");
-			System.out.println("PLAYER" + result);
+			result += game.getPlayers().get(i).toString() + "COLOR: ";
+			System.out.println("PLAYER" + result + game.toString());
 		} 
-		
-		
+
 	}
 
 	public void setGame(Game game) {
@@ -81,20 +75,7 @@ public class BoardPanel extends JPanel {
 	}
 
 	public String getResult() {
-		while(counter == 1)
-			return result;
-		return "";
-	
+		return result;
 	}
 
-	public void setResult(String result) {
-		this.result = result;
-		counter = 1;
-	}
-
-
-	
-
-	
-		
 }
