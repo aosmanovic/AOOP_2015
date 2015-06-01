@@ -40,9 +40,10 @@ public class GameLogicService {
 
 	public void movement(Game game) {
 		Coordinates cheeseCoordinates = game.board().cheeseCoordinates();
+		log.debug("calculate movement");
 
 		for (Player player : game.getPlayers()) {
-			log.info("Position of the mouse: " + player.coordinates().toString());
+			log.info("Position of the mouse '{}': {}", player.name(), player.coordinates());
 
 			// get neighbors with paths
 			List<Coordinates> floorList = calculateNeighbor(game.board().fields(), player.coordinates());

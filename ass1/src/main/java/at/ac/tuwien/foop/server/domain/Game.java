@@ -1,6 +1,7 @@
 package at.ac.tuwien.foop.server.domain;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
@@ -18,6 +19,7 @@ import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
+import at.ac.tuwien.foop.server.event.RemovePlayerEvent;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
@@ -144,9 +146,9 @@ public class Game {
 	public void leave(Player p) {
 		players.remove(p);
 		if (players.size() == 0) {
-			// TODO: stop game?
+			state = GameState.over;
 		}
-		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
+		listeners.forEach(e -> e.onUpdate(new RemovePlayerEvent(p)));
 	}
 
 	public synchronized void sendGust(WindGust gust) {
@@ -162,8 +164,6 @@ public class Game {
 		} else {
 			c = new Coordinates(1 * gust.strength, 0);
 		}
-		// System.out.println(String.format(" %d + %d , %d + %d", wind.x , c.x,
-		// wind.y , c.y));
 		wind = Wind.fromCoordinates(wind.x + c.x, wind.y + c.y);
 	}
 
@@ -181,16 +181,31 @@ public class Game {
 	}
 
 	public List<Player> getPlayers() {
+		log.debug("get players!");
 		return players;
 	}
 
 	public void movePlayer(String name, Coordinates coordinates) {
-		Player player = getPlayer(name);
-		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
-				coordinates.y, p.coordinates(), p.getState()) : p);
+		log.debug("move player {}", name);
+//		Player player = getPlayer(name);
+//		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
+//				coordinates.y, p.coordinates(), p.getState()) : p);
+		int i = 0;
+		for(Player p:players) {
+//		Iterator<Player> it = players.iterator();
+//		while(it.hasNext()){
+//			Player p = it.next();
+			if(p.name().equals(name)) {
+				players.set(i, p.moveTo(coordinates.x,
+				coordinates.y, p.coordinates(), p.getState()));
+				break;
+			}
+			i++;
+		}
 	}
 
 	public Player getPlayer(String name) {
+		log.debug("get player {}", name);
 		return players.stream().filter(e -> e.name().equals(name)).findFirst()
 				.orElseThrow(IllegalArgumentException::new);
 	}

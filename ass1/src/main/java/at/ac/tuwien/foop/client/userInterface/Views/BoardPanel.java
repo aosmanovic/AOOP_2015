@@ -16,6 +16,7 @@ public class BoardPanel extends JPanel {
 
 	public BoardPanel() {
 		images = new FieldImages();
+		setDoubleBuffered(true);
 	}
 
 	public void actionPerformed(ActionEvent e) {

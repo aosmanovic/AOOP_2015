@@ -17,6 +17,7 @@ import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
+import at.ac.tuwien.foop.domain.message.server.RemovePlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 import at.ac.tuwien.foop.server.domain.BoardString;
@@ -25,6 +26,7 @@ import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
+import at.ac.tuwien.foop.server.event.RemovePlayerEvent;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,9 +55,8 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			ctx.writeAndFlush(new Message(Type.S_PONG));
 		} else if (m.type == Type.C_JOIN) {
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
-			Player player = game.join(jm.name); 
+			player = game.join(jm.name); 
 			if (player != null) {
-//				BoardString b = service.getBoard(game);
 				BoardString b = game.boardString();
 				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
 				ctx.writeAndFlush(new Message(Type.S_JOINED));
@@ -63,11 +64,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 			}
 		} else if (m.type == Type.C_LEAVE) {
-			if (player == null) {
-				// TODO: send error, as not joined yet
-			} else {
-				game.leave(player);
-			}
+			game.leave(player);
 		} else if (m.type == Type.C_WIND) {
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
@@ -93,12 +90,11 @@ public class GameHandler extends ChannelHandlerAdapter implements
 
 	@Override
 	public void onUpdate(GameEvent e) {
+		log.debug("handler on update");
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.UPDATE) {
 			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game.wind()));
-//		} else if (e.type == GameEvent.Type.OVER) {
-//			channel.writeAndFlush(new GameOverMessage(game.getPlayers().get(0))); // TO DO
 		}
 	}
 
@@ -108,10 +104,14 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	}
 
 	@Override
+	public void onUpdate(RemovePlayerEvent e) {
+		channel.writeAndFlush(new RemovePlayerMessage(e.player));
+	}
+	
+	@Override
 	public void onUpdate(GameOverEvent e) {
 		// TODO Auto-generated method stub
 		channel.writeAndFlush(new GameOverMessage(e.player));
 	}
-	
-	
+
 }

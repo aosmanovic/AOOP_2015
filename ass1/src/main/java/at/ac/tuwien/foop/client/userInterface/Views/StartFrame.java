@@ -4,13 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import javax.swing.text.DefaultCaret;
 
 import at.ac.tuwien.foop.client.RandomNameGenerator;
 import at.ac.tuwien.foop.client.domain.Game;
@@ -31,7 +34,7 @@ public class StartFrame extends JFrame {
 	private JButton btnStartGame;
 	private JButton btnLeaveGame;
 
-	private JTextPane txtpnLog;
+	private JTextArea txtpnLog;
 	private JTextField jtfServerAddress;
 	private JTextField jtfPlayerName;
 
@@ -43,6 +46,7 @@ public class StartFrame extends JFrame {
 		setBounds(100, 100, 450, 300);
 
 		pnlContent = new JPanel(new BorderLayout(2, 2));
+		pnlContent.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		getContentPane().add(pnlContent, BorderLayout.CENTER);
 		pnlContent.setLayout(new BorderLayout(2, 2));
 
@@ -55,14 +59,16 @@ public class StartFrame extends JFrame {
 		pnlContent.add(pnlConnect, BorderLayout.SOUTH);
 
 		// log field
-		txtpnLog = new JTextPane();
+		txtpnLog = new JTextArea();
 		txtpnLog.setEditable(false);
-		pnlContent.add(txtpnLog, BorderLayout.CENTER);
+		((DefaultCaret)txtpnLog.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		pnlContent.add(new JScrollPane(txtpnLog), BorderLayout.CENTER);
 		printMessage("Welcome to the Mouse Labyrinth Game!\n\n");
 	}
 
 	private JPanel prepareServerPanel() {
 		JPanel panel = new JPanel(new BorderLayout(2, 2));
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JLabel label = new JLabel("server address: ");
 		panel.add(label, BorderLayout.WEST);
@@ -79,6 +85,7 @@ public class StartFrame extends JFrame {
 
 	private JPanel prepareJoinGamePanel() {
 		JPanel panel = new JPanel(new BorderLayout(2, 2));
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		JLabel label = new JLabel("player name: ");
 		panel.add(label, BorderLayout.WEST);
@@ -93,7 +100,8 @@ public class StartFrame extends JFrame {
 	}
 
 	private JPanel prepareStartGamePanel() {
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 2));
+		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 0));
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
 		btnStartGame = new JButton("start");
 		btnStartGame.addActionListener(e -> btnStartGame.setEnabled(false));
@@ -171,7 +179,7 @@ public class StartFrame extends JFrame {
 	}
 
 	public void printMessage(String msg) {
-		txtpnLog.setText(String.join("\n", txtpnLog.getText(), msg));
+		txtpnLog.append(msg + "\n");
 	}
 
 	public void enableStartButton() {
