@@ -19,7 +19,7 @@ public class Server {
 
 	public Server() {
 		log.debug("set up server!");
-		Game game = new Game(new GameLogicService().loadBoard(GameLogicService.BOARD_PATH));
+		Game game = new Game(new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH()));
 		server = new NettyServer(game);
 		new Thread(server).start();
 		timer = new Timer("gameLoop", true);

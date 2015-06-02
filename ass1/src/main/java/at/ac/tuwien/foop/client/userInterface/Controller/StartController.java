@@ -98,6 +98,17 @@ public class StartController implements ConnectListener, GameEventListener,
 			showBoard();
 		} else if (e.type == GameEvent.Type.JOIN) {
 			startFrame.showStartGamePanel();
+		} else if (e.type == GameEvent.Type.OVER) {
+			int gameover = startFrame.showGameOver(game);
+			if (gameover == 0) {
+				log.info("LOAD new level");
+				service.changeLevel(core);
+				boardFrame.getBoard().setGame(game);
+			} else if (gameover == 1) {
+				log.info("Leave");
+				service.leave(game, core);
+				hideBoard();
+			}
 		}
 	}
 
@@ -105,6 +116,10 @@ public class StartController implements ConnectListener, GameEventListener,
 	public void onUpdate(NewPlayerEvent e) {
 		startFrame.printMessage(String.format("Player '%s' joined the game!",
 				e.name));
+	}
+
+	public void hideBoard() {
+		System.exit(0);
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.message.Message;
-import at.ac.tuwien.foop.domain.message.Message.Type;
 
 public class GameOverMessage extends Message {
 	

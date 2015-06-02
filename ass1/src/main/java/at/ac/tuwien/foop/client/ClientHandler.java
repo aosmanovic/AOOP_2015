@@ -84,7 +84,14 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			GameOverMessage gameOverMessage = mapper.readValue(str,
 					GameOverMessage.class);
 			game.over(gameOverMessage.player.name());
-		} else {
+			//game.start(); // TO DO Get board map from server, it is null !!!
+			//BoardMessage boardMessage = mapper.readValue(str,
+					//BoardMessage.class);
+			//game.setBoard(Board.createBoard(boardMessage.fields,
+					//boardMessage.width));
+			
+		} 
+		else {
 			log.warn("unknown message");
 		}
 	}
@@ -131,5 +138,11 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	public void over() {
 		channel.writeAndFlush(new Message(Type.C_OVER));
 
+	}
+
+	@Override
+	public void newLevel() {
+		channel.writeAndFlush(new Message(Type.C_NEWLEVEL));
+		
 	}
 }

@@ -39,6 +39,7 @@ public class Board {
 	 *            the width of the board
 	 */
 	public static Board createBoard(String fieldString, int width) {
+		System.out.println("create Board with string: "+ fieldString);
 		Objects.requireNonNull(fieldString);
 		Validate.isTrue(width > 0, "the width must be > 0 but it is '%d'",
 				width);

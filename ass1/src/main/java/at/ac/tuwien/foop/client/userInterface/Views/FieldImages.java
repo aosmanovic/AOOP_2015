@@ -3,9 +3,9 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+
 
 public class FieldImages {
 
@@ -19,13 +19,13 @@ public class FieldImages {
 	private void loadImages() {
 		try {
 			wall = new ImageIcon(ImageIO.read(loadStream("wall.png")))
-					.getImage();
+			.getImage();
 			path = new ImageIcon(ImageIO.read(loadStream("path.jpg")))
-					.getImage();
+			.getImage();
 			cheese = new ImageIcon(ImageIO.read(loadStream("cheese.jpg")))
-					.getImage();
+			.getImage();
 			mouse = new ImageIcon(ImageIO.read(loadStream("mouse.png")))
-					.getImage();
+			.getImage();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,20 +37,23 @@ public class FieldImages {
 				.getResourceAsStream(path);
 	}
 
-	public Image getWall() {
-		return wall;
+	
+	public Image getMouse() {
+		return mouse;
 	}
 
 	public Image getPath() {
 		return path;
 	}
 
+	public Image getWall() {
+		return wall;
+	}
+
 	public Image getCheese() {
 		return cheese;
 	}
-
-	public Image getMouse() {
-		return mouse;
-	}
+	
+	
 
 }

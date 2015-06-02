@@ -10,4 +10,5 @@ public interface GameCore {
 	public void ping();
 	public void start();
 	public void over();
+	public void newLevel();
 }

@@ -27,6 +27,7 @@ import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
 import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 import at.ac.tuwien.foop.server.event.RemovePlayerEvent;
+import at.ac.tuwien.foop.server.service.GameLogicService;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -69,7 +70,15 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
-		} else {
+		} else if (m.type == Type.C_NEWLEVEL) {
+			Game.setLevelCounter(Game.getLevelCounter()+1);
+			game.setBoard(new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH()));
+			
+			BoardString b = game.boardString();
+			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+			// TODO MOVEMENT FOR THIS NEW LEVEL
+		}
+		else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
@@ -112,6 +121,10 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(GameOverEvent e) {
 		// TODO Auto-generated method stub
 		channel.writeAndFlush(new GameOverMessage(e.player));
+		BoardString b = game.boardString();
+		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+		channel.writeAndFlush(new Message(Type.S_JOINED));
+		
 	}
 
 }

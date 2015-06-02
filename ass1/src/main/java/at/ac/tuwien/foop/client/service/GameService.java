@@ -42,4 +42,8 @@ public class GameService {
 	public void ping(GameCore gameCore) {
 		gameCore.ping();
 	}
+	
+	public void changeLevel(GameCore gameCore) {
+		gameCore.newLevel();
+	}
 }
