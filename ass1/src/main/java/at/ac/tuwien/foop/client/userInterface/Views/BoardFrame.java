@@ -28,7 +28,17 @@ public class BoardFrame extends JFrame{
 		this.b = b;
 		getContentPane().add(b);
 		getContentPane().add(label, BorderLayout.PAGE_END);
-		label.setText("Current players: " +b.getResult());
+		
+		new java.util.Timer().schedule( 
+		        new java.util.TimerTask() {
+		            @Override
+		            public void run() {
+		            	label.setText("Current players: " +b.getResult());
+		            }
+		        }, 
+		        2100 
+		);
+
 	}
 }
 

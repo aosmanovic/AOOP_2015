@@ -3,7 +3,8 @@ package at.ac.tuwien.foop.client.userInterface.Views;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,14 +17,13 @@ public class BoardPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private FieldImages images;
 	private Game game;
-	private static ArrayList<Color> colors = new ArrayList<>();
+	private static Map<Color,String> colors = new HashMap<>();
 	private String result ="";
-	private JLabel label = new JLabel();
 	
 
 	public BoardPanel() {
 		images = new FieldImages();
-		colors.add(Color.RED); colors.add(Color.BLUE); colors.add(Color.GREEN);
+		colors.put(Color.RED, "Red"); colors.put(Color.BLUE, "Blue"); colors.put(Color.GREEN, "Green");
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -67,27 +67,30 @@ public class BoardPanel extends JPanel {
 
 
 		for (int i=0; i<game.getPlayers().size(); i++) {
-			g.drawImage(images.getMouse(), game.getPlayers().get(i).coordinates().x * FieldImages.IMAGE_SIZE, game.getPlayers().get(i).coordinates().y * FieldImages.IMAGE_SIZE, 27, 27, colors.get(i), null);
-			result += game.getPlayers().get(i).toString() + "COLOR: ";
-			System.out.println("PLAYER" + result );
+			Color key = colors.keySet().iterator().next();
+			g.drawImage(images.getMouse(), game.getPlayers().get(i).coordinates().x * FieldImages.IMAGE_SIZE, game.getPlayers().get(i).coordinates().y * FieldImages.IMAGE_SIZE, 27, 27, key, null);
 		} 
 
 	}
 	
-	public void getPlayers(Game game) {
-		for (int i=0; i<game.getPlayers().size(); i++) {
-			result += game.getPlayers().get(i).toString() + "COLOR: ";
-			System.out.println("PLAYER" + result );
-		} 
-	}
+	
 
 	public void setGame(Game game) {
 		this.game = game;
 	}
 
 	public String getResult() {
+		
+		for (int i=0; i<game.getPlayers().size(); i++) {
+			Color key = colors.keySet().iterator().next();
+			result += "   NAME: " + game.getPlayers().get(i).name() + "    COLOR: " + colors.get(key) +        "\n";
+		} 
 	
 		return result;
+	}
+	
+	public void getClor() {
+		
 	}
 
 }
