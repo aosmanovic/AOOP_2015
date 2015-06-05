@@ -1,7 +1,5 @@
 package at.ac.tuwien.foop.client.userInterface.Controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -14,6 +12,7 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
@@ -23,85 +22,89 @@ import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 
 public class StartController implements ConnectListener, GameEventListener,
-KeyListener {
+		KeyListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
+	private static final int DEFAULT_PORT = 20150;
+
 	private Game game;
 	private GameCore core = null;
-	private StartFrame start;
+	private StartFrame startFrame;
 	private GameService service = new GameService();
 	private BoardFrame boardFrame = new BoardFrame();
 
 	public StartController() {
-		start = new StartFrame();
-		connect("localhost", "20150");
+		startFrame = new StartFrame();
 
 		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
 
-		start.setStartControllerListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				gameStart();
-			}
-		});
+		startFrame.addJoinGameButtonListener(e -> service.join(game, core,
+				startFrame.getPlayerName()));
+		startFrame.addConnectButtonListener(e -> connect(
+				startFrame.getServerAddress(), DEFAULT_PORT));
+		startFrame.addDisconnectButtonListener(e -> service.disconnect(game,
+				core));
+		startFrame.addStartGameButtonListener(e -> service.start(game, core));
 	}
 
-	public void connect(String host, String port) {
+	private void connect(String host, int port) {
 		log.debug("connect to {}:{}", host, port);
+		startFrame.printMessage(String.format("Connect to server '%s:%d'!",
+				host, port));
 		game = new Game();
-		start.setGame(game);
+		startFrame.setGame(game);
 		game.addGameEventListener(this);
 
-		NettyClient c = new NettyClient(game, host, Integer.parseInt(port));
+		NettyClient c = new NettyClient(game, host, port);
 		c.addConnectListener(this);
 		new Thread(c, "Network-Layer-Thread").start();
-	}
-
-	public void gameStart() {
-		service.start(game, core);
-	}
-
-	public void onConnect(NettyClient client) {
-		core = client.getClientHandler();
-		service.join(game, core, "A");
-		start.setStart();
 	}
 
 	public void setCore(ClientHandler core) {
 		this.core = core;
 	}
 
+	public void showStartView() {
+		startFrame.setVisible(true);
+	}
+
+	private void showBoard() {
+		boardFrame.setVisible(true);
+	}
+
+	@Override
+	public void onConnect(NettyClient client) {
+		core = client.getClientHandler();
+		startFrame.printMessage("Connected to server!");
+		startFrame.showJoinGamePanel();
+		// service.join(game, core, "A");
+		// startFrame.showNewGamePanel();
+	}
+
 	@Override
 	public void onConnecitonFailure() {
-		start.showFailure();
-	}
-
-	public void showStart() {
-		start.setVisible(true);
-	}
-
-	public void showAlreadyConnected() {
-		start.showAlreadyConnected();
+		startFrame.printMessage("Connection to server failed!");
+		startFrame.showFailure();
 	}
 
 	@Override
 	public void onUpdate(GameEvent e) {
-		if (e.type == GameEvent.Type.NEW_PLAYER) {
-			start.printMessage();
-		} else if (e.type == GameEvent.Type.START) {
-			showBoard();
+		if (e.type == GameEvent.Type.UPDATE) {
+			boardFrame.getBoard().repaint();
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardFrame.getBoard().setGame(game);
-		} else if (e.type == GameEvent.Type.UPDATE) {
-			boardFrame.getBoard().repaint();
+		} else if (e.type == GameEvent.Type.START) {
+			showBoard();
+		} else if (e.type == GameEvent.Type.JOIN) {
+			startFrame.showStartGamePanel();
 		} else if (e.type == GameEvent.Type.OVER) {
-			int gameover= start.showGameOver(game);
-			if(gameover ==0) { 
+			int gameover = startFrame.showGameOver(game);
+			if (gameover == 0) {
 				log.info("LOAD new level");
 				service.changeLevel(core);
 				boardFrame.getBoard().setGame(game);
-			} else if (gameover == 1) { 
+			} else if (gameover == 1) {
 				log.info("Leave");
 				service.leave(game, core);
 				hideBoard();
@@ -109,8 +112,10 @@ KeyListener {
 		}
 	}
 
-	public void showBoard() {
-		boardFrame.setVisible(true);
+	@Override
+	public void onUpdate(NewPlayerEvent e) {
+		startFrame.printMessage(String.format("Player '%s' joined the game!",
+				e.name));
 	}
 
 	public void hideBoard() {

@@ -1,5 +1,8 @@
 package at.ac.tuwien.foop.server.domain;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -178,4 +181,14 @@ public class GameTest {
 		Assert.assertEquals(-1, game.wind().x, 0.01);
 		Assert.assertEquals(1, game.wind().y, 0.01);
 	}
+	
+//	@Test
+//	public void testChangeList() {
+//		List<Player> list = Arrays.asList(new Player("foo", new Coordinates(1, 2)), new Player("bar", new Coordinates(3, 4)));
+//		for(Player p : list) {
+//			list.replaceAll(e -> e == p ? new Player("huh!", new Coordinates(100, 5)) : e);
+//			System.out.println(list);
+//		}
+//		System.out.println(list);
+//	}
 }

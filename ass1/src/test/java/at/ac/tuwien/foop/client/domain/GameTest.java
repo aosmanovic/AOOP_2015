@@ -5,11 +5,14 @@ import org.junit.Test;
 
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.GameEvent;
+import at.ac.tuwien.foop.client.events.GameEventListener;
+import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.domain.Board;
 
 public class GameTest {
-	
+
 	private final Board board = Board.createBoard("www", 1);
+
 	@Test
 	public void testSetBoard_whileRunning_shouldThrowRuntimeException() {
 		Game g = new Game();
@@ -26,8 +29,16 @@ public class GameTest {
 	@Test
 	public void testSetBoard_whithListener_shouldFireEvent() {
 		Game g = new Game();
-		g.addGameEventListener(e -> Assert.assertEquals(GameEvent.Type.BOARD,
-				e.type));
+		g.addGameEventListener(new GameEventListener() {
+			@Override
+			public void onUpdate(NewPlayerEvent e) {
+			}
+
+			@Override
+			public void onUpdate(GameEvent e) {
+				Assert.assertEquals(GameEvent.Type.BOARD, e.type);
+			}
+		});
 		g.setBoard(board);
 	}
 }

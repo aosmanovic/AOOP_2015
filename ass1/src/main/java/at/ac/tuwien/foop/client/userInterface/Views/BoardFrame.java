@@ -36,7 +36,7 @@ public class BoardFrame extends JFrame{
 		            	label.setText("Current players: " +b.getResult());
 		            }
 		        }, 
-		        2100 
+		        4000 
 		);
 
 	}

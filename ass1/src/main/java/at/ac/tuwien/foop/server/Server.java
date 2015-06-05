@@ -36,8 +36,6 @@ public class Server {
 
 		@Override
 		public void run() {
-			log.debug("execute game loop!");
-			
 			if (game.state() == GameState.running) {
 				game.next();
 			} else if (game.state() == GameState.over) {

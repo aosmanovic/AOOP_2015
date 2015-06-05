@@ -23,6 +23,7 @@ public class BoardPanel extends JPanel {
 
 	public BoardPanel() {
 		images = new FieldImages();
+
 		colors.put(Color.RED, "Red"); colors.put(Color.BLUE, "Blue"); colors.put(Color.GREEN, "Green");
 	}
 

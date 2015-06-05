@@ -21,6 +21,7 @@ import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
+import at.ac.tuwien.foop.domain.message.server.RemovePlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 
@@ -61,6 +62,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(mapper.readValue(str, NewPlayerMessage.class).player);
+		} else if (m.type == Type.S_REMOVEPLAYER) {
+			game.removePlayer(mapper.readValue(str, RemovePlayerMessage.class).player);
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);
