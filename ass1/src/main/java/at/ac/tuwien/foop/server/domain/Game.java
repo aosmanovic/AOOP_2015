@@ -12,6 +12,7 @@ import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.domain.WindGust;
+import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
@@ -176,6 +177,7 @@ public class Game {
 		return board;
 	}
 
+	//TODO change to private
 	public void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
@@ -189,6 +191,10 @@ public class Game {
 		Player player = getPlayer(name);
 		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
 				coordinates.y, p.coordinates(), p.getState()) : p);
+		
+		// 2 mouses crash
+		if (service.checkCrash(player.coordinates(), this, this.board().fields())==true) 
+			player.setState(State.crash);
 	}
 
 	public Player getPlayer(String name) {

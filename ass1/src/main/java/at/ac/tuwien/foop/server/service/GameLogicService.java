@@ -20,6 +20,8 @@ public class GameLogicService {
 
 	private static String BOARD_PATH = "Map";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
+	private List<Coordinates> floorList;
+
 
 	public BoardString loadBoard(String path) {
 
@@ -48,7 +50,7 @@ public class GameLogicService {
 			log.info("Position of the mouse: " + player.coordinates().toString());
 
 			// get neighbors with paths
-			List<Coordinates> floorList = calculateNeighbor(game.board().fields(), player.coordinates());
+			floorList = calculateNeighbor(game.board().fields(), player.coordinates());
 
 			// check for dead end
 			if (floorList.size() == 1 && player.getLastCoordinates() != null) {
@@ -56,14 +58,25 @@ public class GameLogicService {
 				game.movePlayer(player.name(), player.getLastCoordinates());
 				break;
 			}
-			
+
+			// mouse crashes
+			if (player.getState().equals(State.crash)) {
+				new java.util.Timer().schedule( 
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								moveRandomly(player,game);
+							}
+						}, 
+						5000 
+						);
+			}
+
 			// calculate player state changes and crazy movements
 			if (!player.getState().equals(State.notCrazy)) {
 				if (floorList.size() >= 3) {
 					if (player.getState().equals(State.crazy)) {
-						player.setState(State.notSoCrazy);
-						List<Coordinates> p = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
-						game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+						moveRandomly(player,game);
 						break;
 					} else
 						player.setState(State.notCrazy);
@@ -72,7 +85,7 @@ public class GameLogicService {
 					break;
 				}
 			}
-			
+
 			// TODO: just a hack: removes last cordinates from possible neighbors
 			floorList = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
 
@@ -118,7 +131,7 @@ public class GameLogicService {
 	private List<Coordinates> calculateNeighbor(Field[][] fields, Coordinates position) {
 		int x = position.x;
 		int y = position.y;
-		
+
 		return Arrays
 				.asList(new Coordinates[] { new Coordinates(x, y - 1), new Coordinates(x, y + 1), new Coordinates(x - 1, y), new Coordinates(x + 1, y) })
 				.stream()
@@ -148,6 +161,26 @@ public class GameLogicService {
 	public static void setBOARD_PATH(String bOARD_PATH) {
 		BOARD_PATH = bOARD_PATH;
 	}
+
+	public boolean checkCrash(Coordinates position, Game game, Field[][] fields) {
+		int x = position.x;
+		int y = position.y;
+
+		for (int i =0; i<game.getPlayers().size(); i++) {
+			if(fields[y-1][x].equals(Field.start) || fields[y+1][x].equals(Field.start) || fields[y][x-1].equals(Field.start) || fields[y][x+1].equals(Field.start)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	
-	
+	public void moveRandomly(Player player, Game game) {
+		player.setState(State.notSoCrazy);
+		List<Coordinates> p = floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).collect(Collectors.toList());
+		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+	}
+
+
 }

@@ -11,7 +11,7 @@ public class Player {
 	private String color = "";
 	
 	public static enum State {
-		crazy, notSoCrazy, notCrazy
+		crazy, notSoCrazy, notCrazy, crash
 	} ;
 	
 	

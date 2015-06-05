@@ -75,6 +75,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			game.start();
 		} else if (m.type == Type.C_NEWLEVEL) {
 			Game.setLevelCounter(Game.getLevelCounter()+1);
+			// TODO not accourding to domain model - just for testing purpose, server should create a new game
 			game.setBoard(new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH()));
 			
 			BoardString b = game.boardString();

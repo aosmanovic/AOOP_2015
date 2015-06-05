@@ -19,7 +19,7 @@ public class BoardPanel extends JPanel {
 	private Game game;
 	private static Map<Color,String> colors = new HashMap<>();
 	private String result ="";
-	
+
 
 	public BoardPanel() {
 		images = new FieldImages();
@@ -72,25 +72,25 @@ public class BoardPanel extends JPanel {
 		} 
 
 	}
-	
-	
+
+
 
 	public void setGame(Game game) {
 		this.game = game;
 	}
 
 	public String getResult() {
-		
+
 		for (int i=0; i<game.getPlayers().size(); i++) {
 			Color key = colors.keySet().iterator().next();
 			result += "   NAME: " + game.getPlayers().get(i).name() + "    COLOR: " + colors.get(key) +        "\n";
 		} 
-	
+
 		return result;
 	}
-	
+
 	public void getClor() {
-		
+
 	}
 
 }
