@@ -4,8 +4,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
@@ -21,6 +19,7 @@ import at.ac.tuwien.foop.domain.message.client.JoinMessage;
 import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
+import at.ac.tuwien.foop.domain.message.server.JoinedMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.RemovePlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
@@ -73,7 +72,10 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		} else if (m.type == Type.S_UPDATE) {
 			game.update(mapper.readValue(str, UpdateMessage.class).players);
 		} else if (m.type == Type.S_JOINED) {
+			JoinedMessage joinedMessage = mapper.readValue(str,
+					JoinedMessage.class);
 			game.join();
+			joinedMessage.players.forEach(p -> game.addPlayer(p));
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
 		} else if (m.type == Type.S_START) {
