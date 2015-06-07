@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.domain.WindGust;
-import at.ac.tuwien.foop.domain.Player.State;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
@@ -190,21 +190,24 @@ public class Game {
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
 
-		log.debug("move player {}", name);
+		log.debug("move player {} to {}", name, coordinates);
 		int i = 0;
 		for (Player p : players) {
 			if (p.name().equals(name)) {
-				players.set(i, p.moveTo(coordinates.x, coordinates.y,
-						p.coordinates(), p.getState()));
+				player = p.moveTo(coordinates.x, coordinates.y,
+						p.coordinates(), p.getState());
+				players.set(i, player);
 				break;
 			}
 			i++;
 		}
 
 		// 2 mouses crash
-		if (service.checkCrash(player.coordinates(), this, this.board()
-				.fields()) == true)
+		Player other = service.checkCrash(player, this);
+		if (other != null) {
 			player.setState(State.crash);
+			other.setState(State.crash);
+		}
 	}
 
 	public Player getPlayer(String name) {
