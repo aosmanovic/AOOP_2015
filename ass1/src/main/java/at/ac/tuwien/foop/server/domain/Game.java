@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.server.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -28,7 +29,7 @@ public class Game {
 
 	private static Logger log = LoggerFactory.getLogger(Game.class);
 
-	private List<GameEventListener> listeners = new ArrayList<>();
+	private CopyOnWriteArrayList<GameEventListener> listeners = new CopyOnWriteArrayList<>();
 
 	private GameState state = GameState.ready;
 

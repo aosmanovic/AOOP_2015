@@ -17,6 +17,7 @@ import io.netty.util.CharsetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import org.slf4j.Logger;
@@ -39,7 +40,7 @@ public class NettyClient implements Runnable {
 
 	private int retry = 0;
 	private Channel channel;
-	private List<ConnectListener> connectListeners = new ArrayList<>();
+	private CopyOnWriteArrayList<ConnectListener> connectListeners = new CopyOnWriteArrayList<>();
 
 	private ClientHandler clientHandler;
 
