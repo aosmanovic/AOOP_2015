@@ -16,6 +16,7 @@ import at.ac.tuwien.foop.domain.message.client.JoinMessage;
 import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
+import at.ac.tuwien.foop.domain.message.server.JoinedMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.RemovePlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
@@ -60,7 +61,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			if (player != null) {
 				BoardString b = game.boardString();
 				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
-				ctx.writeAndFlush(new Message(Type.S_JOINED));
+				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 			}
@@ -124,7 +125,8 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		channel.writeAndFlush(new GameOverMessage(e.player));
 		BoardString b = game.boardString();
 		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
-		channel.writeAndFlush(new Message(Type.S_JOINED));
+		// TODO: check why joined
+//		channel.writeAndFlush(new Message(Type.S_JOINED));
 		
 	}
 
