@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Player {
+	private static final int MAX_CRASH_TIME = 5;
+	
 	private final String name;
 	private Coordinates coordinates;
 	private Coordinates lastCoordinates;
 	private State state;
 	private String color = "";
+	private int crashTime = 0;
 	
 	public static enum State {
 		crazy, notSoCrazy, notCrazy, crash
@@ -96,6 +99,9 @@ public class Player {
 		this.color = color;
 	}	
 	
-	
+	public boolean increaseCrashTime() {
+		return (++crashTime % MAX_CRASH_TIME) == 0;
+		
+	}
 	
 }

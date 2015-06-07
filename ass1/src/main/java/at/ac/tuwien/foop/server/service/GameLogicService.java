@@ -57,33 +57,27 @@ public class GameLogicService {
 			if (floorList.size() == 1 && player.getLastCoordinates() != null) {
 				player.setState(State.crazy);
 				game.movePlayer(player.name(), player.getLastCoordinates());
-				break;
+				continue;
 			}
 
 			// mouse crashes
-			if (player.getState().equals(State.crash)) {
-				new java.util.Timer().schedule( 
-						new java.util.TimerTask() {
-							@Override
-							public void run() {
-								moveRandomly(player,game);
-							}
-						}, 
-						5000 
-						);
-			}
+//			if (player.getState().equals(State.crash)) {
+//				if (player.increaseCrashTime()) {
+//					moveRandomly(player,game);
+//				}
+//			}
 
 			// calculate player state changes and crazy movements
 			if (!player.getState().equals(State.notCrazy)) {
 				if (floorList.size() >= 3) {
 					if (player.getState().equals(State.crazy)) {
 						moveRandomly(player,game);
-						break;
+						continue;
 					} else
 						player.setState(State.notCrazy);
 				} else {
 					game.movePlayer(player.name(), floorList.stream().filter(z -> !z.equals(player.getLastCoordinates())).findFirst().orElse(null));
-					break;
+					continue;
 				}
 			}
 
@@ -100,7 +94,7 @@ public class GameLogicService {
 			if (closestNeighbor.equals(cheeseCoordinates)) {
 				log.info("player '{}' wins the game!", player.name());
 				game.stop(player);
-				break;
+				continue;
 			}
 			log.info("Last Coordinates: " + player.getLastCoordinates());
 		}

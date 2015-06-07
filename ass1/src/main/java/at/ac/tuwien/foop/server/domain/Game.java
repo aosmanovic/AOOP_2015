@@ -177,7 +177,7 @@ public class Game {
 		return board;
 	}
 
-	//TODO change to private
+	// TODO change to private
 	public void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
@@ -189,11 +189,21 @@ public class Game {
 
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
-		players.replaceAll(p -> p.equals(player) ? p.moveTo(coordinates.x,
-				coordinates.y, p.coordinates(), p.getState()) : p);
-		
+
+		log.debug("move player {}", name);
+		int i = 0;
+		for (Player p : players) {
+			if (p.name().equals(name)) {
+				players.set(i, p.moveTo(coordinates.x, coordinates.y,
+						p.coordinates(), p.getState()));
+				break;
+			}
+			i++;
+		}
+
 		// 2 mouses crash
-		if (service.checkCrash(player.coordinates(), this, this.board().fields())==true) 
+		if (service.checkCrash(player.coordinates(), this, this.board()
+				.fields()) == true)
 			player.setState(State.crash);
 	}
 
@@ -217,8 +227,5 @@ public class Game {
 	public static void setLevelCounter(int levelCounter) {
 		Game.levelCounter = levelCounter;
 	}
-	
-	
-	
-	
+
 }
