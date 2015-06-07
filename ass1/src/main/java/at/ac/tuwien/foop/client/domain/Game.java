@@ -2,6 +2,7 @@ package at.ac.tuwien.foop.client.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
@@ -11,7 +12,7 @@ import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
 
 public class Game {
-	private List<GameEventListener> listeners = new ArrayList<>();
+	private CopyOnWriteArrayList<GameEventListener> listeners = new CopyOnWriteArrayList<>();
 
 	private boolean running = false;
 	private boolean joined = false;

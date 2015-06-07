@@ -6,6 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +35,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	private ObjectMapper mapper = new ObjectMapper();
 	private Channel channel;
 
-	private List<ChannelActiveListener> listeners = new ArrayList<>();
+	private final CopyOnWriteArrayList<ChannelActiveListener> listeners = new CopyOnWriteArrayList<>();
 
 	public ClientHandler(Game game) {
 		this.game = game;
