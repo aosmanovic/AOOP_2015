@@ -5,8 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import at.ac.tuwien.foop.client.domain.Game;
@@ -19,6 +19,7 @@ public class BoardPanel extends JPanel {
 	private Game game;
 	private static Map<Color,String> colors = new HashMap<>();
 	private String result ="";
+	private Consumer<Integer> onGameSet;
 
 
 	public BoardPanel() {
@@ -78,6 +79,12 @@ public class BoardPanel extends JPanel {
 
 	public void setGame(Game game) {
 		this.game = game;
+		if (onGameSet != null)
+			onGameSet.accept(0);
+	}
+
+	public void setOnGameSetCallback(Consumer<Integer> f) {
+		onGameSet = f;
 	}
 
 	public String getResult() {

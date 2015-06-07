@@ -6,7 +6,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.JLabel;
 
-public class BoardFrame extends JFrame{
+public class BoardFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel label = new JLabel();
@@ -28,17 +28,8 @@ public class BoardFrame extends JFrame{
 		this.b = b;
 		getContentPane().add(b);
 		getContentPane().add(label, BorderLayout.PAGE_END);
-		
-		new java.util.Timer().schedule( 
-		        new java.util.TimerTask() {
-		            @Override
-		            public void run() {
-		            	label.setText("Current players: " +b.getResult());
-		            }
-		        }, 
-		        4000 
-		);
 
+		b.setOnGameSetCallback(e -> label.setText("Current players: "
+				+ b.getResult()));
 	}
 }
-
