@@ -20,7 +20,6 @@ public class GameLogicService {
 
 	private static String BOARD_PATH = "Map";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
-	private List<Coordinates> floorList;
 
 	public BoardString loadBoard(String path) {
 
@@ -48,13 +47,14 @@ public class GameLogicService {
 	public void movement(Game game) {
 		Coordinates cheeseCoordinates = game.board().cheeseCoordinates();
 		log.debug("***calculate movement***");
+		
 
 		for (Player player : game.getPlayers()) {
 			log.info("Position of the mouse '{}': {}", player.name(),
 					player.coordinates());
 
 			// get neighbors with paths
-			floorList = calculateNeighbor(game.board().fields(),
+			List<Coordinates> floorList = calculateNeighbor(game.board().fields(),
 					player.coordinates());
 
 			// check for dead end
@@ -67,7 +67,7 @@ public class GameLogicService {
 			// mouse crashes
 			if (player.getState().equals(State.crash)) {
 				if (player.increaseCrashTime()) {
-					moveRandomly(player, game);
+					moveRandomlyDifferentDirections(player, game, floorList);
 				} else {
 					continue;
 				}
@@ -77,7 +77,7 @@ public class GameLogicService {
 			if (!player.getState().equals(State.notCrazy)) {
 				if (floorList.size() >= 3) {
 					if (player.getState().equals(State.crazy)) {
-						moveRandomly(player, game);
+						moveRandomly(player, game, floorList);
 						continue;
 					} else
 						player.setState(State.notCrazy);
@@ -204,10 +204,19 @@ public class GameLogicService {
 		return null;
 	}
 
-	public void moveRandomly(Player player, Game game) {
+	public void moveRandomly(Player player, Game game, List<Coordinates> floorList) {
 		player.setState(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
 				.filter(z -> !z.equals(player.getLastCoordinates()))
+				.collect(Collectors.toList());
+		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+	}
+	
+	public void moveRandomlyDifferentDirections(Player player, Game game, List<Coordinates> floorList) {
+		player.setState(State.notSoCrazy);
+		List<Coordinates> p = floorList.stream()
+				.filter(z -> !z.equals(player.getLastCoordinates()) 
+						|| !game.getPlayers().stream().anyMatch(pl -> pl.coordinates().equals(z)))
 				.collect(Collectors.toList());
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}

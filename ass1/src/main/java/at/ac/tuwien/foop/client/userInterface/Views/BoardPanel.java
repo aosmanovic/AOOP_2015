@@ -71,29 +71,14 @@ public class BoardPanel extends JPanel {
 		 * FieldImages.IMAGE_SIZE, null));
 		 */
 
-		// for (Color key : colors.keySet()) {
-		// System.out.println("Key = " + key);
-
 		for (Player p : game.getPlayers()) {
-
-			// Color key = colors.keySet().iterator().next();
-			// System.out.println("Key = " + key);
-
 			g.drawImage(images.getMouse(), p.coordinates().x
 					* FieldImages.IMAGE_SIZE, p.coordinates().y
 					* FieldImages.IMAGE_SIZE, 27, 27,
 					playercolor.get(p.name()).color, null);
-
 		}
 	}
 
-	//
-	// System.out.println("COLOR" + colors.get(key));
-	// g.drawImage(images.getMouse(), game.getPlayers().get(i).coordinates().x *
-	// FieldImages.IMAGE_SIZE, game.getPlayers().get(i).coordinates().y *
-	// FieldImages.IMAGE_SIZE, 27, 27, key, null);
-
-	// }
 
 	public void setGame(Game game) {
 		log.debug("set game");
