@@ -191,7 +191,7 @@ public class Game {
 	public void movePlayer(String name, Coordinates coordinates) {
 		Player player = getPlayer(name);
 
-		log.debug("move player {} to {}", name, coordinates);
+		log.debug("Move player '{}' to {}", name, coordinates);
 		int i = 0;
 		for (Player p : players) {
 			if (p.name().equals(name)) {

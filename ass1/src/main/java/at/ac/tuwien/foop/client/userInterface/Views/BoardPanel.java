@@ -91,13 +91,10 @@ public class BoardPanel extends JPanel {
 
 			@Override
 			public void onUpdate(GameEvent e) {
-				log.debug("get game event********************" + e.type.toString());
 				if (e.type.equals(GameEvent.Type.START)) {
 					log.debug("new player, update colors");
 					log.info("PLAYERS :"+ game.getPlayers());
 
-					// TODO Auto-generated method stub
-					System.out.println("IN");
 					List<PlayerColor> colors = new ArrayList<>();
 					colors.add(new PlayerColor(Color.RED, "Red"));
 					colors.add(new PlayerColor(Color.BLUE, "Blue"));
