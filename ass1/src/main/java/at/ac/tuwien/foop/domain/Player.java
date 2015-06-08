@@ -99,9 +99,9 @@ public class Player {
 		this.color = color;
 	}	
 	
-	public boolean increaseCrashTime() {
+	public boolean crash() {
+		lastCoordinates = coordinates;
 		return (++crashTime % MAX_CRASH_TIME) == 0;
 		
 	}
-	
 }

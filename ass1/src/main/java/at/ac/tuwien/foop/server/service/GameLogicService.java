@@ -66,11 +66,10 @@ public class GameLogicService {
 
 			// mouse crashes
 			if (player.getState().equals(State.crash)) {
-				if (player.increaseCrashTime()) {
+				if (player.crash()) {
 					moveRandomlyDifferentDirections(player, game, floorList);
-				} else {
-					continue;
 				}
+				continue;
 			}
 
 			// calculate player state changes and crazy movements
@@ -215,9 +214,9 @@ public class GameLogicService {
 	public void moveRandomlyDifferentDirections(Player player, Game game, List<Coordinates> floorList) {
 		player.setState(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
-				.filter(z -> !z.equals(player.getLastCoordinates()) 
-						|| !game.getPlayers().stream().anyMatch(pl -> pl.coordinates().equals(z)))
+				.filter(z -> !game.getPlayers().stream().anyMatch(pl -> pl.coordinates().equals(z)))
 				.collect(Collectors.toList());
+		log.debug("possible floors {}", p);
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}
 

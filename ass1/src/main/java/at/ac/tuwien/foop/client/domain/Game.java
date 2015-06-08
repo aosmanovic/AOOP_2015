@@ -67,6 +67,8 @@ public class Game {
 	}
 
 	public void addPlayer(Player player) {
+		if (players.stream().anyMatch(p -> p.equals(player)))
+			return;
 		players.add(player);
 		listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(player.name())));
 	}
@@ -75,7 +77,7 @@ public class Game {
 		players.remove(player);
 		listeners.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
 	}
-	
+
 	public List<Player> getPlayers() {
 		return players;
 	}
@@ -100,5 +102,4 @@ public class Game {
 		return winner;
 	}
 
-	
 }

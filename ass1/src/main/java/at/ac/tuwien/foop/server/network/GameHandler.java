@@ -57,10 +57,11 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			ctx.writeAndFlush(new Message(Type.S_PONG));
 		} else if (m.type == Type.C_JOIN) {
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
-			player = game.join(jm.name); 
+			player = game.join(jm.name);
 			if (player != null) {
 				BoardString b = game.boardString();
-				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+						b.width));
 				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
@@ -72,15 +73,17 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		} else if (m.type == Type.C_START) {
 			game.start();
 		} else if (m.type == Type.C_NEWLEVEL) {
-			Game.setLevelCounter(Game.getLevelCounter()+1);
-			// TODO not accourding to domain model - just for testing purpose, server should create a new game
-			game.setBoard(new GameLogicService().loadBoard(GameLogicService.getBOARD_PATH()));
-			
+			Game.setLevelCounter(Game.getLevelCounter() + 1);
+			// TODO not accourding to domain model - just for testing purpose,
+			// server should create a new game
+			game.setBoard(new GameLogicService().loadBoard(GameLogicService
+					.getBOARD_PATH()));
+
 			BoardString b = game.boardString();
-			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+					b.width));
 			// TODO MOVEMENT FOR THIS NEW LEVEL
-		}
-		else {
+		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
@@ -101,11 +104,11 @@ public class GameHandler extends ChannelHandlerAdapter implements
 
 	@Override
 	public void onUpdate(GameEvent e) {
-		log.debug("handler on update");
 		if (e.type == GameEvent.Type.START) {
 			channel.writeAndFlush(new Message(Type.S_START));
 		} else if (e.type == GameEvent.Type.UPDATE) {
-			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game.wind()));
+			channel.writeAndFlush(new UpdateMessage(game.getPlayers(), game
+					.wind()));
 		}
 	}
 
@@ -118,16 +121,17 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(RemovePlayerEvent e) {
 		channel.writeAndFlush(new RemovePlayerMessage(e.player));
 	}
-	
+
 	@Override
 	public void onUpdate(GameOverEvent e) {
 		// TODO Auto-generated method stub
 		channel.writeAndFlush(new GameOverMessage(e.player));
 		BoardString b = game.boardString();
-		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board, b.width));
+		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+				b.width));
 		// TODO: check why joined
-//		channel.writeAndFlush(new Message(Type.S_JOINED));
-		
+		// channel.writeAndFlush(new Message(Type.S_JOINED));
+
 	}
 
 }
