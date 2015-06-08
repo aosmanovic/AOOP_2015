@@ -211,7 +211,7 @@ public class GameLogicService {
 				.collect(Collectors.toList());
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}
-	
+	 
 	public void moveRandomlyDifferentDirections(Player player, Game game, List<Coordinates> floorList) {
 		player.setState(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
