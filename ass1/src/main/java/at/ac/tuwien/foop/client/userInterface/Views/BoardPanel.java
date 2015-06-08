@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.function.Consumer;
 
 import javax.swing.JPanel;
@@ -112,29 +113,39 @@ public class BoardPanel extends JPanel {
 			onGameSet.accept(0);
 	}
 
+	
 	public void setOnGameSetCallback(Consumer<Integer> f) {
 		onGameSet = f;
 	}
+	
 
 	public String getResult() {
-
-		/*
-		 * for (Player p: game.getPlayers()) { // Color key =
-		 * colors.keySet().iterator().next(); result += "   NAME: " + p.name() +
-		 * "    COLOR: " + playercolor.get(p.name()).name + "\n"; }
-		 */
+		
+		for (int i = 0; i < game.getPlayers().size(); i++) {
+			result += "  NAME:   " + game.getPlayers().get(i).name() + "        COLOR:   ";
+			
+			for ( String key : playercolor.keySet() ) {
+			    //log.info( "KEY - Player: " + key );
+			    
+			    if(key.equals( game.getPlayers().get(i).name())) 
+			    	result += playercolor.get(key).colorName;
+			    
+			}	       
+		}
+		log.info("RESULT: " + result);
 		return result;
 	}
+	
 
 	public class PlayerColor {
 
 		public final Color color;
-		public final String name;
+		public final String colorName;
 
-		public PlayerColor(Color color, String name) {
+		public PlayerColor(Color color, String colorName) {
 			super();
 			this.color = color;
-			this.name = name;
+			this.colorName = colorName;
 		}
 
 	}

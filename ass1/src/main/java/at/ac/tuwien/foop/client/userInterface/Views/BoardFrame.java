@@ -28,7 +28,7 @@ public class BoardFrame extends JFrame {
 		this.b = b;
 		getContentPane().add(b);
 		getContentPane().add(label, BorderLayout.PAGE_END);
-
+		
 		b.setOnGameSetCallback(e -> label.setText("Current players: "
 				+ b.getResult()));
 	}
