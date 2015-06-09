@@ -69,13 +69,14 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 					BoardMessage.class);
 			game.setBoard(Board.createBoard(boardMessage.fields,
 					boardMessage.width));
+			boardMessage.list.forEach(p -> game.addPlayer(p));
 		} else if (m.type == Type.S_UPDATE) {
 			game.update(mapper.readValue(str, UpdateMessage.class).players);
 		} else if (m.type == Type.S_JOINED) {
-			JoinedMessage joinedMessage = mapper.readValue(str,
-					JoinedMessage.class);
-			game.join();
-			joinedMessage.players.forEach(p -> game.addPlayer(p));
+			//JoinedMessage joinedMessage = mapper.readValue(str,
+				//	JoinedMessage.class);
+			//game.join();
+			//joinedMessage.players.forEach(p -> game.addPlayer(p));
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
 		} else if (m.type == Type.S_START) {
@@ -145,7 +146,12 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 
 	@Override
 	public void newLevel() {
-		channel.writeAndFlush(new Message(Type.C_NEWLEVEL));
+		channel.writeAndFlush(new Message(Type.C_JOIN));
 		
+	}
+
+	@Override
+	public void setGame(Game game) {
+		this.game = game;
 	}
 }

@@ -1,13 +1,8 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
-import java.awt.Color;
 import java.awt.Graphics;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.function.Consumer;
 
 import javax.swing.JPanel;
 
@@ -15,9 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
-import at.ac.tuwien.foop.client.events.GameEvent;
-import at.ac.tuwien.foop.client.events.GameEventListener;
-import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Player;
 

@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client.service;
 
+import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.domain.WindGust;
 
 public interface GameCore {
@@ -11,4 +12,5 @@ public interface GameCore {
 	public void start();
 	public void over();
 	public void newLevel();
+	public void setGame(Game game);
 }

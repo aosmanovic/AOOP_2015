@@ -23,6 +23,7 @@ import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
+import at.ac.tuwien.foop.server.domain.Game.GameState;
 import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
@@ -40,6 +41,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	private Game game;
 	private Player player;
 	private Channel channel;
+	private int level = 0;
 
 	public GameHandler(Game game) {
 		this.game = game;
@@ -56,13 +58,18 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		if (m.type == Type.C_PING) {
 			ctx.writeAndFlush(new Message(Type.S_PONG));
 		} else if (m.type == Type.C_JOIN) {
+			if (game.state() == GameState.over) {
+				level = (level + 1) % 3;
+				game = new  Game(new GameLogicService().loadBoard(GameLogicService
+						.getBoardPath(level)));
+			}
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
 			player = game.join(jm.name);
 			if (player != null) {
 				BoardString b = game.boardString();
 				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
-						b.width));
-				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
+						b.width, game.getPlayers()));
+//				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 			}
@@ -72,17 +79,17 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();
-		} else if (m.type == Type.C_NEWLEVEL) {
-			Game.setLevelCounter(Game.getLevelCounter() + 1);
-			// TODO not accourding to domain model - just for testing purpose,
-			// server should create a new game
-			game.setBoard(new GameLogicService().loadBoard(GameLogicService
-					.getBOARD_PATH()));
-
-			BoardString b = game.boardString();
-			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
-					b.width));
-			// TODO MOVEMENT FOR THIS NEW LEVEL
+//		} else if (m.type == Type.C_NEWLEVEL) {
+//			Game.setLevelCounter(Game.getLevelCounter() + 1);
+//			// TODO not accourding to domain model - just for testing purpose,
+//			// server should create a new game
+//			game.setBoard(new GameLogicService().loadBoard(GameLogicService
+//					.getBoardPath()));
+//
+//			BoardString b = game.boardString();
+//			ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+//					b.width));
+//			// TODO MOVEMENT FOR THIS NEW LEVEL
 		} else {
 			log.warn("unknown message");
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
@@ -126,9 +133,9 @@ public class GameHandler extends ChannelHandlerAdapter implements
 	public void onUpdate(GameOverEvent e) {
 		// TODO Auto-generated method stub
 		channel.writeAndFlush(new GameOverMessage(e.player));
-		BoardString b = game.boardString();
-		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
-				b.width));
+//		BoardString b = game.boardString();
+//		channel.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+//				b.width));
 		// TODO: check why joined
 		// channel.writeAndFlush(new Message(Type.S_JOINED));
 

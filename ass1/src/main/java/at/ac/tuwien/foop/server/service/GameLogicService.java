@@ -18,16 +18,16 @@ import at.ac.tuwien.foop.server.domain.Game;
 
 public class GameLogicService {
 
-	private static String BOARD_PATH = "Map";
+//	private static String BOARD_PATH = "Map";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
 
 	public BoardString loadBoard(String path) {
 
-		log.debug("load board with path '{}'!", getBOARD_PATH());
-		log.info("Level: " + Game.getLevelCounter());
+//		log.debug("load board with path '{}'!", getBoardPath());
+//		log.info("Level: " + Game.getLevelCounter());
 		try (Scanner s = new Scanner(Thread.currentThread()
 				.getContextClassLoader()
-				.getResourceAsStream(path + Game.getLevelCounter() + ".txt"))) {
+				.getResourceAsStream(path))) {
 			int width = 0;
 			StringBuffer buffer = new StringBuffer();
 			while (s.hasNextLine()) {
@@ -175,13 +175,13 @@ public class GameLogicService {
 		return Math.sqrt(x + y);
 	}
 
-	public static String getBOARD_PATH() {
-		return BOARD_PATH;
+	public static String getBoardPath(int lvl) {
+		return String.format("Map%d.txt", lvl);
 	}
 
-	public static void setBOARD_PATH(String bOARD_PATH) {
-		BOARD_PATH = bOARD_PATH;
-	}
+//	public static void setBOARD_PATH(String bOARD_PATH) {
+//		BOARD_PATH = bOARD_PATH;
+//	}
 
 	public Player checkCrash(Player player, Game game) {
 		log.debug("***check crash of player '{}'***", player.name());

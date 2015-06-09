@@ -178,8 +178,7 @@ public class Game {
 		return board;
 	}
 
-	// TODO change to private
-	public void setBoard(BoardString bs) {
+	private void setBoard(BoardString bs) {
 		boardString = bs;
 		board = Board.createBoard(bs.board, bs.width);
 	}

@@ -34,6 +34,7 @@ public class StartController implements ConnectListener, GameEventListener,
 	private static final int DEFAULT_PORT = 20150;
 
 	private Game game;
+	private Game nextGame;
 	private GameCore core = null;
 	private StartFrame startFrame;
 	private GameService service = new GameService();
@@ -100,20 +101,25 @@ public class StartController implements ConnectListener, GameEventListener,
 		if (e.type == GameEvent.Type.UPDATE) {
 			boardFrame.getBoard().repaint();
 		} else if (e.type == GameEvent.Type.BOARD) {
+			game = nextGame;
+			game.join();
 			boardFrame.getBoard().setGame(game);
 		} else if (e.type == GameEvent.Type.START) {
-			Map<String,PlayerColor> map = assignPlayerColor();
-			boardFrame.getBoard().setColor(map);
-			boardFrame.setLabel(game, map);
+//			Map<String,PlayerColor> map = assignPlayerColor();
+//			boardFrame.getBoard().setColor(map);
+//			boardFrame.setLabel(game, map);
 			showBoard();
-		} else if (e.type == GameEvent.Type.JOIN) {
+		} else if (e.type == GameEvent.Type.JOIN)   {
+			setColor();
 			startFrame.showStartGamePanel();
 		} else if (e.type == GameEvent.Type.OVER) {
+			nextGame = new Game();
+			//game.setBoard(newGame.getBoard());
 			int gameover = startFrame.showGameOver(game);
 			if (gameover == 0) {
 				log.info("LOAD new level");
 				service.changeLevel(core);
-				boardFrame.getBoard().setGame(game);
+//				boardFrame.getBoard().setGame(game);
 			} else if (gameover == 1) {
 				log.info("Leave");
 				service.leave(game, core);
@@ -122,6 +128,13 @@ public class StartController implements ConnectListener, GameEventListener,
 		}
 	}
 
+	
+	private void setColor() {
+		Map<String,PlayerColor> map = assignPlayerColor();
+		boardFrame.getBoard().setColor(map);
+		boardFrame.setLabel(game, map);		
+	}
+	
 	private Map<String, PlayerColor> assignPlayerColor() {
 		log.debug("new player, update colors");
 		log.info("PLAYERS :" + game.getPlayers());
@@ -141,6 +154,7 @@ public class StartController implements ConnectListener, GameEventListener,
 
 	@Override
 	public void onUpdate(NewPlayerEvent e) {
+		setColor();
 		startFrame.printMessage(String.format("Player '%s' joined the game!",
 				e.name));
 	}
