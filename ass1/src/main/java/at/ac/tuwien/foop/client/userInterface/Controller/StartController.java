@@ -1,7 +1,12 @@
 package at.ac.tuwien.foop.client.userInterface.Controller;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +22,7 @@ import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
 import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
+import at.ac.tuwien.foop.client.userInterface.Views.PlayerColor;
 import at.ac.tuwien.foop.client.userInterface.Views.StartFrame;
 import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
@@ -36,8 +42,8 @@ public class StartController implements ConnectListener, GameEventListener,
 	public StartController() {
 		startFrame = new StartFrame();
 
-		boardFrame.setBoard(new BoardPanel());
 		boardFrame.addKeyListener(this);
+		boardFrame.setBoard(new BoardPanel());
 
 		startFrame.addJoinGameButtonListener(e -> service.join(game, core,
 				startFrame.getPlayerName()));
@@ -70,6 +76,7 @@ public class StartController implements ConnectListener, GameEventListener,
 	}
 
 	private void showBoard() {
+		
 		boardFrame.setVisible(true);
 	}
 
@@ -95,6 +102,9 @@ public class StartController implements ConnectListener, GameEventListener,
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardFrame.getBoard().setGame(game);
 		} else if (e.type == GameEvent.Type.START) {
+			Map<String,PlayerColor> map = assignPlayerColor();
+			boardFrame.getBoard().setColor(map);
+			boardFrame.setLabel(game, map);
 			showBoard();
 		} else if (e.type == GameEvent.Type.JOIN) {
 			startFrame.showStartGamePanel();
@@ -110,6 +120,23 @@ public class StartController implements ConnectListener, GameEventListener,
 				hideBoard();
 			}
 		}
+	}
+
+	private Map<String, PlayerColor> assignPlayerColor() {
+		log.debug("new player, update colors");
+		log.info("PLAYERS :" + game.getPlayers());
+
+		Map<String, PlayerColor> playercolor = new HashMap<String, PlayerColor>();
+		List<PlayerColor> colors = new ArrayList<>();
+		colors.add(new PlayerColor(Color.RED, "Red"));
+		colors.add(new PlayerColor(Color.BLUE, "Blue"));
+		colors.add(new PlayerColor(Color.GREEN, "Green"));
+
+		for (int i = 0; i < game.getPlayers().size(); i++) {
+			playercolor.put(game.getPlayers().get(i).name(),
+					colors.get(i % colors.size()));
+		}
+		return playercolor;
 	}
 
 	@Override

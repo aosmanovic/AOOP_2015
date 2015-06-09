@@ -28,13 +28,9 @@ public class BoardPanel extends JPanel {
 	private FieldImages images;
 	private Game game;
 	private static Map<String, PlayerColor> playercolor = new HashMap<>();
-	private String result = "";
-	private Consumer<Integer> onGameSet;
 
 	public BoardPanel() {
 		images = new FieldImages();
-		// colors.put(Color.RED, "Red"); colors.put(Color.BLUE, "Blue");
-		// colors.put(Color.GREEN, "Green");
 	}
 
 	@Override
@@ -66,12 +62,6 @@ public class BoardPanel extends JPanel {
 			}
 		}
 
-		/*
-		 * game.getPlayers().forEach( p -> g.drawImage(images.getMouse(),
-		 * p.coordinates().x * FieldImages.IMAGE_SIZE, p.coordinates().y *
-		 * FieldImages.IMAGE_SIZE, null));
-		 */
-
 		for (Player p : game.getPlayers()) {
 			g.drawImage(images.getMouse(), p.coordinates().x
 					* FieldImages.IMAGE_SIZE, p.coordinates().y
@@ -84,70 +74,12 @@ public class BoardPanel extends JPanel {
 	public void setGame(Game game) {
 		log.debug("set game");
 		this.game = game;
-		game.addGameEventListener(new GameEventListener() {
-
-			@Override
-			public void onUpdate(NewPlayerEvent e) {
-			}
-
-			@Override
-			public void onUpdate(GameEvent e) {
-				if (e.type.equals(GameEvent.Type.START)) {
-					log.debug("new player, update colors");
-					log.info("PLAYERS :"+ game.getPlayers());
-
-					List<PlayerColor> colors = new ArrayList<>();
-					colors.add(new PlayerColor(Color.RED, "Red"));
-					colors.add(new PlayerColor(Color.BLUE, "Blue"));
-					colors.add(new PlayerColor(Color.GREEN, "Green"));
-
-					for (int i = 0; i < game.getPlayers().size(); i++) {
-						playercolor.put(game.getPlayers().get(i).name(),
-								colors.get(i % colors.size()));
-					}
-				}
-			}
-		});
-
-		if (onGameSet != null)
-			onGameSet.accept(0);
-	}
-
-	
-	public void setOnGameSetCallback(Consumer<Integer> f) {
-		onGameSet = f;
 	}
 	
-
-	public String getResult() {
-		
-		for (int i = 0; i < game.getPlayers().size(); i++) {
-			result += "  NAME:   " + game.getPlayers().get(i).name() + "        COLOR:   ";
-			
-			for ( String key : playercolor.keySet() ) {
-			    //log.info( "KEY - Player: " + key );
-			    
-			    if(key.equals( game.getPlayers().get(i).name())) 
-			    	result += playercolor.get(key).colorName;
-			    
-			}	       
-		}
-		log.info("RESULT: " + result);
-		return result;
+	public void setColor(Map<String, PlayerColor> map) {
+		playercolor = map;
 	}
 	
-
-	public class PlayerColor {
-
-		public final Color color;
-		public final String colorName;
-
-		public PlayerColor(Color color, String colorName) {
-			super();
-			this.color = color;
-			this.colorName = colorName;
-		}
-
-	}
+	
 
 }
