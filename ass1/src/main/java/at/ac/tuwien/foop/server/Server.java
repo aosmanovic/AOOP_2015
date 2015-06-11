@@ -13,7 +13,7 @@ import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Server {
 	private static Logger log = LoggerFactory.getLogger(Server.class);
-	private static final int LOOP_DELAY = 200;
+	private static final int LOOP_DELAY = 400;
 
 	private NettyServer server;
 	private Timer timer;

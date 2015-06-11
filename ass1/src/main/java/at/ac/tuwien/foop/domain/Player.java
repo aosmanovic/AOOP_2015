@@ -102,6 +102,10 @@ public class Player {
 	public boolean crash() {
 		lastCoordinates = coordinates;
 		return (++crashTime % MAX_CRASH_TIME) == 0;
-		
 	}
+	
+	/*public Coordinates addWindToCoordinates(int x, int y) {
+		Coordinates c = new Coordinates(coordinates.x+x,coordinates.y+y);
+		return c;
+	}*/
 }

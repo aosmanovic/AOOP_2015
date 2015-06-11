@@ -76,6 +76,7 @@ public class GameHandler extends ChannelHandlerAdapter implements
 		} else if (m.type == Type.C_LEAVE) {
 			game.leave(player);
 		} else if (m.type == Type.C_WIND) {
+			log.info("****Wind accepted****");
 			game.sendGust(mapper.readValue(str, WindMessage.class).wind);
 		} else if (m.type == Type.C_START) {
 			game.start();

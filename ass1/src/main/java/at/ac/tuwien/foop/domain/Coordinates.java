@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Coordinates {
 	public final int x;
 	public final int y;
+	
 
 	@JsonCreator
 	public Coordinates(@JsonProperty("x") int x, @JsonProperty("y") int y) {

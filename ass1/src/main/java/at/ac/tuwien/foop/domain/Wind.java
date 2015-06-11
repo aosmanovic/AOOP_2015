@@ -19,8 +19,8 @@ public class Wind {
 	
 	public final double angle;
 	public final double strength;
-	public final double x;
-	public final double y;
+	public  double x;
+	public  double y;
 
 	private Wind(double angle, double strength, double x, double y) {
 		this.angle = angle;
@@ -71,5 +71,10 @@ public class Wind {
 	public String toString() {
 		return "Wind [angle=" + angle + ", strength=" + strength + ", x=" + x
 				+ ", y=" + y + "]";
+	}
+
+	public void setWindToDefault() {
+		this.x = 0;
+		this.y = 0;
 	}
 }

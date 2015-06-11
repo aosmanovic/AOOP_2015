@@ -110,7 +110,7 @@ public class Game {
 		}
 
 		// call movement method here
-		service.movement(this);
+		service.movement(this,wind);
 
 		// calculate next step
 		fireGameEvent(new GameEvent(Type.UPDATE));

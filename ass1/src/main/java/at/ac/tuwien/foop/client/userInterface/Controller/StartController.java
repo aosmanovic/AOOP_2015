@@ -34,7 +34,7 @@ public class StartController implements ConnectListener, GameEventListener,
 	private static final int DEFAULT_PORT = 20150;
 
 	private Game game;
-	private Game nextGame;
+	//private Game nextGame;
 	private GameCore core = null;
 	private StartFrame startFrame;
 	private GameService service = new GameService();
@@ -101,7 +101,7 @@ public class StartController implements ConnectListener, GameEventListener,
 		if (e.type == GameEvent.Type.UPDATE) {
 			boardFrame.getBoard().repaint();
 		} else if (e.type == GameEvent.Type.BOARD) {
-			game = nextGame;
+			//game = nextGame;
 			game.join();
 			boardFrame.getBoard().setGame(game);
 		} else if (e.type == GameEvent.Type.START) {
@@ -113,7 +113,7 @@ public class StartController implements ConnectListener, GameEventListener,
 			setColor();
 			startFrame.showStartGamePanel();
 		} else if (e.type == GameEvent.Type.OVER) {
-			nextGame = new Game();
+			//nextGame = new Game();
 			//game.setBoard(newGame.getBoard());
 			int gameover = startFrame.showGameOver(game);
 			if (gameover == 0) {
@@ -171,6 +171,7 @@ public class StartController implements ConnectListener, GameEventListener,
 	public void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_UP) {
 			service.sendWind(game, core, new WindGust(Direction.NORTH, 1));
+			log.info("Button up pressed");
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
 			service.sendWind(game, core, new WindGust(Direction.SOUTH, 1));
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
