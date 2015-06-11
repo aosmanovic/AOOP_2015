@@ -13,14 +13,14 @@ import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Server {
 	private static Logger log = LoggerFactory.getLogger(Server.class);
-	private static final int LOOP_DELAY = 1300;
+	private static final int LOOP_DELAY = 1000;
 
 	private NettyServer server;
 	private Timer timer;
 
 	public Server() {
 		log.debug("set up server!");
-		Game game = new Game(new GameLogicService().loadBoard(GameLogicService.getBoardPath(0)));
+		Game game = new Game(new GameLogicService().loadBoard(GameLogicService.getBoardPath(2)));
 		server = new NettyServer(game);
 		new Thread(server).start();
 		timer = new Timer("gameLoop", true);

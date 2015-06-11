@@ -19,8 +19,8 @@ public class Wind {
 	
 	public final double angle;
 	public final double strength;
-	public final double x;
-	public final double y;
+	public double x;
+	public double y;
 
 	private Wind(double angle, double strength, double x, double y) {
 		this.angle = angle;
