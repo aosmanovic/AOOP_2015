@@ -236,10 +236,10 @@ public class GameLogicService {
 
 		Coordinates c = addWindToCoordinates(p.get(new Random().nextInt(p.size())), (int)wind.x, (int)wind.y);
 		
-		/*if (checkIfPath(c, game.board().fields()) == true)
+		if (checkIfPath(c, game.board().fields()) == true)
 			game.movePlayer(player.name(), c);
 		else 
-			*/game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+			game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 
 	}
 
@@ -252,9 +252,9 @@ public class GameLogicService {
 
 		Coordinates c = addWindToCoordinates(p.get(new Random().nextInt(p.size())), (int)wind.x, (int)wind.y);
 
-		/*if (checkIfPath(c, game.board().fields()) == true)
+		if (checkIfPath(c, game.board().fields()) == true)
 			game.movePlayer(player.name(), c);
-		else*/
+		else
 			game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 
 
