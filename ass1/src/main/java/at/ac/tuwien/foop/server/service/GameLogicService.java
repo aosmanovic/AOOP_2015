@@ -13,18 +13,19 @@ import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Player.State;
+import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 
 public class GameLogicService {
 
-//	private static String BOARD_PATH = "Map";
+	//	private static String BOARD_PATH = "Map";
 	private static Logger log = LoggerFactory.getLogger(GameLogicService.class);
 
 	public BoardString loadBoard(String path) {
 
-//		log.debug("load board with path '{}'!", getBoardPath());
-//		log.info("Level: " + Game.getLevelCounter());
+		//		log.debug("load board with path '{}'!", getBoardPath());
+		//		log.info("Level: " + Game.getLevelCounter());
 		try (Scanner s = new Scanner(Thread.currentThread()
 				.getContextClassLoader()
 				.getResourceAsStream(path))) {
@@ -44,10 +45,10 @@ public class GameLogicService {
 		}
 	}
 
-	public void movement(Game game) {
+	public void movement(Game game, Wind wind) {
 		Coordinates cheeseCoordinates = game.board().cheeseCoordinates();
 		log.debug("***calculate movement***");
-		
+		log.debug("WIND: " + wind.toString());
 
 		for (Player player : game.getPlayers()) {
 			log.info("Position of the mouse '{}': {}", player.name(),
@@ -84,9 +85,9 @@ public class GameLogicService {
 					game.movePlayer(
 							player.name(),
 							floorList
-									.stream()
-									.filter(z -> !z.equals(player
-											.getLastCoordinates())).findFirst()
+							.stream()
+							.filter(z -> !z.equals(player
+									.getLastCoordinates())).findFirst()
 									.orElse(null));
 					continue;
 				}
@@ -100,7 +101,7 @@ public class GameLogicService {
 
 			// calculate closest neighbor
 			Coordinates closestNeighbor = calculateClosestNeighbor(floorList,
-					cheeseCoordinates);
+					cheeseCoordinates, wind, game.board().fields(), player.coordinates());
 
 			// move the player
 			game.movePlayer(player.name(), closestNeighbor);
@@ -124,18 +125,55 @@ public class GameLogicService {
 	 * @return
 	 */
 	private Coordinates calculateClosestNeighbor(List<Coordinates> neighbors,
-			Coordinates cheeseCoordinates) {
+			Coordinates cheeseCoordinates, Wind wind, Field[][] field, Coordinates c) {
 		double minDistance = Double.POSITIVE_INFINITY;
 		Coordinates closestNeighbor = null;
-		for (Coordinates neighbor : neighbors) {
-			double distance = calculateDistanceToCheese(cheeseCoordinates,
-					neighbor);
-			if (distance <= minDistance) {
-				minDistance = distance;
-				closestNeighbor = neighbor;
-				log.info("Closest neighbor:" + closestNeighbor);
+
+		if(wind.x == 0 && wind.y == 0) {
+			log.info("No wind influence");
+			for (Coordinates neighbor : neighbors) {
+				double distance = calculateDistanceToCheese(cheeseCoordinates,
+						neighbor,wind);
+				if (distance <= minDistance) {
+					minDistance = distance;
+					closestNeighbor = neighbor;
+					log.info("Closest neighbor:" + closestNeighbor);
+				}
 			}
+		} else {
+			log.info("***********WIND influence*******");
+			log.info("-----Player position------   " + c.x + " " + c.y);
+			int newX = 0; 
+			int newY=0;
+			
+			if( wind.x>0)	
+				newX =( int) (c.x+wind.x);
+			else newX=c.x;
+			
+			if (wind.y>0) 
+				newY= (int)( c.y+wind.y);
+			else newY=c.y;
+
+			log.info("-----------   WIND X " + newX + "----------  WIND Y " + newY);
+			
+			//closestNeighbor = new Coordinates((int)(closestNeighbor.x+wind.x), (int)(closestNeighbor.y+wind.y));
+			//if(field[newX][newY].equals(Field.floor)) {
+				log.info("JOJOJOJOOOOOOOOO -----------   X " + newX + "----------    Y " + newY);
+				closestNeighbor = new Coordinates(newX, newY);
+			/*} else {
+				for (Coordinates neighbor : neighbors) {
+					double distance = calculateDistanceToCheese(cheeseCoordinates,
+							neighbor,wind);
+					if (distance <= minDistance) {
+						minDistance = distance;
+						closestNeighbor = neighbor;
+						log.info("Closest neighbor:" + closestNeighbor);
+					}
+				}
+			}*/
+
 		}
+		wind.setWindToDefault();
 		return closestNeighbor;
 	}
 
@@ -151,37 +189,43 @@ public class GameLogicService {
 				.asList(new Coordinates[] { new Coordinates(x, y - 1),
 						new Coordinates(x, y + 1), new Coordinates(x - 1, y),
 						new Coordinates(x + 1, y) })
-				.stream()
-				.filter(neighbour -> {
-					if (neighbour.x < fields[0].length
-							&& neighbour.x >= 0
-							&& neighbour.y < fields.length
-							&& neighbour.y >= 0
-							&& !fields[neighbour.y][neighbour.x]
-									.equals(Field.wall)) {
-						return true;
-					}
-					return false;
-				}).collect(Collectors.toList());
+						.stream()
+						.filter(neighbour -> {
+							if (neighbour.x < fields[0].length
+									&& neighbour.x >= 0
+									&& neighbour.y < fields.length
+									&& neighbour.y >= 0
+									&& !fields[neighbour.y][neighbour.x]
+											.equals(Field.wall)) {
+								return true;
+							}
+							return false;
+						}).collect(Collectors.toList());
 	}
 
 	/**
 	 * Calculate the distance between {@code position} and {@code cheese}.
 	 */
 	private double calculateDistanceToCheese(Coordinates position,
-			Coordinates cheese) {
+			Coordinates cheese, Wind wind) {
+
+		//if(wind.x == 0 && wind.y == 0) {
+
 		double x = (cheese.x - position.x) * (cheese.x - position.x);
 		double y = (cheese.y - position.y) * (cheese.y - position.y);
 		return Math.sqrt(x + y);
+		//} else {
+		//	return 0.0;
+		//}
 	}
 
 	public static String getBoardPath(int lvl) {
 		return String.format("Map%d.txt", lvl);
 	}
 
-//	public static void setBOARD_PATH(String bOARD_PATH) {
-//		BOARD_PATH = bOARD_PATH;
-//	}
+	//	public static void setBOARD_PATH(String bOARD_PATH) {
+	//		BOARD_PATH = bOARD_PATH;
+	//	}
 
 	public Player checkCrash(Player player, Game game) {
 		log.debug("***check crash of player '{}'***", player.name());
@@ -210,7 +254,7 @@ public class GameLogicService {
 				.collect(Collectors.toList());
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}
-	 
+
 	public void moveRandomlyDifferentDirections(Player player, Game game, List<Coordinates> floorList) {
 		player.setState(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
