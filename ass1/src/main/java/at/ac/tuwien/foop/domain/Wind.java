@@ -30,9 +30,9 @@ public class Wind {
 	}
 	public static Wind fromCoordinates(double x, double y) {
 		//double angle = Math.atan2(x, -y);
-		//double strength = Math.sqrt(x*x + y*y);
+		double strength = Math.sqrt(x*x + y*y);
 		//return fromAngle(angle, strength);
-		return new Wind(0, 0, x, y);
+		return new Wind(0, strength, x, y);
 	}
 	
 	@JsonCreator
