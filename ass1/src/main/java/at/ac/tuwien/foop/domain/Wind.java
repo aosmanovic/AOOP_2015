@@ -28,11 +28,11 @@ public class Wind {
 		this.x = x;
 		this.y = y;
 	}
-	
 	public static Wind fromCoordinates(double x, double y) {
-		double angle = Math.atan2(x, -y);
-		double strength = Math.sqrt(x*x + y*y);
-		return fromAngle(angle, strength);
+		//double angle = Math.atan2(x, -y);
+		//double strength = Math.sqrt(x*x + y*y);
+		//return fromAngle(angle, strength);
+		return new Wind(0, 0, x, y);
 	}
 	
 	@JsonCreator
