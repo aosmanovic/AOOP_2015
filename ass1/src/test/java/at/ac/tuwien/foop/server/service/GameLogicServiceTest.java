@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.domain.Coordinates;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Wind;
 import at.ac.tuwien.foop.server.domain.BoardString;
 import at.ac.tuwien.foop.server.domain.Game;
 
 public class GameLogicServiceTest {
 
 	GameLogicService service = new GameLogicService();
+	private Wind noWind = Wind.fromCoordinates(0, 0);
 	private static Logger log = LoggerFactory.getLogger(GameLogicServiceTest.class);
 
 	@Test
@@ -29,7 +31,7 @@ public class GameLogicServiceTest {
 		game.join("Al");
 
 		Player actual = game.getPlayers().get(0);
-		service.movement(game);
+		service.movement(game, noWind);
 		Assert.assertEquals(new Coordinates(3, 1), game.getPlayer(actual.name()).coordinates());
 	}
 	
@@ -48,7 +50,7 @@ public class GameLogicServiceTest {
 		game.join("Al");
 
 		Player actual = game.getPlayers().get(0);
-		service.movement(game);
+		service.movement(game, noWind);
 		Assert.assertEquals(new Coordinates(4, 2), game.getPlayer(actual.name()).coordinates());
 	}
 	
@@ -67,7 +69,7 @@ public class GameLogicServiceTest {
 		game.join("Al");
 
 		Player actual = game.getPlayers().get(0);
-		service.movement(game);
+		service.movement(game, noWind);
 		Assert.assertEquals(new Coordinates(3, 1), game.getPlayer(actual.name()).coordinates());
 	}
 
@@ -86,12 +88,12 @@ public class GameLogicServiceTest {
 		game.join("Al");
 
 		Player actual = game.getPlayers().get(0);
-		service.movement(game);
-		service.movement(game);
+		service.movement(game, noWind);
+		service.movement(game, noWind);
 		
-		service.movement(game);
-		service.movement(game);
-		service.movement(game);
+		service.movement(game, noWind);
+		service.movement(game, noWind);
+		service.movement(game, noWind);
 		Assert.assertEquals(new Coordinates(3, 2), game.getPlayer(actual.name()).coordinates());
 	}
 }
