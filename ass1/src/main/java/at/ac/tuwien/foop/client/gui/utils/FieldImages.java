@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.userInterface.Views;
+package at.ac.tuwien.foop.client.gui.utils;
 
 import java.awt.Image;
 import java.io.IOException;

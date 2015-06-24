@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.userInterface.Views;
+package at.ac.tuwien.foop.client.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.DefaultCaret;
 
-import at.ac.tuwien.foop.client.RandomNameGenerator;
+import at.ac.tuwien.foop.client.gui.utils.RandomNameGenerator;
 
 public class StartFrame extends JFrame {
 

@@ -1,12 +1,12 @@
-package at.ac.tuwien.foop.client.userInterface.Controller;
+package at.ac.tuwien.foop.client.gui.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.NettyClient;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
-import at.ac.tuwien.foop.client.userInterface.Views.StartFrame;
+import at.ac.tuwien.foop.client.gui.view.StartFrame;
+import at.ac.tuwien.foop.client.network.NettyClient;
 
 public class StartController implements ConnectListener {
 

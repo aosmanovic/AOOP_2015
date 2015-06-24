@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.userInterface.Views;
+package at.ac.tuwien.foop.client.gui.utils;
 
 import java.awt.Color;
 
@@ -8,10 +8,8 @@ public class PlayerColor {
 	public final String colorName;
 
 	public PlayerColor(Color color, String colorName) {
-		super();
 		this.color = color;
 		this.colorName = colorName;
 	}
-
 }
 

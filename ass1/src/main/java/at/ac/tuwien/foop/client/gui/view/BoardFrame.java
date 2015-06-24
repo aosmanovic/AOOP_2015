@@ -1,17 +1,17 @@
-package at.ac.tuwien.foop.client.userInterface.Views;
-
-import javax.swing.JFrame;
+package at.ac.tuwien.foop.client.gui.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Map;
 
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 import at.ac.tuwien.foop.domain.Player;
 
 public class BoardFrame extends JFrame {

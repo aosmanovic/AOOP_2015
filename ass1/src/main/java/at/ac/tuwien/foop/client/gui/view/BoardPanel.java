@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.userInterface.Views;
+package at.ac.tuwien.foop.client.gui.view;
 
 import java.awt.Graphics;
 import java.util.HashMap;
@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.gui.utils.FieldImages;
+import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 import at.ac.tuwien.foop.domain.Board.Field;
 import at.ac.tuwien.foop.domain.Player;
 

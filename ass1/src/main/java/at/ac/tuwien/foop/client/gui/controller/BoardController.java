@@ -1,4 +1,4 @@
-package at.ac.tuwien.foop.client.userInterface.Controller;
+package at.ac.tuwien.foop.client.gui.controller;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
@@ -15,11 +15,11 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.events.NewPlayerEvent;
+import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
+import at.ac.tuwien.foop.client.gui.view.BoardFrame;
+import at.ac.tuwien.foop.client.gui.view.BoardPanel;
 import at.ac.tuwien.foop.client.service.GameCore;
 import at.ac.tuwien.foop.client.service.GameService;
-import at.ac.tuwien.foop.client.userInterface.Views.BoardFrame;
-import at.ac.tuwien.foop.client.userInterface.Views.BoardPanel;
-import at.ac.tuwien.foop.client.userInterface.Views.PlayerColor;
 import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.WindGust.Direction;
 

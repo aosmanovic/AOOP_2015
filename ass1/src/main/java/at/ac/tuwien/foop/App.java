@@ -3,7 +3,7 @@ package at.ac.tuwien.foop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import at.ac.tuwien.foop.client.userInterface.Controller.StartController;
+import at.ac.tuwien.foop.client.gui.controller.StartController;
 import at.ac.tuwien.foop.server.Server;
 
 public class App {
