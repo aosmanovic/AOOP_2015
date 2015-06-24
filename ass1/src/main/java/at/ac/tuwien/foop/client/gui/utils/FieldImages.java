@@ -1,16 +1,16 @@
 package at.ac.tuwien.foop.client.gui.utils;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
 
 public class FieldImages {
-
 	public static final int IMAGE_SIZE = 26;
-	private Image wall, path, cheese, mouse;
+	
+	private BufferedImage wall, path, cheese, mouse, compass, compassArrow;
 
 	public FieldImages() {
 		loadImages();
@@ -18,16 +18,13 @@ public class FieldImages {
 
 	private void loadImages() {
 		try {
-			wall = new ImageIcon(ImageIO.read(loadStream("wall.png")))
-			.getImage();
-			path = new ImageIcon(ImageIO.read(loadStream("path.jpg")))
-			.getImage();
-			cheese = new ImageIcon(ImageIO.read(loadStream("cheese.jpg")))
-			.getImage();
-			mouse = new ImageIcon(ImageIO.read(loadStream("mouse.png")))
-			.getImage();
+			wall = ImageIO.read(loadStream("wall.png"));
+			path = ImageIO.read(loadStream("path.jpg"));
+			cheese = ImageIO.read(loadStream("cheese.jpg"));
+			mouse = ImageIO.read(loadStream("mouse.png"));
+			compass = ImageIO.read(loadStream("compass_bg.png"));
+			compassArrow = ImageIO.read(loadStream("compass_arrow.png"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -38,22 +35,27 @@ public class FieldImages {
 	}
 
 	
-	public Image getMouse() {
+	public BufferedImage getMouse() {
 		return mouse;
 	}
 
-	public Image getPath() {
+	public BufferedImage getPath() {
 		return path;
 	}
 
-	public Image getWall() {
+	public BufferedImage getWall() {
 		return wall;
 	}
 
-	public Image getCheese() {
+	public BufferedImage getCheese() {
 		return cheese;
 	}
-	
-	
 
+	public BufferedImage getCompass() {
+		return compass;
+	}
+
+	public BufferedImage getCompassArrow() {
+		return compassArrow;
+	}
 }

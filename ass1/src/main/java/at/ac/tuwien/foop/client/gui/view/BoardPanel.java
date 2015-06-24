@@ -24,6 +24,7 @@ public class BoardPanel extends JPanel {
 	private static Map<String, PlayerColor> playercolor = new HashMap<>();
 
 	public BoardPanel() {
+		super();
 		images = new FieldImages();
 	}
 
