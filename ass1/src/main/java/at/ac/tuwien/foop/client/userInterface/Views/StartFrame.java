@@ -1,7 +1,9 @@
 package at.ac.tuwien.foop.client.userInterface.Views;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -13,30 +15,23 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.text.DefaultCaret;
 
 import at.ac.tuwien.foop.client.RandomNameGenerator;
-import at.ac.tuwien.foop.client.domain.Game;
 
 public class StartFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private Game game;
-
 	private JPanel pnlContent;
 	private JPanel pnlConnect;
-	private JPanel pnlJoinGame;
-	private JPanel pnlStartGame;
 
 	private JButton btnConnect;
-	private JButton btnJoinGame;
-	private JButton btnStartGame;
-	private JButton btnLeaveGame;
 
 	private JTextArea txtpnLog;
-	private JTextField jtfServerAddress;
-	private JTextField jtfPlayerName;
+	private JTextField tfServerAddress;
+	private JTextField tfPlayerName;
 
 	/**
 	 * Create the frame.
@@ -44,167 +39,81 @@ public class StartFrame extends JFrame {
 	public StartFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
+		setTitle("Mouse Labyrinth Game");
 
 		pnlContent = new JPanel(new BorderLayout(2, 2));
 		pnlContent.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		getContentPane().add(pnlContent, BorderLayout.CENTER);
-		pnlContent.setLayout(new BorderLayout(2, 2));
 
-		// TODO: somehow set an outer margin
-
-		// bottom panels
-		pnlConnect = prepareServerPanel();
-		pnlJoinGame = prepareJoinGamePanel();
-		pnlStartGame = prepareStartGamePanel();
-		pnlContent.add(pnlConnect, BorderLayout.SOUTH);
+		// control panels
+		pnlConnect = prepareConnectionPanel();
+		pnlContent.add(pnlConnect, BorderLayout.NORTH);
 
 		// log field
 		txtpnLog = new JTextArea();
 		txtpnLog.setEditable(false);
-		((DefaultCaret)txtpnLog.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		txtpnLog.setLineWrap(true);
+		txtpnLog.setWrapStyleWord(true);
+		((DefaultCaret) txtpnLog.getCaret())
+				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		pnlContent.add(new JScrollPane(txtpnLog), BorderLayout.CENTER);
-		printMessage("Welcome to the Mouse Labyrinth Game!\n\n");
+		printMessage("Welcome to the Mouse Labyrinth Game!\n\nA server was started in the background so you can play on localhost or you connect to a remote server.\nChoose a name and have fun :)!");
 	}
 
-	private JPanel prepareServerPanel() {
-		JPanel panel = new JPanel(new BorderLayout(2, 2));
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+	private JPanel prepareConnectionPanel() {
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
 
-		JLabel label = new JLabel("server address: ");
-		panel.add(label, BorderLayout.WEST);
+		panel.add(new JLabel("server address: ", SwingConstants.RIGHT),
+				gridBagPosition(0, 0, 0.3));
 
-		jtfServerAddress = new JTextField("localhost");
-		panel.add(jtfServerAddress, BorderLayout.CENTER);
+		tfServerAddress = new JTextField("localhost");
+		panel.add(tfServerAddress, gridBagPosition(1, 0, 0.7));
+
+		panel.add(new JLabel("player name: ", SwingConstants.RIGHT),
+				gridBagPosition(0, 1, 0.3));
+
+		tfPlayerName = new JTextField(RandomNameGenerator.name());
+		panel.add(tfPlayerName, gridBagPosition(1, 1, 0.7));
 
 		btnConnect = new JButton("connect");
 		btnConnect.addActionListener(o -> btnConnect.setEnabled(false));
-		panel.add(btnConnect, BorderLayout.EAST);
+		GridBagConstraints c = gridBagPosition(0, 2, 1);
+		c.gridwidth = 2;
+		panel.add(btnConnect, c);
 
 		return panel;
 	}
 
-	private JPanel prepareJoinGamePanel() {
-		JPanel panel = new JPanel(new BorderLayout(2, 2));
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-		JLabel label = new JLabel("player name: ");
-		panel.add(label, BorderLayout.WEST);
-
-		jtfPlayerName = new JTextField(RandomNameGenerator.name());
-		panel.add(jtfPlayerName, BorderLayout.CENTER);
-
-		btnJoinGame = new JButton("join");
-		btnJoinGame.addActionListener(e -> btnJoinGame.setEnabled(false));
-		panel.add(btnJoinGame, BorderLayout.EAST);
-		return panel;
-	}
-
-	private JPanel prepareStartGamePanel() {
-		JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 2, 0));
-		panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-
-		btnStartGame = new JButton("start");
-		btnStartGame.addActionListener(e -> btnStartGame.setEnabled(false));
-		panel.add(btnStartGame, BorderLayout.EAST);
-
-		btnLeaveGame = new JButton("disconnect");
-		btnLeaveGame.addActionListener(e -> showConnectPanel());
-		panel.add(btnLeaveGame, BorderLayout.EAST);
-		return panel;
-
+	private GridBagConstraints gridBagPosition(int x, int y, double weight) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = x;
+		c.gridy = y;
+		c.weightx = weight;
+		c.insets = new Insets(2, 2, 2, 2);
+		return c;
 	}
 
 	public void showFailure() {
+		printMessage("Could not connect to server!");
 		btnConnect.setEnabled(true);
 		JOptionPane.showMessageDialog(null, "Try to connect again...");
-	}
-
-	public void showAlreadyConnected() {
-		JOptionPane.showMessageDialog(null, "You are already connected...");
-	}
-
-	public void addJoinGameButtonListener(ActionListener ac) {
-		this.btnJoinGame.addActionListener(ac);
 	}
 
 	public void addConnectButtonListener(ActionListener ac) {
 		this.btnConnect.addActionListener(ac);
 	}
 
-	public void addDisconnectButtonListener(ActionListener ac) {
-		this.btnLeaveGame.addActionListener(ac);
-	}
-
-	public void addStartGameButtonListener(ActionListener ac) {
-		this.btnStartGame.addActionListener(ac);
-	}
-
-	public int countPlayers() {
-		int i = game == null ? 0 : game.getPlayers().size();
-		return i;
-	}
-
 	public String getServerAddress() {
-		return jtfServerAddress.getText();
+		return tfServerAddress.getText();
 	}
 
 	public String getPlayerName() {
-		return jtfPlayerName.getText();
-	}
-
-	public void showConnectPanel() {
-		btnConnect.setEnabled(true);
-
-		pnlContent.remove(pnlStartGame);
-		pnlContent.add(pnlConnect, BorderLayout.SOUTH);
-		pnlContent.validate();
-		pnlContent.repaint();
-	}
-
-	public void showJoinGamePanel() {
-		btnJoinGame.setEnabled(true);
-
-		pnlContent.remove(pnlConnect);
-		pnlContent.add(pnlJoinGame, BorderLayout.SOUTH);
-		pnlContent.validate();
-		pnlContent.repaint();
-	}
-
-	public void showStartGamePanel() {
-		btnStartGame.setEnabled(true);
-
-		pnlContent.remove(pnlJoinGame);
-		pnlContent.add(pnlStartGame, BorderLayout.SOUTH);
-		pnlContent.validate();
-		pnlContent.repaint();
+		return tfPlayerName.getText();
 	}
 
 	public void printMessage(String msg) {
 		txtpnLog.append(msg + "\n");
-	}
-
-	public void enableStartButton() {
-		btnJoinGame.setEnabled(true);
-	}
-
-	public void enableConnectButton() {
-		btnJoinGame.setEnabled(true);
-	}
-
-	public void setGame(Game game) {
-		this.game = game;
-	}
-
-	public int showGameOver(Game game) {
-		Object[] options = {"Go to next level","Leave the game"};
-		int answer = JOptionPane.showOptionDialog(null,
-				"The game is finished!\nThe winner of the game is: " + game.winner(),
-				"Game Over",
-				JOptionPane.DEFAULT_OPTION,
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				options[0]);
-		return answer;
 	}
 }

@@ -13,7 +13,7 @@ public class App {
 		log.info("start system");
 		new Server();
 		StartController sc = new StartController();
-		sc.showStartView();
+		sc.showStartFrame();
 	}
 
 	public static void main(String[] args) {
