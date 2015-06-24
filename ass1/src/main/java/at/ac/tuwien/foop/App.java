@@ -11,9 +11,9 @@ public class App {
 
 	public App() {
 		log.info("start system");
-		new Server();
 		StartController sc = new StartController();
 		sc.showStartFrame();
+		new Server().setServerReadyListener(sc);
 	}
 
 	public static void main(String[] args) {

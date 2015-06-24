@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.server.domain.Game;
 import at.ac.tuwien.foop.server.domain.Game.GameState;
+import at.ac.tuwien.foop.server.event.ServerReadyListener;
 import at.ac.tuwien.foop.server.network.NettyServer;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
@@ -20,7 +21,8 @@ public class Server {
 
 	public Server() {
 		log.debug("set up server!");
-		Game game = new Game(new GameLogicService().loadBoard(GameLogicService.getBoardPath(2)));
+		Game game = new Game(new GameLogicService().loadBoard(GameLogicService
+				.getBoardPath(2)));
 		server = new NettyServer(game);
 		new Thread(server).start();
 		timer = new Timer("gameLoop", true);
@@ -43,5 +45,9 @@ public class Server {
 				timer.cancel();
 			}
 		}
+	}
+
+	public void setServerReadyListener(ServerReadyListener l) {
+		server.addConnectListener(l);
 	}
 }

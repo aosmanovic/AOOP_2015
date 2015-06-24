@@ -57,7 +57,7 @@ public class StartFrame extends JFrame {
 		((DefaultCaret) txtpnLog.getCaret())
 				.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		pnlContent.add(new JScrollPane(txtpnLog), BorderLayout.CENTER);
-		printMessage("Welcome to the Mouse Labyrinth Game!\n\nA server was started in the background so you can play on localhost or you connect to a remote server.\nChoose a name and have fun :)\n\n!");
+		printMessage("Welcome to the Mouse Labyrinth Game!\n\nA server was started in the background so you can play on localhost or you connect to a remote server.\nChoose a name and have fun! :)\n\n");
 	}
 
 	private JPanel prepareConnectionPanel() {

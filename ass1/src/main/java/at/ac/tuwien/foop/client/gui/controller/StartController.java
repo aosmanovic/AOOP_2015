@@ -14,8 +14,9 @@ import at.ac.tuwien.foop.client.events.ConnectListener;
 import at.ac.tuwien.foop.client.gui.utils.FontStore;
 import at.ac.tuwien.foop.client.gui.view.StartFrame;
 import at.ac.tuwien.foop.client.network.NettyClient;
+import at.ac.tuwien.foop.server.event.ServerReadyListener;
 
-public class StartController implements ConnectListener {
+public class StartController implements ConnectListener, ServerReadyListener {
 
 	private static Logger log = LoggerFactory.getLogger(StartController.class);
 	private static final int DEFAULT_PORT = 20150;
@@ -48,20 +49,10 @@ public class StartController implements ConnectListener {
 		startFrame.setVisible(true);
 	}
 
-	@Override
-	public void onConnect(NettyClient client) {
-		boardController = new BoardController(game, client.getClientHandler());
-	}
-
-	@Override
-	public void onConnecitonFailure() {
-		startFrame.showFailure();
-	}
-
 	public void hideBoard() {
 		System.exit(0);
 	}
-
+	
 	private void setUIFont(Font font) {
 		{
 			Enumeration<Object> keys = UIManager.getDefaults().keys();
@@ -76,5 +67,25 @@ public class StartController implements ConnectListener {
 				}
 			}
 		}
+	}
+
+	@Override
+	public void onConnect(NettyClient client) {
+		boardController = new BoardController(game, client.getClientHandler());
+	}
+
+	@Override
+	public void onConnecitonFailure() {
+		startFrame.showFailure();
+	}
+
+	@Override
+	public void onReady() {
+		startFrame.printMessage("Server started on your computer. Use 'localhost' to connect!");
+	}
+
+	@Override
+	public void onFailure() {
+		startFrame.printMessage("ATTENTION: Could not spawn a server, maybe there is already one running on your computer!?");
 	}
 }
