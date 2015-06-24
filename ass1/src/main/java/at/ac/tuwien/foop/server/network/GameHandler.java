@@ -66,10 +66,9 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			JoinMessage jm = mapper.readValue(str, JoinMessage.class);
 			player = game.join(jm.name);
 			if (player != null) {
-				BoardString b = game.boardString();
-				ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
-						b.width, game.getPlayers()));
-//				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
+				//TODO: remove when mess with game over is cleaned up
+				sendBoard(ctx);
+				ctx.writeAndFlush(new JoinedMessage(game.getPlayers()));
 			} else {
 				ctx.writeAndFlush(new Message(Type.S_ALREADY_FULL));
 			}
@@ -95,12 +94,19 @@ public class GameHandler extends ChannelHandlerAdapter implements
 			ctx.writeAndFlush(new UnknownMessage(m.type.toString()));
 		}
 	}
+	
+	private void sendBoard(ChannelHandlerContext ctx) {
+		BoardString b = game.boardString();
+		ctx.writeAndFlush(new BoardMessage(UUID.randomUUID(), b.board,
+				b.width, game.getPlayers()));
+	}
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
 		super.channelActive(ctx);
 		channel = ctx.channel();
 		log.info("new client connected");
+		sendBoard(ctx);
 	}
 
 	@Override

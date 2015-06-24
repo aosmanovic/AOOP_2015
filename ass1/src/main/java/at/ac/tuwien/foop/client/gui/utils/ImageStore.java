@@ -6,13 +6,14 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-
-public class FieldImages {
+public class ImageStore {
 	public static final int IMAGE_SIZE = 26;
-	
+
+	private static ImageStore instance;
+
 	private BufferedImage wall, path, cheese, mouse, compass, compassArrow;
 
-	public FieldImages() {
+	private ImageStore() {
 		loadImages();
 	}
 
@@ -34,7 +35,6 @@ public class FieldImages {
 				.getResourceAsStream(path);
 	}
 
-	
 	public BufferedImage getMouse() {
 		return mouse;
 	}
@@ -57,5 +57,12 @@ public class FieldImages {
 
 	public BufferedImage getCompassArrow() {
 		return compassArrow;
+	}
+
+	public static ImageStore getInstance() {
+		if (instance == null) {
+			return new ImageStore();
+		}
+		return instance;
 	}
 }

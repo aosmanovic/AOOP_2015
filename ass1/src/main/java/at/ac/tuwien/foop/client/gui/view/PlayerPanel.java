@@ -8,14 +8,21 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class PlayerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
+	private static Logger log = LoggerFactory.getLogger(PlayerPanel.class);
 
 	private JPanel pnlSpectator;
 	private JPanel pnlPlayer;
 
 	public PlayerPanel() {
 		super();
+
+		log.debug("create player panel");
+
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
 		pnlPlayer = prepareListPanel();

@@ -1,10 +1,17 @@
 package at.ac.tuwien.foop.client.gui.controller;
 
+import java.awt.Font;
+import java.util.Enumeration;
+
+import javax.swing.UIManager;
+import javax.swing.plaf.FontUIResource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.events.ConnectListener;
+import at.ac.tuwien.foop.client.gui.utils.FontStore;
 import at.ac.tuwien.foop.client.gui.view.StartFrame;
 import at.ac.tuwien.foop.client.network.NettyClient;
 
@@ -15,10 +22,14 @@ public class StartController implements ConnectListener {
 
 	private Game game;
 	private StartFrame startFrame;
+	private BoardController boardController;
 
 	public StartController() {
-		startFrame = new StartFrame();
+		game = new Game();
 
+		setUIFont(FontStore.getInstance().getGameFont());
+		
+		startFrame = new StartFrame();
 		startFrame.addConnectButtonListener(e -> connect(
 				startFrame.getServerAddress(), DEFAULT_PORT));
 	}
@@ -39,8 +50,7 @@ public class StartController implements ConnectListener {
 
 	@Override
 	public void onConnect(NettyClient client) {
-		// TODO: we probably need a member of it so we can listen to it when the player left a game...
-		new BoardController().showBoardFrame();
+		boardController = new BoardController(game, client.getClientHandler());
 	}
 
 	@Override
@@ -50,5 +60,21 @@ public class StartController implements ConnectListener {
 
 	public void hideBoard() {
 		System.exit(0);
+	}
+
+	private void setUIFont(Font font) {
+		{
+			Enumeration<Object> keys = UIManager.getDefaults().keys();
+			while (keys.hasMoreElements()) {
+				Object key = keys.nextElement();
+				Object value = UIManager.get(key);
+				if (value instanceof FontUIResource) {
+					UIManager.put(
+							key,
+							new FontUIResource(font.deriveFont(new Float(
+									((FontUIResource) value).getSize()))));
+				}
+			}
+		}
 	}
 }

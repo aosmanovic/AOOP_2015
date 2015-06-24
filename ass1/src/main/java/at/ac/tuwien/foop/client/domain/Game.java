@@ -10,15 +10,21 @@ import at.ac.tuwien.foop.client.events.NewPlayerEvent;
 import at.ac.tuwien.foop.client.events.RemovePlayerEvent;
 import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.Player;
+import at.ac.tuwien.foop.domain.Wind;
 
 public class Game {
 	private CopyOnWriteArrayList<GameEventListener> listeners = new CopyOnWriteArrayList<>();
 
 	private boolean running = false;
 	private boolean joined = false;
-	private List<Player> players = new ArrayList<>();
+	private List<ClientPlayer> players = new ArrayList<>();
 	private Board board;
+	private Wind wind;
 	private String winner = "";
+
+	public Game() {
+		wind = Wind.fromAngle(0, 0);
+	}
 
 	public void board(Board board) {
 		this.board = board;
@@ -61,12 +67,13 @@ public class Game {
 		return running;
 	}
 
-	public void update(List<Player> players) {
+	public void update(List<ClientPlayer> players, Wind wind) {
 		this.players = players;
+		this.wind = wind;
 		fireGameEvent(new GameEvent(GameEvent.Type.UPDATE));
 	}
 
-	public void addPlayer(Player player) {
+	public void addPlayer(ClientPlayer player) {
 		if (players.stream().anyMatch(p -> p.equals(player)))
 			return;
 		players.add(player);
@@ -75,23 +82,28 @@ public class Game {
 
 	public void removePlayer(Player player) {
 		players.remove(player);
-		listeners.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
+		listeners
+				.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
 	}
 
-	public List<Player> getPlayers() {
+	public List<ClientPlayer> getPlayers() {
 		return players;
 	}
 
 	public void setBoard(Board board) {
-		if (running) {
-			throw new RuntimeException("can't set board on a running game!");
-		}
+//		if (running) {
+//			throw new RuntimeException("can't set board on a running game!");
+//		}
 		this.board = board;
 		fireGameEvent(new GameEvent(GameEvent.Type.BOARD));
 	}
 
 	public Board getBoard() {
 		return board;
+	}
+
+	public Wind getWind() {
+		return wind;
 	}
 
 	public boolean joined() {

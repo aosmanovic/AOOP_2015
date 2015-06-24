@@ -1,5 +1,6 @@
 package at.ac.tuwien.foop.client.gui.view;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
@@ -9,19 +10,29 @@ import java.awt.image.BufferedImage;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import at.ac.tuwien.foop.client.gui.utils.FieldImages;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import at.ac.tuwien.foop.client.gui.utils.ImageStore;
 import at.ac.tuwien.foop.domain.Wind;
 
 public class CompassPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
+	private static Logger log = LoggerFactory.getLogger(CompassPanel.class);
 
 	private Wind wind;
-	private FieldImages images;
+	private ImageStore images;
 
-	public CompassPanel(Wind wind, FieldImages images) {
+	public CompassPanel(Wind wind) {
 		super();
+
+		log.debug("create compass panel");
+
 		this.wind = wind;
-		this.images = images;
+		this.images = ImageStore.getInstance();
+		// add(new JLabel(new ImageIcon(images.getCompass())));
+		setPreferredSize(new Dimension(images.getCompass().getWidth(), images
+				.getCompass().getWidth()));
 	}
 
 	@Override
@@ -47,8 +58,7 @@ public class CompassPanel extends JPanel {
 	// TODO: remove when tested
 	public static void main(String args[]) {
 		JFrame frame = new JFrame("test");
-		CompassPanel panel = new CompassPanel(Wind.fromCoordinates(1.5, 3),
-				new FieldImages());
+		CompassPanel panel = new CompassPanel(Wind.fromCoordinates(1.5, 3));
 		frame.add(panel);
 		frame.setBounds(10, 10, 300, 300);
 		frame.setVisible(true);
