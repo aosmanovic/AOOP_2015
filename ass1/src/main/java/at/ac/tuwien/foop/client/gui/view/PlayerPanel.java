@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import jdk.nashorn.internal.ir.annotations.Immutable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +44,6 @@ public class PlayerPanel extends JPanel {
 	public void setPlayer(List<ClientPlayer> players) {
 		pnlPlayer.removeAll();
 		pnlSpectator.removeAll();
-		System.out.println(players.size());
 		new ArrayList<>(players).forEach(p -> {
 			if (p.active()) {
 				pnlPlayer.add(new JLabel("   " + p.name()));

@@ -150,8 +150,9 @@ public class BoardController implements GameEventListener, KeyListener {
 		} else {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				if (!game.joined()) {
-					// TODO: do not send any names!
 					core.join();
+				} else {
+					core.start();
 				}
 			}
 		}

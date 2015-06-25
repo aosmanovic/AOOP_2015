@@ -14,7 +14,6 @@ import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.gui.utils.ImageStore;
 import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 import at.ac.tuwien.foop.domain.Board.Field;
-import at.ac.tuwien.foop.domain.Player;
 
 public class BoardPanel extends JPanel {
 	private static Logger log = LoggerFactory.getLogger(BoardPanel.class);

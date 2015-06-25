@@ -46,6 +46,10 @@ public class GameLogicService {
 		log.debug("***calculate movement***");
 
 		for (Player player : game.getPlayers()) {
+			if (!player.active()) {
+				continue;
+			}
+			
 			log.info("Position of the mouse '{}': {}", player.name(), player.coordinates());
 
 			// get neighbors with paths
@@ -93,7 +97,6 @@ public class GameLogicService {
 			floorList = floorList.stream()
 					.filter(z -> !z.equals(player.lastCoordinates()))
 					.collect(Collectors.toList());
-
 			// calculate next neighbor considering the wind
 			Coordinates nextNeighbor = calculateNextNeighbor(floorList,
 					cheeseCoordinates, wind, game.board().fields(), player.coordinates());

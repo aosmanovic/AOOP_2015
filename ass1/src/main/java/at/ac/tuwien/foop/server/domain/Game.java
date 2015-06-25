@@ -19,7 +19,6 @@ import at.ac.tuwien.foop.server.event.GameEvent;
 import at.ac.tuwien.foop.server.event.GameEvent.Type;
 import at.ac.tuwien.foop.server.event.GameEventListener;
 import at.ac.tuwien.foop.server.event.GameOverEvent;
-import at.ac.tuwien.foop.server.event.NewPlayerEvent;
 import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Game {
@@ -125,33 +124,36 @@ public class Game {
 	 * 
 	 * @return a player if joined, null otherwise
 	 */
-	public synchronized boolean join(Player p) {
+	public boolean join(Player p) {
 		Coordinates c = findFreeStartingCoordinates();
 		if (c == null) {
 			return false;
 		}
-
-		players.remove(p);
-		players.add(new Player(p.name(), c, null, State.notCrazy, true));
-
+		synchronized (players) {
+			players.remove(p);
+			players.add(new Player(p.name(), c, null, State.notCrazy, true));
+		}
 		return true;
 	}
 
 	private Coordinates findFreeStartingCoordinates() {
-		return board
-				.startCoordinates()
-				.stream()
-				.filter(c -> !players.stream().anyMatch(
-						p -> p.coordinates().equals(c))).findFirst()
-				.orElse(null);
+		synchronized (players) {
+			return board
+					.startCoordinates()
+					.stream()
+					.filter(c -> !players.stream().anyMatch(
+							p -> p.coordinates().equals(c))).findFirst()
+					.orElse(null);
+		}
 	}
 
 	public void leave(Player p) {
-		// players.remove(p);
-		players.remove(p);
-		players.add(new Player(p.name(), p.coordinates(), null, State.notCrazy,
-				false));
+		synchronized (p) {
 
+			players.remove(p);
+			players.add(new Player(p.name(), p.coordinates(), null,
+					State.notCrazy, false));
+		}
 		// TODO: filter stream for a check...
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
@@ -188,35 +190,43 @@ public class Game {
 	}
 
 	public List<Player> getPlayers() {
-		return players;
+		synchronized (players) {
+			return players;
+		}
 	}
 
 	public void movePlayer(String name, Coordinates coordinates) {
-		Player player = getPlayer(name);
+		synchronized (players) {
 
-		log.debug("Move player '{}' to {}", name, coordinates);
-		int i = 0;
-		for (Player p : players) {
-			if (p.name().equals(name)) {
-				player = p.moveTo(coordinates.x, coordinates.y,
-						p.coordinates(), p.state());
-				players.set(i, player);
-				break;
+			Player player = getPlayer(name);
+
+			log.debug("Move player '{}' to {}", name, coordinates);
+			int i = 0;
+			for (Player p : players) {
+				if (p.name().equals(name)) {
+					player = p.moveTo(coordinates.x, coordinates.y,
+							p.coordinates(), p.state());
+					players.set(i, player);
+					break;
+				}
+				i++;
 			}
-			i++;
-		}
 
-		// 2 mouses crash
-		Player other = service.checkCrash(player, this);
-		if (other != null) {
-			player.state(State.crash);
-			other.state(State.crash);
+			// 2 mouses crash
+			Player other = service.checkCrash(player, this);
+			if (other != null) {
+				player.state(State.crash);
+				other.state(State.crash);
+			}
 		}
 	}
 
 	public Player getPlayer(String name) {
-		return players.stream().filter(e -> e.name().equals(name)).findFirst()
-				.orElseThrow(IllegalArgumentException::new);
+		synchronized (players) {
+
+			return players.stream().filter(e -> e.name().equals(name))
+					.findFirst().orElseThrow(IllegalArgumentException::new);
+		}
 	}
 
 	public GameState state() {
@@ -241,18 +251,24 @@ public class Game {
 	 * @param name
 	 */
 	public Player newSpectator(String name) {
-		if (players.stream().anyMatch(p -> p.name().equals(name))) {
-			return null;
+		synchronized (players) {
+
+			if (players.stream().anyMatch(p -> p.name().equals(name))) {
+				return null;
+			}
+			Player p = new Player(name, new Coordinates(0, 0), null,
+					State.notCrazy, false);
+			players.add(p);
+			// listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
+
+			return p;
 		}
-		Player p = new Player(name, new Coordinates(0, 0), null,
-				State.notCrazy, false);
-		players.add(p);
-		// listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
-		return p;
 	}
 
 	public void removePlayer(Player player) {
-		players.remove(player);
+		synchronized (player) {
+			players.remove(player);
+		}
 	}
 
 }
