@@ -102,7 +102,11 @@ public class StartFrame extends JFrame {
 	}
 
 	public void addConnectButtonListener(ActionListener ac) {
-		this.btnConnect.addActionListener(ac);
+		btnConnect.addActionListener(ac);
+	}
+	
+	public void enableConnectButton() {
+		btnConnect.setEnabled(true);
 	}
 
 	public String getServerAddress() {

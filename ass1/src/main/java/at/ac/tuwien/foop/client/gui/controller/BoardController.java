@@ -2,16 +2,18 @@ package at.ac.tuwien.foop.client.gui.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.Game;
+import at.ac.tuwien.foop.client.events.BoardControllerListener;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.events.NewPlayerEvent;
-import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 import at.ac.tuwien.foop.client.gui.view.BoardFrame;
 import at.ac.tuwien.foop.client.gui.view.BoardPanel;
 import at.ac.tuwien.foop.client.gui.view.CompassPanel;
@@ -35,6 +37,8 @@ public class BoardController implements GameEventListener, KeyListener {
 	private PlayerPanel playerPanel;
 	private CompassPanel compassPanel;
 
+	private List<BoardControllerListener> listeners = new ArrayList<>();
+
 	public BoardController(Game game, GameCore core) {
 		log.debug("create board controller");
 
@@ -56,7 +60,7 @@ public class BoardController implements GameEventListener, KeyListener {
 		// TODO: remove after tests
 		messagePanel.setTopMessage("- SPECTATOR MODE -");
 		messagePanel
-				.setBottomMessage("- press ENTER to join or ESC to leave -");
+				.setBottomMessage("- press ENTER to join or ESC to disconnect -");
 	}
 
 	@Override
@@ -77,6 +81,9 @@ public class BoardController implements GameEventListener, KeyListener {
 			// boardFrame.setLabel(game, map);
 			// showBoard();
 		} else if (e.type == GameEvent.Type.JOIN) {
+			messagePanel
+					.setBottomMessage("- press SPACE to start the game or ESC to leave -");
+			messagePanel.setTopMessage("- ready to play!? -");
 			// setColor();
 			// startFrame.showStartGamePanel();
 		} else if (e.type == GameEvent.Type.OVER) {
@@ -137,23 +144,21 @@ public class BoardController implements GameEventListener, KeyListener {
 			} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 				service.sendWind(game, core, new WindGust(Direction.EAST, 1));
 			}
-		}
-
-		// join & leave
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			if (!game.joined() && !game.running()) {
-				core.join("not a real name");
+		} else {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if (!game.joined()) {
+					// TODO: do not send any names!
+					core.join("not a real name");
+				}
 			}
-		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+		}
+		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (game.joined()) {
 				core.leave();
 			} else {
-				// TODO: define it ESC means leave the running game or close the
-				// program
-				// TODO: will not work because of the onUpdate(Board) -> will
-				// show it again
-				// boardPanel.setVisible(false);
-				// TODO: inform other controller (with a event) that im done!
+				game.removeGameEventListener(this);
+				listeners.forEach(l -> l.onDisconnectRequest());
+				boardFrame.dispose();
 			}
 		}
 	}
@@ -171,5 +176,9 @@ public class BoardController implements GameEventListener, KeyListener {
 		boardFrame.pack();
 		boardFrame.setVisible(true);
 		boardFrame.setLocationRelativeTo(null);
+	}
+
+	public void addBoardControllerListener(BoardControllerListener listener) {
+		listeners.add(listener);
 	}
 }
