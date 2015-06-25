@@ -114,7 +114,7 @@ public class Game {
 
 		// call movement method here
 		service.movement(this, wind);
-		wind = Wind.fromAngle(wind.angle, Math.max(wind.strength - Wind.MAX_STRENGTH, 0));
+		wind = Wind.fromAngle(wind.angle, Math.max(wind.strength - (Wind.MAX_STRENGTH / 2), 0));
 
 		sendUpdate();
 	}
