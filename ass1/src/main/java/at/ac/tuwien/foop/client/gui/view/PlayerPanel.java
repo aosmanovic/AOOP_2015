@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import at.ac.tuwien.foop.client.domain.ClientPlayer;
+import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 
 public class PlayerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -18,6 +19,7 @@ public class PlayerPanel extends JPanel {
 
 	private JPanel pnlSpectator;
 	private JPanel pnlPlayer;
+	private PlayerColor playerColor;
 
 	public PlayerPanel() {
 		super();
@@ -33,6 +35,8 @@ public class PlayerPanel extends JPanel {
 		add(pnlPlayer);
 		add(new JLabel("Spectators"));
 		add(pnlSpectator);
+		
+		playerColor = PlayerColor.getInstance();
 	}
 
 	private JPanel prepareListPanel() {
@@ -45,10 +49,12 @@ public class PlayerPanel extends JPanel {
 		pnlPlayer.removeAll();
 		pnlSpectator.removeAll();
 		new ArrayList<>(players).forEach(p -> {
+			JLabel label = new JLabel("   " + p.name());
+			label.setForeground(playerColor.color(p.color()));
 			if (p.active()) {
-				pnlPlayer.add(new JLabel("   " + p.name()));
+				pnlPlayer.add(label);
 			} else {
-				pnlSpectator.add(new JLabel("   " + p.name()));
+				pnlSpectator.add(label);
 			}
 			;
 		});

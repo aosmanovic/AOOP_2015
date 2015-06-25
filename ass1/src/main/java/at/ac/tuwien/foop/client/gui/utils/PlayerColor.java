@@ -13,7 +13,7 @@ public class PlayerColor {
 	private ArrayList<String> colorList = new ArrayList<>();
 	private int count = 0;
 
-	public PlayerColor() {
+	private PlayerColor() {
 		colors.put("red", Color.RED);
 		colors.put("green", Color.GREEN);
 		colors.put("blue", Color.BLUE);
@@ -31,7 +31,7 @@ public class PlayerColor {
 
 	public static PlayerColor getInstance() {
 		if (instance == null) {
-			return new PlayerColor();
+			instance = new PlayerColor();
 		}
 		return instance;
 	}

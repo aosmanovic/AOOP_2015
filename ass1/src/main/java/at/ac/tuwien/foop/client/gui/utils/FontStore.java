@@ -37,7 +37,7 @@ public class FontStore {
 
 	public static FontStore getInstance() {
 		if (instance == null) {
-			return new FontStore();
+			instance = new FontStore();
 		}
 		return instance;
 	}

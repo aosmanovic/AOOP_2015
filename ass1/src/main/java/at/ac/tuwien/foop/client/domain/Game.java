@@ -7,9 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import at.ac.tuwien.foop.client.events.GameEvent;
 import at.ac.tuwien.foop.client.events.GameEventListener;
 import at.ac.tuwien.foop.client.events.NewPlayerEvent;
-import at.ac.tuwien.foop.client.events.RemovePlayerEvent;
 import at.ac.tuwien.foop.domain.Board;
-import at.ac.tuwien.foop.domain.Player;
 import at.ac.tuwien.foop.domain.Wind;
 
 public class Game {
