@@ -72,9 +72,4 @@ public class Wind {
 		return "Wind [angle=" + angle + ", strength=" + strength + ", x=" + x
 				+ ", y=" + y + "]";
 	}
-
-	public void setWindToDefault() {
-		// TODO Auto-generated method stub
-		this.x=0; this.y=0;
-	}
 }

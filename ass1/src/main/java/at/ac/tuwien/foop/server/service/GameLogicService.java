@@ -183,11 +183,8 @@ public class GameLogicService {
 
 				log.info("Wind changed direction");
 				nextNeighbor = new Coordinates(newX, newY);
-				wind.setWindToDefault();
-
 			} else 
 				nextNeighbor = calculateClosestNeighborToCheese(neighbors,cheeseCoordinates);		
-
 		}
 		return nextNeighbor;
 	}
