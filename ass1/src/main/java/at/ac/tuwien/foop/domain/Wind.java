@@ -36,7 +36,7 @@ public class Wind {
 	}
 	
 	@JsonCreator
-	public static Wind fromAngle(@JsonProperty("angle") double angle, @JsonProperty("strnegth") double strength) {
+	public static Wind fromAngle(@JsonProperty("angle") double angle, @JsonProperty("strength") double strength) {
 		Validate.isTrue(strength >= 0);
 
 		strength = Math.min(MAX_STRENGTH, strength);
