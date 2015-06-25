@@ -3,6 +3,7 @@ package at.ac.tuwien.foop.server.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
@@ -35,13 +36,13 @@ public class Game {
 	private List<Player> players = new ArrayList<>();
 	private BoardString boardString;
 	private Board board;
-	private Wind wind = Wind.fromCoordinates(0, 0);
-	private static int levelCounter = 0;
+	private Wind wind;
+	private int levelCounter = 0;
 
 	private GameLogicService service = new GameLogicService();
 
 	public Game(BoardString bs) {
-		setBoard(bs);
+		reset(bs);
 	}
 
 	public void addGameEventListener(GameEventListener listener) {
@@ -114,7 +115,8 @@ public class Game {
 
 		// call movement method here
 		service.movement(this, wind);
-		wind = Wind.fromAngle(wind.angle, Math.max(wind.strength - (Wind.MAX_STRENGTH / 2), 0));
+		wind = Wind.fromAngle(wind.angle,
+				Math.max(wind.strength - (Wind.MAX_STRENGTH / 2), 0));
 
 		sendUpdate();
 	}
@@ -238,12 +240,12 @@ public class Game {
 		return wind;
 	}
 
-	public static int getLevelCounter() {
+	public int level() {
 		return levelCounter;
 	}
 
-	public static void setLevelCounter(int levelCounter) {
-		Game.levelCounter = levelCounter;
+	public void level(int levelCounter) {
+		this.levelCounter = levelCounter;
 	}
 
 	/**
@@ -260,7 +262,6 @@ public class Game {
 			Player p = new Player(name, new Coordinates(0, 0), null,
 					State.notCrazy, false);
 			players.add(p);
-			// listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
 
 			return p;
 		}
@@ -272,4 +273,18 @@ public class Game {
 		}
 	}
 
+	public void reset(BoardString bs) {
+		wind = Wind.fromCoordinates(0, 0);
+		state = GameState.ready;
+		setBoard(bs);
+
+		synchronized (players) {
+			players = players
+					.stream()
+					.map(p -> new Player(p.name(), new Coordinates(0, 0), null,
+							State.notCrazy, false))
+					.collect(Collectors.toList());
+		}
+		listeners.forEach(e -> e.onUpdate(new GameEvent(GameEvent.Type.NEW_LEVEL)));
+	}
 }

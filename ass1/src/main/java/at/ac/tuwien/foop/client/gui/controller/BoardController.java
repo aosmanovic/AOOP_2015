@@ -56,67 +56,38 @@ public class BoardController implements GameEventListener, KeyListener {
 
 		game.addGameEventListener(this);
 
-		// TODO: remove after tests
 		spectatorMode();
 	}
 
+	// game events
+	
 	@Override
 	public void onUpdate(GameEvent e) {
 		if (e.type == GameEvent.Type.UPDATE) {
 			boardPanel.repaint();
-			playerPanel.setPlayer(game.getPlayers());
+			playerPanel.players(game.getPlayers());
+			compassPanel.wind(game.getWind());
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardPanel.setGame(game);
 			if (!boardFrame.isVisible()) {
 				showBoardFrame();
 			}
-			// game.join();
+			boardFrame.pack();
 		} else if (e.type == GameEvent.Type.START) {
-			// Map<String,PlayerColor> map = assignPlayerColor();
-			// boardFrame.getBoard().setColor(map);
-			// boardFrame.setLabel(game, map);
-			// showBoard();
+			gameMode();
 		} else if (e.type == GameEvent.Type.JOIN) {
 			joindeMode();
 		} else if (e.type == GameEvent.Type.OVER) {
-			// nextGame = new Game();
-			// game.setBoard(newGame.getBoard());
-			// int gameover = startFrame.showGameOver(game);
-			// if (gameover == 0) {
-			// log.info("LOAD new level");
-			// service.changeLevel(core);
-			// // boardFrame.getBoard().setGame(game);
-			// } else if (gameover == 1) {
-			// log.info("Leave");
-			// service.leave(game, core);
-			// // TODO: close board and inform controller (that in turn informs
-			// the start-controller?!)
-			// }
+			gameOverMode();
+			game.leave();
 		}
 	}
+	
+	@Override
+	public void onUpdate(NewPlayerEvent e) {
+	}
 
-	// private void setColor() {
-	// Map<String,PlayerColor> map = assignPlayerColor();
-	// boardFrame.getBoard().setColor(map);
-	// boardFrame.setLabel(game, map);
-	// }
-	// private Map<String, PlayerColor> assignPlayerColor() {
-	// log.debug("new player, update colors");
-	// log.info("PLAYERS :" + game.getPlayers());
-	//
-	// Map<String, PlayerColor> playercolor = new HashMap<String,
-	// PlayerColor>();
-	// List<PlayerColor> colors = new ArrayList<>();
-	// colors.add(new PlayerColor(Color.RED, "Red"));
-	// colors.add(new PlayerColor(Color.BLUE, "Blue"));
-	// colors.add(new PlayerColor(Color.GREEN, "Green"));
-	//
-	// for (int i = 0; i < game.getPlayers().size(); i++) {
-	// playercolor.put(game.getPlayers().get(i).name(),
-	// colors.get(i % colors.size()));
-	// }
-	// return playercolor;
-	// }
+	// messages
 
 	private void spectatorMode() {
 		messagePanel.setTopMessage("- SPECTATOR MODE -");
@@ -125,15 +96,25 @@ public class BoardController implements GameEventListener, KeyListener {
 	}
 
 	private void joindeMode() {
-		messagePanel
-				.setBottomMessage("- press SPACE to start the game or ESC to leave -");
 		messagePanel.setTopMessage("- ready to play!? -");
+		messagePanel
+				.setBottomMessage("- press ENTER to start the game or ESC to leave -");
 	}
 
-	@Override
-	public void onUpdate(NewPlayerEvent e) {
+	private void gameOverMode() {
+		messagePanel.setTopMessage(String.format("- %s has won!!! -",
+				game.winner()));
+		messagePanel
+				.setBottomMessage("- press ENTER to join or ESC to disconnect -");
+	}
+	
+	private void gameMode() {
+		messagePanel.setTopMessage("");
+		messagePanel.setBottomMessage("");
 	}
 
+	// inputs
+	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// wind

@@ -14,7 +14,7 @@ import at.ac.tuwien.foop.server.service.GameLogicService;
 
 public class Server {
 	private static Logger log = LoggerFactory.getLogger(Server.class);
-	private static final int LOOP_DELAY = 1000;
+	private static final int LOOP_DELAY = 500;
 
 	private NettyServer server;
 	private Timer timer;
@@ -22,7 +22,7 @@ public class Server {
 	public Server() {
 		log.debug("set up server!");
 		Game game = new Game(new GameLogicService().loadBoard(GameLogicService
-				.getBoardPath(2)));
+				.getBoardPath(0)));
 		server = new NettyServer(game);
 		new Thread(server).start();
 		timer = new Timer("gameLoop", true);
@@ -41,9 +41,6 @@ public class Server {
 		public void run() {
 			if (game.state() == GameState.running) {
 				game.next();
-//			} else if (game.state() == GameState.over) {
-//				timer.cancel();
-//			}
 			} else {
 				game.sendUpdate();
 			}

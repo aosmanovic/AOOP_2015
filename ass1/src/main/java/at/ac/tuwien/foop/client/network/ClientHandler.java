@@ -61,26 +61,37 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		if (m.type == Type.S_PONG) {
 			log.info("yay, got a pong!");
 		} else if (m.type == Type.S_NEWPLAYER) {
-			game.addPlayer(new ClientPlayer(mapper.readValue(str, NewPlayerMessage.class).player));
+			game.addPlayer(new ClientPlayer(mapper.readValue(str,
+					NewPlayerMessage.class).player));
 		} else if (m.type == Type.S_REMOVEPLAYER) {
-			// TODO: not needed, as update replaces players anyway, can be used to show a message to the user...
-//			game.removePlayer(mapper.readValue(str, RemovePlayerMessage.class).player);
+			// TODO: not needed, as update replaces players anyway, can be used
+			// to show a message to the user...
+			// game.removePlayer(mapper.readValue(str,
+			// RemovePlayerMessage.class).player);
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);
-			game.setBoard(Board.createBoard(boardMessage.fields,
-					boardMessage.width));
-			boardMessage.list.forEach(p -> game.addPlayer(new ClientPlayer(p)));
+			Board board = Board.createBoard(boardMessage.fields,
+					boardMessage.width);
+			if ("".equals(game.winner())) {
+				game.setBoard(board);
+			} else {
+				game.resetGame(board);
+			}
 		} else if (m.type == Type.S_UPDATE) {
-			UpdateMessage updateMessage = mapper.readValue(str, UpdateMessage.class);
-			game.update(updateMessage.players.stream().map(p -> new ClientPlayer(p)).collect(Collectors.toList()), updateMessage.wind);
+			UpdateMessage updateMessage = mapper.readValue(str,
+					UpdateMessage.class);
+			game.update(
+					updateMessage.players.stream()
+							.map(p -> new ClientPlayer(p))
+							.collect(Collectors.toList()), updateMessage.wind);
 		} else if (m.type == Type.S_JOINED) {
 			game.join();
 			// TODO: remove additional data from joined message!
-			
-			//JoinedMessage joinedMessage = mapper.readValue(str,
-				//	JoinedMessage.class);
-			//joinedMessage.players.forEach(p -> game.addPlayer(p));
+
+			// JoinedMessage joinedMessage = mapper.readValue(str,
+			// JoinedMessage.class);
+			// joinedMessage.players.forEach(p -> game.addPlayer(p));
 		} else if (m.type == Type.S_ALREADY_FULL) {
 			log.debug("game already full");
 		} else if (m.type == Type.S_START) {
@@ -92,14 +103,13 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			GameOverMessage gameOverMessage = mapper.readValue(str,
 					GameOverMessage.class);
 			game.over(gameOverMessage.player.name());
-			//game.start(); // TO DO Get board map from server, it is null !!!
-			//BoardMessage boardMessage = mapper.readValue(str,
-					//BoardMessage.class);
-			//game.setBoard(Board.createBoard(boardMessage.fields,
-					//boardMessage.width));
-			
-		} 
-		else {
+			// game.start(); // TO DO Get board map from server, it is null !!!
+			// BoardMessage boardMessage = mapper.readValue(str,
+			// BoardMessage.class);
+			// game.setBoard(Board.createBoard(boardMessage.fields,
+			// boardMessage.width));
+
+		} else {
 			log.warn("unknown message");
 		}
 	}
@@ -117,7 +127,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	public void join() {
 		channel.writeAndFlush(new Message(Type.C_JOIN));
 	}
-	
+
 	@Override
 	public void leave() {
 		channel.writeAndFlush(new Message(Type.C_LEAVE));
@@ -150,7 +160,7 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	@Override
 	public void newLevel() {
 		channel.writeAndFlush(new Message(Type.C_JOIN));
-		
+
 	}
 
 	@Override

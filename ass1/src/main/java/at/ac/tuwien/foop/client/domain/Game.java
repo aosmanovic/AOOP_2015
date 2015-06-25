@@ -17,7 +17,7 @@ public class Game {
 	private boolean joined = false;
 	private List<ClientPlayer> players = new ArrayList<>();
 	private Board board;
-	private Wind wind;
+	private Wind wind = null;
 	private String winner = "";
 
 	public Game() {
@@ -82,20 +82,11 @@ public class Game {
 		listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(player.name())));
 	}
 
-//	public void removePlayer(Player player) {
-//		players.remove(player);
-//		listeners
-//				.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
-//	}
-//
 	public List<ClientPlayer> getPlayers() {
 		return players;
 	}
 
 	public void setBoard(Board board) {
-//		if (running) {
-//			throw new RuntimeException("can't set board on a running game!");
-//		}
 		this.board = board;
 		fireGameEvent(new GameEvent(GameEvent.Type.BOARD));
 	}
@@ -114,6 +105,14 @@ public class Game {
 
 	public String winner() {
 		return winner;
+	}
+	
+	public void resetGame(Board board) {
+		running = false;
+		joined = false;
+		wind = Wind.fromAngle(0, 0);
+		winner = "";
+		setBoard(board);
 	}
 
 }

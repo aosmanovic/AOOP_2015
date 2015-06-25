@@ -45,7 +45,7 @@ public class PlayerPanel extends JPanel {
 		return p;
 	}
 
-	public void setPlayer(List<ClientPlayer> players) {
+	public void players(List<ClientPlayer> players) {
 		pnlPlayer.removeAll();
 		pnlSpectator.removeAll();
 		new ArrayList<>(players).forEach(p -> {
