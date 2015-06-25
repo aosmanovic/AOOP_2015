@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import at.ac.tuwien.foop.client.domain.ClientPlayer;
 import at.ac.tuwien.foop.client.domain.Game;
 import at.ac.tuwien.foop.client.gui.utils.ImageStore;
 import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
@@ -62,11 +63,14 @@ public class BoardPanel extends JPanel {
 			}
 		}
 
-		for (Player p : game.getPlayers()) {
+		for (ClientPlayer p : game.getPlayers()) {
+			if (!p.active()) {
+				continue;
+			}
 			g.drawImage(images.getMouse(), p.coordinates().x
 					* ImageStore.IMAGE_SIZE, p.coordinates().y
 					* ImageStore.IMAGE_SIZE, ImageStore.IMAGE_SIZE,
-					ImageStore.IMAGE_SIZE, colors.color(p.getColor()),
+					ImageStore.IMAGE_SIZE, colors.color(p.color()),
 					null);
 		}
 		

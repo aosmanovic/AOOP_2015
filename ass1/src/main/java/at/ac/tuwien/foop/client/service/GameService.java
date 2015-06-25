@@ -8,7 +8,7 @@ public class GameService {
 		if (game.joined()) {
 			throw new IllegalStateException("Can't join if joined already!");
 		}
-		core.join(name);
+		core.join();
 	}
 
 	public void leave(Game game, GameCore core) {

@@ -21,7 +21,7 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		Assert.assertNull(game.join("player1"));
+		Assert.assertNull(game.join(game.newSpectator("player1")));
 	}
 
 	@Test
@@ -34,8 +34,8 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("player1");
-		Assert.assertNull(game.join("player2"));
+		game.join(game.newSpectator("player1"));
+		Assert.assertNull(game.join(game.newSpectator("player2")));
 	}
 
 	@Test
@@ -48,8 +48,8 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("player1");
-		Assert.assertNull(game.join("player1"));
+		game.join(game.newSpectator("player1"));
+		Assert.assertNull(game.join(game.newSpectator(("player1"))));
 	}
 	
 	@Test
@@ -62,7 +62,8 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		Player actual = game.join("player1");
+		Player actual = game.newSpectator("player1");
+		game.join(game.newSpectator("player1"));
 		Assert.assertEquals("player1", actual.name());
 		Assert.assertEquals(new Coordinates(3, 2), actual.coordinates());
 	}
@@ -93,7 +94,7 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("player1");
+		game.join(game.newSpectator("player1"));
 		try {
 			game.movePlayer("unknown", new Coordinates(1, 1));
 			Assert.fail("expect exception, as player 'unknown' did not join the game!");
@@ -111,7 +112,7 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join(playerName);
+		game.join(game.newSpectator(playerName));
 		Coordinates expected = new Coordinates(1, 1);
 		game.movePlayer(playerName, expected);
 		Assert.assertEquals(expected, game.getPlayer(playerName).coordinates());
@@ -129,8 +130,8 @@ public class GameTest {
 				+ "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join(playerName1);
-		game.join(playerName2);
+		game.join(game.newSpectator(playerName1));
+		game.join(game.newSpectator(playerName2));
 		Coordinates coord1 = new Coordinates(2, 1);
 		Coordinates coord2 = new Coordinates(3, 2);
 		Assert.assertEquals(coord1, game.getPlayer(playerName1).coordinates());

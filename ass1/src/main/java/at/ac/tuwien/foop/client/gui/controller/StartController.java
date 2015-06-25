@@ -75,6 +75,7 @@ public class StartController implements ConnectListener, ServerReadyListener, Bo
 	public void onConnect(NettyClient client) {
 		BoardController boardController = new BoardController(game, client.getClientHandler());
 		boardController.addBoardControllerListener(this);
+		client.getClientHandler().introduce(startFrame.getPlayerName());
 	}
 
 	@Override
@@ -98,6 +99,6 @@ public class StartController implements ConnectListener, ServerReadyListener, Bo
 			log.error("Can't disconnect if not even connected!");
 		}
 		client.disconnect();
-		startFrame.enableConnectButton();
+		startFrame.enableInputs();
 	}
 }

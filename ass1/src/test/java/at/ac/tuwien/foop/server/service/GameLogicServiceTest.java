@@ -28,7 +28,7 @@ public class GameLogicServiceTest {
 			  + "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("Al");
+		game.join(game.newSpectator("Al"));
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game, noWind);
@@ -47,7 +47,7 @@ public class GameLogicServiceTest {
 			  + "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("Al");
+		game.join(game.newSpectator("Al"));
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game, noWind);
@@ -66,7 +66,7 @@ public class GameLogicServiceTest {
 			  + "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("Al");
+		game.join(game.newSpectator("Al"));
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game, noWind);
@@ -85,7 +85,7 @@ public class GameLogicServiceTest {
 				  "wwwwwwww";
 		BoardString bs = new BoardString(b, 8);
 		Game game = new Game(bs);
-		game.join("Al");
+		game.join(game.newSpectator("Al"));
 
 		Player actual = game.getPlayers().get(0);
 		service.movement(game, noWind);

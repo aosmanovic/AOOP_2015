@@ -63,6 +63,10 @@ public class Game {
 		fireGameEvent(new GameEvent(GameEvent.Type.JOIN));
 	}
 
+	public void leave() {
+		joined = false;
+	}
+	
 	public boolean running() {
 		return running;
 	}
@@ -80,12 +84,12 @@ public class Game {
 		listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(player.name())));
 	}
 
-	public void removePlayer(Player player) {
-		players.remove(player);
-		listeners
-				.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
-	}
-
+//	public void removePlayer(Player player) {
+//		players.remove(player);
+//		listeners
+//				.forEach(e -> e.onUpdate(new RemovePlayerEvent(player.name())));
+//	}
+//
 	public List<ClientPlayer> getPlayers() {
 		return players;
 	}

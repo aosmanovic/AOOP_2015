@@ -53,8 +53,12 @@ public class Game {
 		listeners.remove(listener);
 	}
 
-	public void fireGameEvent(GameEvent event) {
+	private void fireGameEvent(GameEvent event) {
 		listeners.forEach(e -> e.onUpdate(event));
+	}
+
+	public void sendUpdate() {
+		fireGameEvent(new GameEvent(Type.UPDATE));
 	}
 
 	/**
@@ -112,8 +116,7 @@ public class Game {
 		// call movement method here
 		service.movement(this, wind);
 
-		// calculate next step
-		fireGameEvent(new GameEvent(Type.UPDATE));
+		sendUpdate();
 	}
 
 	/**
@@ -122,17 +125,16 @@ public class Game {
 	 * 
 	 * @return a player if joined, null otherwise
 	 */
-	public synchronized Player join(String name) {
-		// TODO: maybe handle full and name already used differently!
-		Coordinates c;
-		if (!players.stream().anyMatch(p -> p.name().equals(name))
-				&& (c = findFreeStartingCoordinates()) != null) {
-			Player p = new Player(name, c);
-			players.add(p);
-			listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
-			return p;
+	public synchronized boolean join(Player p) {
+		Coordinates c = findFreeStartingCoordinates();
+		if (c == null) {
+			return false;
 		}
-		return null;
+
+		players.remove(p);
+		players.add(new Player(p.name(), c, null, State.notCrazy, true));
+
+		return true;
 	}
 
 	private Coordinates findFreeStartingCoordinates() {
@@ -145,10 +147,12 @@ public class Game {
 	}
 
 	public void leave(Player p) {
+		// players.remove(p);
 		players.remove(p);
-		if (players.size() == 0) {
-			// TODO: stop game?
-		}
+		players.add(new Player(p.name(), p.coordinates(), null, State.notCrazy,
+				false));
+
+		// TODO: filter stream for a check...
 		fireGameEvent(new GameEvent(Type.REMOVE_PLAYER));
 	}
 
@@ -195,7 +199,7 @@ public class Game {
 		for (Player p : players) {
 			if (p.name().equals(name)) {
 				player = p.moveTo(coordinates.x, coordinates.y,
-						p.coordinates(), p.getState());
+						p.coordinates(), p.state());
 				players.set(i, player);
 				break;
 			}
@@ -205,8 +209,8 @@ public class Game {
 		// 2 mouses crash
 		Player other = service.checkCrash(player, this);
 		if (other != null) {
-			player.setState(State.crash);
-			other.setState(State.crash);
+			player.state(State.crash);
+			other.state(State.crash);
 		}
 	}
 
@@ -229,6 +233,26 @@ public class Game {
 
 	public static void setLevelCounter(int levelCounter) {
 		Game.levelCounter = levelCounter;
+	}
+
+	/**
+	 * Creates a new player as spectator in the game.
+	 * 
+	 * @param name
+	 */
+	public Player newSpectator(String name) {
+		if (players.stream().anyMatch(p -> p.name().equals(name))) {
+			return null;
+		}
+		Player p = new Player(name, new Coordinates(0, 0), null,
+				State.notCrazy, false);
+		players.add(p);
+		// listeners.forEach(e -> e.onUpdate(new NewPlayerEvent(p)));
+		return p;
+	}
+
+	public void removePlayer(Player player) {
+		players.remove(player);
 	}
 
 }

@@ -41,8 +41,11 @@ public class Server {
 		public void run() {
 			if (game.state() == GameState.running) {
 				game.next();
-			} else if (game.state() == GameState.over) {
-				timer.cancel();
+//			} else if (game.state() == GameState.over) {
+//				timer.cancel();
+//			}
+			} else {
+				game.sendUpdate();
 			}
 		}
 	}

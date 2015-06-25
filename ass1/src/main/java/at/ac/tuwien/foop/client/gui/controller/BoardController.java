@@ -4,7 +4,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,17 +57,14 @@ public class BoardController implements GameEventListener, KeyListener {
 		game.addGameEventListener(this);
 
 		// TODO: remove after tests
-		messagePanel.setTopMessage("- SPECTATOR MODE -");
-		messagePanel
-				.setBottomMessage("- press ENTER to join or ESC to disconnect -");
+		spectatorMode();
 	}
 
 	@Override
 	public void onUpdate(GameEvent e) {
 		if (e.type == GameEvent.Type.UPDATE) {
 			boardPanel.repaint();
-			playerPanel.setPlayer(game.getPlayers().stream().map(p -> p.name())
-					.collect(Collectors.toList()));
+			playerPanel.setPlayer(game.getPlayers());
 		} else if (e.type == GameEvent.Type.BOARD) {
 			boardPanel.setGame(game);
 			if (!boardFrame.isVisible()) {
@@ -81,11 +77,7 @@ public class BoardController implements GameEventListener, KeyListener {
 			// boardFrame.setLabel(game, map);
 			// showBoard();
 		} else if (e.type == GameEvent.Type.JOIN) {
-			messagePanel
-					.setBottomMessage("- press SPACE to start the game or ESC to leave -");
-			messagePanel.setTopMessage("- ready to play!? -");
-			// setColor();
-			// startFrame.showStartGamePanel();
+			joindeMode();
 		} else if (e.type == GameEvent.Type.OVER) {
 			// nextGame = new Game();
 			// game.setBoard(newGame.getBoard());
@@ -126,9 +118,20 @@ public class BoardController implements GameEventListener, KeyListener {
 	// return playercolor;
 	// }
 
+	private void spectatorMode() {
+		messagePanel.setTopMessage("- SPECTATOR MODE -");
+		messagePanel
+				.setBottomMessage("- press ENTER to join or ESC to disconnect -");
+	}
+
+	private void joindeMode() {
+		messagePanel
+				.setBottomMessage("- press SPACE to start the game or ESC to leave -");
+		messagePanel.setTopMessage("- ready to play!? -");
+	}
+
 	@Override
 	public void onUpdate(NewPlayerEvent e) {
-		// playerPanel.
 	}
 
 	@Override
@@ -148,13 +151,15 @@ public class BoardController implements GameEventListener, KeyListener {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 				if (!game.joined()) {
 					// TODO: do not send any names!
-					core.join("not a real name");
+					core.join();
 				}
 			}
 		}
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (game.joined()) {
+				game.leave();
 				core.leave();
+				spectatorMode();
 			} else {
 				game.removeGameEventListener(this);
 				listeners.forEach(l -> l.onDisconnectRequest());

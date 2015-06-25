@@ -17,12 +17,11 @@ import at.ac.tuwien.foop.domain.Board;
 import at.ac.tuwien.foop.domain.WindGust;
 import at.ac.tuwien.foop.domain.message.Message;
 import at.ac.tuwien.foop.domain.message.Message.Type;
-import at.ac.tuwien.foop.domain.message.client.JoinMessage;
+import at.ac.tuwien.foop.domain.message.client.IntroduceMessage;
 import at.ac.tuwien.foop.domain.message.client.WindMessage;
 import at.ac.tuwien.foop.domain.message.server.BoardMessage;
 import at.ac.tuwien.foop.domain.message.server.GameOverMessage;
 import at.ac.tuwien.foop.domain.message.server.NewPlayerMessage;
-import at.ac.tuwien.foop.domain.message.server.RemovePlayerMessage;
 import at.ac.tuwien.foop.domain.message.server.UnknownMessage;
 import at.ac.tuwien.foop.domain.message.server.UpdateMessage;
 
@@ -64,7 +63,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 		} else if (m.type == Type.S_NEWPLAYER) {
 			game.addPlayer(new ClientPlayer(mapper.readValue(str, NewPlayerMessage.class).player));
 		} else if (m.type == Type.S_REMOVEPLAYER) {
-			game.removePlayer(mapper.readValue(str, RemovePlayerMessage.class).player);
+			// TODO: not needed, as update replaces players anyway, can be used to show a message to the user...
+//			game.removePlayer(mapper.readValue(str, RemovePlayerMessage.class).player);
 		} else if (m.type == Type.S_BOARD) {
 			BoardMessage boardMessage = mapper.readValue(str,
 					BoardMessage.class);
@@ -76,6 +76,8 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 			game.update(updateMessage.players.stream().map(p -> new ClientPlayer(p)).collect(Collectors.toList()), updateMessage.wind);
 		} else if (m.type == Type.S_JOINED) {
 			game.join();
+			// TODO: remove additional data from joined message!
+			
 			//JoinedMessage joinedMessage = mapper.readValue(str,
 				//	JoinedMessage.class);
 			//joinedMessage.players.forEach(p -> game.addPlayer(p));
@@ -105,12 +107,17 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 	// client requests
 
 	@Override
-	public void join(String name) {
+	public void introduce(String name) {
 		System.out.println(channel);
-		channel.writeAndFlush(new JoinMessage(name));
+		channel.writeAndFlush(new IntroduceMessage(name));
 
 	}
 
+	@Override
+	public void join() {
+		channel.writeAndFlush(new Message(Type.C_JOIN));
+	}
+	
 	@Override
 	public void leave() {
 		channel.writeAndFlush(new Message(Type.C_LEAVE));
@@ -138,12 +145,6 @@ public class ClientHandler extends ChannelHandlerAdapter implements GameCore {
 
 	public void addChannelActiveListener(ChannelActiveListener caListener) {
 		listeners.add(caListener);
-	}
-
-	@Override
-	public void over() {
-		channel.writeAndFlush(new Message(Type.C_OVER));
-
 	}
 
 	@Override

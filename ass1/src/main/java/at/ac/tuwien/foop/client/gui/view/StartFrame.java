@@ -77,7 +77,7 @@ public class StartFrame extends JFrame {
 		panel.add(tfPlayerName, gridBagPosition(1, 1, 0.7));
 
 		btnConnect = new JButton("connect");
-		btnConnect.addActionListener(o -> btnConnect.setEnabled(false));
+		btnConnect.addActionListener(o -> disableInputs());
 		GridBagConstraints c = gridBagPosition(0, 2, 1);
 		c.gridwidth = 2;
 		panel.add(btnConnect, c);
@@ -105,8 +105,16 @@ public class StartFrame extends JFrame {
 		btnConnect.addActionListener(ac);
 	}
 	
-	public void enableConnectButton() {
+	public void enableInputs() {
 		btnConnect.setEnabled(true);
+		tfPlayerName.setEditable(true);
+		tfServerAddress.setEnabled(true);
+	}
+	
+	public void disableInputs() {
+		btnConnect.setEnabled(false);
+		tfPlayerName.setEditable(false);
+		tfServerAddress.setEnabled(false);
 	}
 
 	public String getServerAddress() {
