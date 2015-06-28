@@ -79,7 +79,7 @@ public class GameLogicService {
 					} else
 						player.state(State.notCrazy);
 				} else {
-					if((wind.x!=0 || wind.y!=0) && WindInfluencesValid(player, wind, game)==true)
+					if((wind.x!=0 || wind.y!=0) && isWindInfluencesValid(player, wind, game)==true)
 					{
 						game.movePlayer(player.name(), new Coordinates((int)(player.coordinates().x+wind.x), (int)(player.coordinates().y+wind.y)));
 					}
@@ -100,7 +100,7 @@ public class GameLogicService {
 			// -------------- Cod for normal moving / Not crazy state ----------------------------
 			// TODO: just a hack: removes last cordinates from possible
 			// neighbors
-			if((wind.x!=0 || wind.y!=0) && WindInfluencesValid(player, wind, game)==true)
+			if((wind.x!=0 || wind.y!=0) && isWindInfluencesValid(player, wind, game)==true)
 			{
 				game.movePlayer(player.name(), new Coordinates((int)(player.coordinates().x+wind.x), (int)(player.coordinates().y+wind.y)));
 			}
@@ -261,7 +261,7 @@ public class GameLogicService {
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}
 	
-	private boolean WindInfluencesValid(Player p, Wind w, Game g)
+	private boolean isWindInfluencesValid(Player p, Wind w, Game g)
 	{
 		double signX=1, signY=1;
 		if(w.x<0) signX=-1;
