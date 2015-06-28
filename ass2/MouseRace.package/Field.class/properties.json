@@ -1,0 +1,15 @@
+{
+	"category" : "MouseRace",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "DS 6/28/2015 11:52",
+	"instvars" : [
+		"traversable",
+		"type" ],
+	"name" : "Field",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }

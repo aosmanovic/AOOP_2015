@@ -1,0 +1,15 @@
+{
+	"category" : "MouseRace",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		 ],
+	"commentStamp" : "DS 6/28/2015 11:56",
+	"instvars" : [
+		"fields",
+		"mice" ],
+	"name" : "Board",
+	"pools" : [
+		 ],
+	"super" : "Object",
+	"type" : "normal" }
