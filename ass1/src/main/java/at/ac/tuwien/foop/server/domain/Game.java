@@ -117,9 +117,10 @@ public class Game {
 		service.movement(this, wind);
 //		wind = Wind.fromAngle(wind.angle,
 //				Math.max(wind.strength - (Wind.MAX_STRENGTH / 2), 0));
-		wind = Wind.fromAngle(0, 0);
 		
 		sendUpdate();
+		
+		wind = Wind.fromAngle(0, 0);
 	}
 
 	/**
