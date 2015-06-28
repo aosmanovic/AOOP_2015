@@ -1,4 +1,4 @@
 as yet unclassified
 initialize
 	super initialize.
-	bounds := 0 @ 0 corner: 28 @ 28
+	bounds := 0 @ 0 corner: FieldMorph imageSize @ FieldMorph imageSize

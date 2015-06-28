@@ -15,4 +15,6 @@ board: anObject
 					field := line at: j.
 
 					"create a field morph and add it "
-					self addMorph: FieldMorph new: field type withCoordinates: j @ i ] ]
+					self
+						addMorph:
+							(FieldMorph new: field type withCoordinates: ((j - 1) * FieldMorph imageSize) @ ((i - 1) * FieldMorph imageSize)) ] ]

@@ -1,7 +1,8 @@
 {
 	"class" : {
 		"getImage:" : "DS 6/28/2015 23:13",
+		"imageSize" : "DS 6/29/2015 01:08",
 		"loadImageFiles" : "DS 6/28/2015 22:50",
-		"new:withCoordinates:" : "DS 6/28/2015 23:32" },
+		"new:withCoordinates:" : "DS 6/29/2015 00:47" },
 	"instance" : {
-		"initialize" : "DS 6/28/2015 19:09" } }
+		"initialize" : "DS 6/29/2015 01:12" } }
