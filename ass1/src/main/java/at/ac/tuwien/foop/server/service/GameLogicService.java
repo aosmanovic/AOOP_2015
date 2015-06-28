@@ -42,9 +42,8 @@ public class GameLogicService {
 
 
 	public void movement(Game game, Wind wind) {
+		Coordinates nextNeighbor;
 		Coordinates cheeseCoordinates = game.board().cheeseCoordinates();
-		log.debug("***calculate movement***");
-
 		for (Player player : game.getPlayers()) {
 			if (!player.active()) {
 				continue;
@@ -55,10 +54,9 @@ public class GameLogicService {
 			// get neighbors with paths
 			List<Coordinates> floorList = calculateNeighbor(game.board().fields(),
 					player.coordinates());
-
+			log.debug("***WIND***"+wind.x+"  "+wind.y);
 			// check for dead end
 			if (floorList.size() == 1 && player.lastCoordinates() != null) {
-				log.debug("DEAD END");
 				player.state(State.crazy);
 				game.movePlayer(player.name(), player.lastCoordinates());
 				continue;
@@ -81,37 +79,50 @@ public class GameLogicService {
 					} else
 						player.state(State.notCrazy);
 				} else {
-					game.movePlayer(
+					if((wind.x!=0 || wind.y!=0) && WindInfluencesValid(player, wind, game)==true)
+					{
+						game.movePlayer(player.name(), new Coordinates((int)(player.coordinates().x+wind.x), (int)(player.coordinates().y+wind.y)));
+					}
+					else
+					{
+						game.movePlayer(
 							player.name(),
 							floorList
 							.stream()
 							.filter(z -> !z.equals(player
 									.lastCoordinates())).findFirst()
 									.orElse(null));
+					}
 					continue;
 				}
 			}
 
+			// -------------- Cod for normal moving / Not crazy state ----------------------------
 			// TODO: just a hack: removes last cordinates from possible
 			// neighbors
-			floorList = floorList.stream()
+			if((wind.x!=0 || wind.y!=0) && WindInfluencesValid(player, wind, game)==true)
+			{
+				game.movePlayer(player.name(), new Coordinates((int)(player.coordinates().x+wind.x), (int)(player.coordinates().y+wind.y)));
+			}
+			else
+			{
+				floorList = floorList.stream()
 					.filter(z -> !z.equals(player.lastCoordinates()))
 					.collect(Collectors.toList());
-			// calculate next neighbor considering the wind
-			Coordinates nextNeighbor = calculateNextNeighbor(floorList,
-					cheeseCoordinates, wind, game.board().fields(), player.coordinates());
+				nextNeighbor = calculateNextNeighbor(floorList,
+					cheeseCoordinates);
+				game.movePlayer(player.name(), nextNeighbor);
+			}
 
-			// move the player
-			game.movePlayer(player.name(), nextNeighbor);
+			// calculate next neighbor considering the wind
+			nextNeighbor = calculateNextNeighbor(floorList,
+					cheeseCoordinates);
 
 			// check if cheese was found
 			if (nextNeighbor.equals(cheeseCoordinates)) {
-				log.info("player '{}' wins the game!", player.name());
 				game.stop(player);
 				continue;
 			}
-			log.info("Last Coordinates of player '{}': {} ", player.name(),
-					player.lastCoordinates());
 		}
 	}
 
@@ -134,15 +145,12 @@ public class GameLogicService {
 			if (distance <= minDistance) {
 				minDistance = distance;
 				closestNeighbor = neighbor;
-				log.info("Closest neighbor:" + closestNeighbor);
 			}
 		}
 
 		return closestNeighbor;
 
 	} 
-
-
 	/**
 	 * Calculate the next neighbor, considering the wind direction
 	 * @param neighbors
@@ -152,40 +160,10 @@ public class GameLogicService {
 	 * @param c
 	 * @return
 	 */
-	private Coordinates calculateNextNeighbor(List<Coordinates> neighbors,
-			Coordinates cheeseCoordinates, Wind wind, Field[][] field, Coordinates c) {
-		Coordinates nextNeighbor = null;
-
-		// No wind influence
-		if(wind.x == 0 && wind.y == 0) {
-
-			log.info("No wind influence");
+	private Coordinates calculateNextNeighbor(List<Coordinates> neighbors, Coordinates cheeseCoordinates) {
+			Coordinates nextNeighbor = null;
 			nextNeighbor = calculateClosestNeighborToCheese(neighbors,cheeseCoordinates);		
 
-		} else {
-			log.info("***********WIND influence*******");
-			log.info("Player position: " + c.x + " " + c.y);
-
-			int newX = c.x; 
-			int newY = c.y;;
-			nextNeighbor = new Coordinates(c.x,c.y);
-
-			if( wind.x>0)	
-				newX = (int) (c.x+wind.x);
-			else if (wind.y>0) 
-				newY = (int)( c.y+wind.y);
-
-			log.info("WIND X " + newX + "     WIND Y " + newY);
-
-			// check if the next step is a path and is it in the range of the map
-			if(newX < field[0].length-1	&& newX >= 0&& newY < field.length-1 && newY >= 0 
-					&& field[newY][newX].equals(Field.floor)) {
-
-				log.info("Wind changed direction");
-				nextNeighbor = new Coordinates(newX, newY);
-			} else 
-				nextNeighbor = calculateClosestNeighborToCheese(neighbors,cheeseCoordinates);		
-		}
 		return nextNeighbor;
 	}
 
@@ -247,7 +225,6 @@ public class GameLogicService {
 					|| new Coordinates(x + 1, y).equals(p.coordinates())
 					|| new Coordinates(x, y - 1).equals(p.coordinates())
 					|| new Coordinates(x, y + 1).equals(p.coordinates())) {
-				log.debug("crash found!");
 				return p;
 			}
 		}
@@ -266,6 +243,7 @@ public class GameLogicService {
 				.filter(z -> !z.equals(player.lastCoordinates()))
 				.collect(Collectors.toList());
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+		
 	}
 
 
@@ -280,8 +258,26 @@ public class GameLogicService {
 		List<Coordinates> p = floorList.stream()
 				.filter(z -> !game.getPlayers().stream().anyMatch(pl -> pl.coordinates().equals(z)))
 				.collect(Collectors.toList());
-		log.debug("possible floors {}", p);
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
+	}
+	
+	private boolean WindInfluencesValid(Player p, Wind w, Game g)
+	{
+		double signX=1, signY=1;
+		if(w.x<0) signX=-1;
+		if(w.y<0) signY=-1;
+
+		for(int i=0; i<Math.abs((int)w.x)+1; i++)
+		{
+			for(int j=0; j<Math.abs((int)w.y)+1; j++)
+			{
+				if(g.board().fields()[(int) (p.coordinates().y+j*signY)][(int) (p.coordinates().x+i*signX)]==Field.wall) 
+					{
+						return false;
+					}
+			}
+		}
+		return true;
 	}
 
 
