@@ -1,8 +1,10 @@
 {
 	"class" : {
+		"basePath" : "DS 6/29/2015 01:46",
+		"basePath:" : "DS 6/29/2015 01:47",
 		"getImage:" : "DS 6/28/2015 23:13",
 		"imageSize" : "DS 6/29/2015 01:08",
-		"loadImageFiles" : "DS 6/28/2015 22:50",
+		"loadImageFiles" : "DS 6/29/2015 01:52",
 		"new:withCoordinates:" : "DS 6/29/2015 00:47" },
 	"instance" : {
 		"initialize" : "DS 6/29/2015 01:12" } }
