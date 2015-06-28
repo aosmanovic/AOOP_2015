@@ -4,4 +4,4 @@ importFromFile: filename
 
 	| content |
 	content := (StandardFileStream fileNamed: filename) contentsOfEntireFile.
-	Board new import: content
+	^ self new import: content

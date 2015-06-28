@@ -1,0 +1,18 @@
+{
+	"category" : "MouseRace",
+	"classinstvars" : [
+		 ],
+	"classvars" : [
+		"CheeseForm",
+		"FileDirectory",
+		"FloorForm",
+		"MouseForm",
+		"WallForm" ],
+	"commentStamp" : "DS 6/28/2015 19:35",
+	"instvars" : [
+		 ],
+	"name" : "FieldMorph",
+	"pools" : [
+		 ],
+	"super" : "ImageMorph",
+	"type" : "normal" }

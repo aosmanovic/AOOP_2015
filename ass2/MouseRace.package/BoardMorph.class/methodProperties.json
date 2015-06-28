@@ -1,0 +1,11 @@
+{
+	"class" : {
+		"new:withAlgorithm:" : "DS 6/28/2015 23:53" },
+	"instance" : {
+		"algo:" : "DS 6/28/2015 16:24",
+		"board:" : "DS 6/28/2015 23:36",
+		"handlesKeyboard:" : "DS 6/28/2015 15:36",
+		"handlesMouseDown:" : "DS 6/28/2015 15:38",
+		"keyDown:" : "DS 6/28/2015 15:44",
+		"mouseDown:" : "DS 6/28/2015 15:39",
+		"stepTime" : "DS 6/28/2015 18:00" } }

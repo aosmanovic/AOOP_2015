@@ -1,0 +1,1 @@
+MouseRace new start.ImageMorph new showInWorld .

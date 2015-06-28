@@ -1,8 +1,12 @@
 {
 	"class" : {
-		"importFromFile:" : "DS 6/28/2015 11:39" },
+		"importFromFile:" : "DS 6/28/2015 23:51" },
 	"instance" : {
 		"at:" : "DS 6/28/2015 11:38",
+		"fields" : "DS 6/28/2015 23:45",
+		"fields:" : "DS 6/28/2015 23:45",
 		"getField:withCoordinates:" : "DS 6/28/2015 11:50",
 		"getLineLength:" : "DS 6/28/2015 10:04",
-		"import:" : "DS 6/28/2015 11:51" } }
+		"import:" : "DS 6/28/2015 11:51",
+		"mice" : "DS 6/28/2015 23:45",
+		"mice:" : "DS 6/28/2015 23:45" } }
