@@ -1,10 +1,10 @@
 {
-	"category" : "MouseRace",
+	"category" : "MouseRace-UI",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
 		 ],
-	"commentStamp" : "DS 6/28/2015 16:27",
+	"commentStamp" : "DS 6/29/2015 02:55",
 	"instvars" : [
 		"board",
 		"algo",
