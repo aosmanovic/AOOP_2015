@@ -129,6 +129,13 @@ public class NettyClient implements Runnable {
 			}
 		});
 	}
+	
+	public void disconnect() {
+		if (channel == null) {
+			return;
+		}
+		channel.close();
+	}
 
 	public void addConnectListener(ConnectListener l) {
 		connectListeners.add(l);

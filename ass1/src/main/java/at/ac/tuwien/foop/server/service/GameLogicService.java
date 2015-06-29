@@ -46,6 +46,10 @@ public class GameLogicService {
 		log.debug("***calculate movement***");
 
 		for (Player player : game.getPlayers()) {
+			if (!player.active()) {
+				continue;
+			}
+			
 			log.info("Position of the mouse '{}': {}", player.name(), player.coordinates());
 
 			// get neighbors with paths
@@ -53,15 +57,15 @@ public class GameLogicService {
 					player.coordinates());
 
 			// check for dead end
-			if (floorList.size() == 1 && player.getLastCoordinates() != null) {
+			if (floorList.size() == 1 && player.lastCoordinates() != null) {
 				log.debug("DEAD END");
-				player.setState(State.crazy);
-				game.movePlayer(player.name(), player.getLastCoordinates());
+				player.state(State.crazy);
+				game.movePlayer(player.name(), player.lastCoordinates());
 				continue;
 			}
 
 			// mouse crashes
-			if (player.getState().equals(State.crash)) {
+			if (player.state().equals(State.crash)) {
 				if (player.crash()) {
 					moveRandomlyDifferentDirections(player, game, floorList);
 				}
@@ -69,20 +73,20 @@ public class GameLogicService {
 			}
 
 			// calculate player state changes and crazy movements
-			if (!player.getState().equals(State.notCrazy)) {
+			if (!player.state().equals(State.notCrazy)) {
 				if (floorList.size() >= 3) {
-					if (player.getState().equals(State.crazy)) {
+					if (player.state().equals(State.crazy)) {
 						moveRandomly(player, game, floorList);
 						continue;
 					} else
-						player.setState(State.notCrazy);
+						player.state(State.notCrazy);
 				} else {
 					game.movePlayer(
 							player.name(),
 							floorList
 							.stream()
 							.filter(z -> !z.equals(player
-									.getLastCoordinates())).findFirst()
+									.lastCoordinates())).findFirst()
 									.orElse(null));
 					continue;
 				}
@@ -91,9 +95,8 @@ public class GameLogicService {
 			// TODO: just a hack: removes last cordinates from possible
 			// neighbors
 			floorList = floorList.stream()
-					.filter(z -> !z.equals(player.getLastCoordinates()))
+					.filter(z -> !z.equals(player.lastCoordinates()))
 					.collect(Collectors.toList());
-
 			// calculate next neighbor considering the wind
 			Coordinates nextNeighbor = calculateNextNeighbor(floorList,
 					cheeseCoordinates, wind, game.board().fields(), player.coordinates());
@@ -108,7 +111,7 @@ public class GameLogicService {
 				continue;
 			}
 			log.info("Last Coordinates of player '{}': {} ", player.name(),
-					player.getLastCoordinates());
+					player.lastCoordinates());
 		}
 	}
 
@@ -180,11 +183,8 @@ public class GameLogicService {
 
 				log.info("Wind changed direction");
 				nextNeighbor = new Coordinates(newX, newY);
-				wind.setWindToDefault();
-
 			} else 
 				nextNeighbor = calculateClosestNeighborToCheese(neighbors,cheeseCoordinates);		
-
 		}
 		return nextNeighbor;
 	}
@@ -261,9 +261,9 @@ public class GameLogicService {
 	 * @param floorList
 	 */
 	public void moveRandomly(Player player, Game game, List<Coordinates> floorList) {
-		player.setState(State.notSoCrazy);
+		player.state(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
-				.filter(z -> !z.equals(player.getLastCoordinates()))
+				.filter(z -> !z.equals(player.lastCoordinates()))
 				.collect(Collectors.toList());
 		game.movePlayer(player.name(), p.get(new Random().nextInt(p.size())));
 	}
@@ -276,7 +276,7 @@ public class GameLogicService {
 	 * @param floorList
 	 */
 	public void moveRandomlyDifferentDirections(Player player, Game game, List<Coordinates> floorList) {
-		player.setState(State.notSoCrazy);
+		player.state(State.notSoCrazy);
 		List<Coordinates> p = floorList.stream()
 				.filter(z -> !game.getPlayers().stream().anyMatch(pl -> pl.coordinates().equals(z)))
 				.collect(Collectors.toList());

@@ -61,7 +61,7 @@ public class ImageStore {
 
 	public static ImageStore getInstance() {
 		if (instance == null) {
-			return new ImageStore();
+			instance = new ImageStore();
 		}
 		return instance;
 	}

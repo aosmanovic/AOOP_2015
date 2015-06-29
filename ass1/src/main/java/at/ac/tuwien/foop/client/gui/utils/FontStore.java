@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class FontStore {
+	private static final String PUPPY = "puppy.ttf";
+
 	private static FontStore instance;
 
 	private Font gameFont;
 
 	private FontStore() {
-		gameFont = loadFont("puppy.otf");
+		gameFont = loadFont(PUPPY);
 	}
 
 	private Font loadFont(String path) {
@@ -35,7 +37,7 @@ public class FontStore {
 
 	public static FontStore getInstance() {
 		if (instance == null) {
-			return new FontStore();
+			instance = new FontStore();
 		}
 		return instance;
 	}

@@ -7,7 +7,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.slf4j.Logger;
@@ -35,6 +34,11 @@ public class CompassPanel extends JPanel {
 				.getCompass().getWidth()));
 	}
 
+	public void wind(Wind w) {
+		wind = w;
+		repaint();
+	}
+
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -53,14 +57,5 @@ public class CompassPanel extends JPanel {
 		g.drawRenderedImage(image, null);
 		g.dispose();
 		return result;
-	}
-
-	// TODO: remove when tested
-	public static void main(String args[]) {
-		JFrame frame = new JFrame("test");
-		CompassPanel panel = new CompassPanel(Wind.fromCoordinates(1.5, 3));
-		frame.add(panel);
-		frame.setBounds(10, 10, 300, 300);
-		frame.setVisible(true);
 	}
 }

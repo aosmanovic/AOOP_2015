@@ -12,7 +12,7 @@ public class ClientPlayer extends Player {
 	private String color;
 
 	public ClientPlayer(Player player) {
-		super(player.name(), player.coordinates());
+		super(player.name(), player.coordinates(), player.lastCoordinates(),player.state(), player.active());
 
 		if (playerColors.containsKey(player.name())) {
 			color = playerColors.get(player.name());

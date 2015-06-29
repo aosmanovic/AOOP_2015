@@ -1,15 +1,17 @@
 package at.ac.tuwien.foop.client.gui.view;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BoxLayout;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import at.ac.tuwien.foop.client.domain.ClientPlayer;
+import at.ac.tuwien.foop.client.gui.utils.PlayerColor;
 
 public class PlayerPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -17,6 +19,7 @@ public class PlayerPanel extends JPanel {
 
 	private JPanel pnlSpectator;
 	private JPanel pnlPlayer;
+	private PlayerColor playerColor;
 
 	public PlayerPanel() {
 		super();
@@ -32,6 +35,8 @@ public class PlayerPanel extends JPanel {
 		add(pnlPlayer);
 		add(new JLabel("Spectators"));
 		add(pnlSpectator);
+		
+		playerColor = PlayerColor.getInstance();
 	}
 
 	private JPanel prepareListPanel() {
@@ -40,24 +45,19 @@ public class PlayerPanel extends JPanel {
 		return p;
 	}
 
-	public void setPlayer(List<String> names) {
+	public void players(List<ClientPlayer> players) {
 		pnlPlayer.removeAll();
-		names.forEach(name -> pnlPlayer.add(new JLabel("   " + name)));
-	}
-
-	public void setSpectators(List<String> names) {
-		pnlPlayer.removeAll();
-		names.forEach(name -> pnlPlayer.add(new JLabel("   " + name)));
-	}
-	
-	// TODO: remove when tested
-	public static void main(String args[]) {
-		JFrame frame = new JFrame("test");
-		PlayerPanel panel = new PlayerPanel();
-		frame.add(panel);
-		frame.setBounds(10, 10, 300, 300);
-		frame.setVisible(true);
-		
-		panel.setPlayer(Arrays.asList("foo", "bar"));
+		pnlSpectator.removeAll();
+		new ArrayList<>(players).forEach(p -> {
+			JLabel label = new JLabel("   " + p.name());
+			label.setForeground(playerColor.color(p.color()));
+			if (p.active()) {
+				pnlPlayer.add(label);
+			} else {
+				pnlSpectator.add(label);
+			}
+			;
+		});
+		revalidate();
 	}
 }

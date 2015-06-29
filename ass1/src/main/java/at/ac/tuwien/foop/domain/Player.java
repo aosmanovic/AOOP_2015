@@ -5,32 +5,39 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Player {
 	private static final int MAX_CRASH_TIME = 5;
-	
+
 	private final String name;
 	private Coordinates coordinates;
 	private Coordinates lastCoordinates;
 	private State state;
-	private String color = "";
 	private int crashTime = 0;
-	
+	private boolean active;
+
 	public static enum State {
 		crazy, notSoCrazy, notCrazy, crash
-	} ;
-	
-	
+	};
 
 	@JsonCreator
-	public Player(@JsonProperty("name") String name, @JsonProperty("coordinates") Coordinates coordinates, @JsonProperty("lastCoordinates") Coordinates lastCoordinates, @JsonProperty("state") State crazyState) {
+	public Player(@JsonProperty("name") String name,
+			@JsonProperty("coordinates") Coordinates coordinates,
+			@JsonProperty("lastCoordinates") Coordinates lastCoordinates,
+			@JsonProperty("state") State crazyState, @JsonProperty("active") boolean active) {
 		this.name = name;
 		this.coordinates = coordinates;
 		this.lastCoordinates = lastCoordinates;
 		this.state = crazyState;
-	}
-	
-	public Player(String name, Coordinates coordinates) {
-		this(name, coordinates, null, State.notCrazy);
+		this.active = active;
 	}
 
+	public Player(String name, Coordinates coordinates) {
+		this(name, coordinates, null, State.notCrazy, true);
+	}
+
+	public Player(String name, Coordinates coordinates, boolean active) {
+		this(name, coordinates, null, State.notCrazy, true);
+		
+	}
+	
 	@JsonProperty("name")
 	public String name() {
 		return name;
@@ -42,7 +49,7 @@ public class Player {
 	}
 
 	public Player moveTo(int x, int y, Coordinates lastCoordinates, State state) {
-		return new Player(name, new Coordinates(x, y), lastCoordinates, state);
+		return new Player(name, new Coordinates(x, y), lastCoordinates, state, true);
 	}
 
 	public Player moveTo(int x, int y) {
@@ -79,29 +86,30 @@ public class Player {
 		return "Player [name=" + name + ", coordinates=" + coordinates + "]";
 	}
 
-	public Coordinates getLastCoordinates() {
+	public Coordinates lastCoordinates() {
 		return lastCoordinates;
 	}
 
-	public State getState() {
+	public State state() {
 		return state;
 	}
 
-	public void setState(State state) {
+	public void state(State state) {
 		this.state = state;
 	}
 
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}	
-	
 	public boolean crash() {
 		lastCoordinates = coordinates;
 		return (++crashTime % MAX_CRASH_TIME) == 0;
-		
+
+	}
+
+	@JsonProperty("active")
+	public boolean active() {
+		return active;
+	}
+
+	public void active(boolean state) {
+		active = state;
 	}
 }
