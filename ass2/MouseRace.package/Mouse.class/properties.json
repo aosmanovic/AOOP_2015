@@ -1,13 +1,13 @@
 {
-	"category" : "MouseRace-Main",
+	"category" : "MouseRace-Model",
 	"classinstvars" : [
 		 ],
 	"classvars" : [
 		 ],
-	"commentStamp" : "DS 6/28/2015 23:25",
+	"commentStamp" : "DS 6/29/2015 03:05",
 	"instvars" : [
-		"board" ],
-	"name" : "MovementAlgorithm",
+		"coordinates" ],
+	"name" : "Mouse",
 	"pools" : [
 		 ],
 	"super" : "Object",
