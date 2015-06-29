@@ -2,7 +2,9 @@
 	"class" : {
 		 },
 	"instance" : {
-		"start" : "DS 6/29/2015 06:36",
+		"pause" : "DS 6/29/2015 07:31",
+		"resume" : "DS 6/29/2015 07:30",
+		"start" : "DS 6/29/2015 07:30",
 		"startWithBasePath:" : "DS 6/29/2015 01:49",
 		"stop" : "DS 6/29/2015 01:03",
 		"update" : "DS 6/29/2015 06:21" } }

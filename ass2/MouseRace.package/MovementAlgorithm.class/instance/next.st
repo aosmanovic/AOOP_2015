@@ -3,11 +3,9 @@ next
 	"calculate the next steps for all mice"
 
 	board mice
-"	(1 to: board mice)"
 		do: [ :mouse | 
 			| freeNeighbors closestNeighbor |
 			"mouse := board mice at: i."
-
 			"get free neighbor fields"
 			freeNeighbors := self getFreeNeighbors: mouse coordinates.
 
@@ -19,4 +17,8 @@ next
 
 			"calculate a simple closest neighbor"
 			closestNeighbor := self getClosestNeighbor: freeNeighbors toCheese: board cheeseCoordinates.
-			mouse coordinates: closestNeighbor ]
+			mouse coordinates: closestNeighbor.
+
+			"if cheese we are done"
+			(self isCheese: closestNeighbor) ifTrue: [ board running: false ] ]
+	"	(1 to: board mice)"

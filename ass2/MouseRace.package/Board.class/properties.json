@@ -8,7 +8,8 @@
 	"instvars" : [
 		"fields",
 		"mice",
-		"cheeseCoordinates" ],
+		"cheeseCoordinates",
+		"running" ],
 	"name" : "Board",
 	"pools" : [
 		 ],
