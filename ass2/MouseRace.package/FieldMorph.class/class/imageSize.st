@@ -1,3 +1,3 @@
 as yet unclassified
 imageSize
-	^ 28
+	^ 27
