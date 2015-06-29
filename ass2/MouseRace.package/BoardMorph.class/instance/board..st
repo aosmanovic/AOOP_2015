@@ -20,4 +20,8 @@ board: anObject
 	"create mice"
 	mice := Array new: board mice size.
 	(1 to: board mice size)
-		do: [ :i | self addMorph: ((FieldMorph new: 'mouse' withCoordinates: ((board mice at: i) coordinates - 1) * FieldMorph imageSize) color: Color red) ]
+		do: [ :i | 
+			| mouse |
+			mouse := FieldMorph new: 'mouse' withCoordinates: ((board mice at: i) coordinates - 1) * FieldMorph imageSize.
+			self addMorph: mouse.
+			mice at: i put: mouse ]

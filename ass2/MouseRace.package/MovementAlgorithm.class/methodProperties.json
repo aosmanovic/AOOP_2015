@@ -3,4 +3,6 @@
 		 },
 	"instance" : {
 		"board:" : "DS 6/29/2015 04:33",
-		"next" : "DS 6/29/2015 04:42" } }
+		"getClosestNeighbor:toCheese:" : "DS 6/29/2015 05:57",
+		"getFreeNeighbors:" : "DS 6/29/2015 06:50",
+		"next" : "DS 6/29/2015 06:09" } }

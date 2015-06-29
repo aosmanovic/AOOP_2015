@@ -34,6 +34,8 @@ import: string
 						ifTrue: [ 
 							miceCollection add: (Mouse new: i @ lineNumber)
 							"mice at: mouseNumber put: (Mouse new: i @ lineNumber).
-							mouseNumber := mouseNumber + 1" ] ].
+							mouseNumber := mouseNumber + 1" ].
+					char = $C
+						ifTrue: [ cheeseCoordinates := i @ lineNumber ] ].
 			lineNumber := lineNumber + 1 ].
 	mice := Array newFrom: miceCollection

@@ -7,7 +7,8 @@
 	"commentStamp" : "DS 6/28/2015 11:56",
 	"instvars" : [
 		"fields",
-		"mice" ],
+		"mice",
+		"cheeseCoordinates" ],
 	"name" : "Board",
 	"pools" : [
 		 ],

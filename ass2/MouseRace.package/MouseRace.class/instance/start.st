@@ -2,7 +2,10 @@ as yet unclassified
 start
 	"Starts the mouse race :)"
 
+	| boardModel |
 	FieldMorph loadImageFiles.
 
-	board := BoardMorph new: (Board importFromFile: 'Map0.txt') withAlgorithm: MovementAlgorithm new.
+	boardModel := Board importFromFile: 'Map0.txt'.
+	movementAlgorithm := MovementAlgorithm new board: boardModel.
+	board := BoardMorph new: boardModel withAlgorithm: movementAlgorithm.
 	board openInWorld
