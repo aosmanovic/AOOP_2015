@@ -4,8 +4,9 @@
 		 ],
 	"classvars" : [
 		 ],
-	"commentStamp" : "DS 6/28/2015 11:56",
+	"commentStamp" : "DS 6/29/2015 07:46",
 	"instvars" : [
+		"wind",
 		"fields",
 		"mice",
 		"cheeseCoordinates",

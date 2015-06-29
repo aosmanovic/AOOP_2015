@@ -13,4 +13,6 @@ w-wwww
 w---Cw
 wwwwww
 
-TODO: rename messages
+TODO: 
+- rename messages
+- check for wind max

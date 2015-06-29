@@ -5,7 +5,6 @@ next
 	board mice
 		do: [ :mouse | 
 			| freeNeighbors closestNeighbor |
-			"mouse := board mice at: i."
 			"get free neighbor fields"
 			freeNeighbors := self getFreeNeighbors: mouse coordinates.
 
@@ -20,5 +19,6 @@ next
 			mouse coordinates: closestNeighbor.
 
 			"if cheese we are done"
-			(self isCheese: closestNeighbor) ifTrue: [ board running: false ] ]
-	"	(1 to: board mice)"
+			(self isCheese: closestNeighbor)
+				ifTrue: [ board running: false ] ].
+	board resetWind

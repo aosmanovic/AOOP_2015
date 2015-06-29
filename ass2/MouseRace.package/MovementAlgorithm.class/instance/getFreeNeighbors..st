@@ -15,8 +15,5 @@ getFreeNeighbors: coordinates
 	c := coordinates x @ coordinates y + 1.
 	c y > board fields size | ((board at: c) type = 'wall')
 		ifFalse: [ fields add: c ].
-	Transcript
-		show: ' free fields: ';
-		show: fields;
-		show: ((board at: (fields at: 1)) type).
+
 	^ fields
