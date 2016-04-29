@@ -1,11 +1,5 @@
 # Network Game
 
-**Application type:** Desktop
-
-**Programming language:** Java
-
-**IDE:** Eclipse
-
 **Institution:** TU Vienna
 
 **Academic year:** 2014/2015
@@ -13,6 +7,12 @@
 **Subject:** Advanced Object-Oriented Programming
 
 Team work - group of 3 people
+
+**Application type:** Desktop
+
+**Programming language:** Java
+
+**IDE:** Eclipse
 
 ## Task Description
 
