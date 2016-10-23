@@ -27,12 +27,12 @@ Team work - group of 3 people
 
 ## Task Description
 
-Design and implement a network-compatible mouse racing game in an object-oriented programming language of your choice (but not in a language specialized for game development). The game shall correspond to the following description.
+"Design and implement a network-compatible mouse racing game in an object-oriented programming language of your choice (but not in a language specialized for game development). The game shall correspond to the following description.
 Each player is represented by a mouse searching for a piece of cheese located at the playing field. Mice pace around rather quickly within the boarders of the playing field according to a predefined algorithm (to be determined by the game designer) depending on environmental influences. Such influences origin from different kinds of barriers and artefacts (walls, fences, lakes, toys, food, toxins, fragrances, traps, etc.) causing a mouse to change its behavior, direction or speed for a while or forever. Players can influence the race by adding artefacts to and removing them from the playing field during the race. Winner is the first mouse finding a piece of cheese.
 
 Each player uses his/her own computer connected to a network. The communication between the computers shall be efficient enough to avoid noticeable delays for up to four players. All players shall get the same information at about the same time.
 
-Please select appropriate details of the game by yourselves. Give your fancy full scope.
+Please select appropriate details of the game by yourselves. Give your fancy full scope." LVA team
 
 ### Important commands
 
