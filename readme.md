@@ -15,10 +15,7 @@
 * substitutability versus genericity
 * how to handle covariant problems and parallel class hierarchies
 * implementation of object-oriented languages
-* selected software design patterns
-
-Didactic approach:
-In a lecture we discuss the foundations. Then, participants solve three programming assignments (one of them in Eiffel and one in Smalltalk) in small groups to internalize the matter. In addition to the specified subject of the course we also discuss some aspects of the topic proposed by the participants. " TISS TU Vienna
+* selected software design patterns" TISS TU Vienna
 
 Team work - group of 3 people
 
