@@ -25,6 +25,8 @@ Team work - group of 3 people
 
 **IDE:** Eclipse
 
+**Responsibilities:** pair programming in Java and Eiffel part of the assingment 
+
 ## Task Description
 
 "Design and implement a network-compatible mouse racing game in an object-oriented programming language of your choice (but not in a language specialized for game development). The game shall correspond to the following description.
