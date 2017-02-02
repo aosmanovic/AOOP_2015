@@ -25,7 +25,7 @@ Team work - group of 3 people
 
 **IDE:** Eclipse
 
-**Responsibilities:** pair programming in Java and Eiffel part of the assingment 
+**Responsibilities:** pair programming in Java and Eiffel part of the assingment with alma89, mentor: dseebacher
 
 ## Task Description
 
