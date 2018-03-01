@@ -6,17 +6,6 @@
 
 **Subject:** Advanced Object-Oriented Programming
 
-**Course description**
-
-"Participants become acquainted with advanced techniques in object-oriented programming and learn to distinguish between promising and dangerous uses of these techniques. Furthermore, partitipants learn how to bypass shortcomings of current programming languages by applying appropriate programming techniques. We deal among others with the following topics on the basis of several object-oriented programming languages (Java, C# or C++ as well as Eiffel and Smalltalk):
-
-* Names as means of abstraction
-* circumvention of name conflicts
-* substitutability versus genericity
-* how to handle covariant problems and parallel class hierarchies
-* implementation of object-oriented languages
-* selected software design patterns" TISS TU Vienna
-
 Team work - group of 3 people
 
 **Application type:** Desktop
